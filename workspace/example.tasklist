@@ -1,0 +1,54 @@
+{
+  "id": "d63b4a87-ca5e-41f8-b800-83ff4947a1ce",
+  "tasks": [
+    {
+      "id": "8ed1cf47-ae0a-4901-9e00-e3490d1b2cc6",
+      "name": "NewTaskNode0",
+      "description": "New task description",
+      "position": {
+        "x": 233,
+        "y": 109
+      }
+    }
+  ],
+  "transitions": [],
+  "ingresses": [],
+  "clusters": [
+    {
+      "id": "ff9e221e-26a9-46bf-b4ae-463d4d948b7e",
+      "name": "NewClusterNode0",
+      "position": {
+        "x": 87,
+        "y": 192
+      },
+      "size": {
+        "width": 191.546875,
+        "height": 110
+      }
+    },
+    {
+      "id": "fd1699dd-46db-4cfa-bcfc-0e1350bc9704",
+      "name": "NewClusterNode0",
+      "position": {
+        "x": 126,
+        "y": 421
+      }
+    },
+    {
+      "id": "2fdacfa9-2bab-41c9-bddd-9fbb5f6069ac",
+      "name": "NewClusterNode2",
+      "position": {
+        "x": 40,
+        "y": 101
+      }
+    },
+    {
+      "id": "c4c8dbc6-f162-413f-81d3-3310f85d0e14",
+      "name": "NewClusterNode3",
+      "position": {
+        "x": -25.257118886360928,
+        "y": 37.41225440599347
+      }
+    }
+  ]
+}

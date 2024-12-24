@@ -1,0 +1,77 @@
+4:43:15 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 54599 
+4:43:15 PM warn -  [OperationHandlerRegistry] Could not register key-value pair. Key is already registered {
+    "key": "createNode_node",
+    "value": {
+        "operationType": "createNode",
+        "elementTypeIds": [
+            "node"
+        ],
+        "modelState": {
+            "properties": {},
+            "editMode": "editable",
+            "index": {
+                "idToElement": {},
+                "typeToElements": {},
+                "idToTaskListElements": {}
+            },
+            "serializer": {
+                "reservedKeys": [
+                    "children",
+                    "parent",
+                    "index",
+                    "source",
+                    "target"
+                ],
+                "diagramConfiguration": {
+                    "layoutKind": 1,
+                    "needsClientLayout": true,
+                    "animatedUpdate": true
+                }
+            },
+            "clientId": "tempId"
+        }
+    }
+}
+4:43:15 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+4:43:16 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: eb9500bc-afe1-4764-8609-239249b174e9, protocolVersion: 1.0.0 
+4:43:16 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+4:43:16 PM warn -  [OperationHandlerRegistry] Could not register key-value pair. Key is already registered {
+    "key": "createNode_node",
+    "value": {
+        "operationType": "createNode",
+        "elementTypeIds": [
+            "node"
+        ],
+        "modelState": {
+            "properties": {},
+            "editMode": "editable",
+            "index": {
+                "idToElement": {},
+                "typeToElements": {},
+                "idToTaskListElements": {}
+            },
+            "serializer": {
+                "reservedKeys": [
+                    "children",
+                    "parent",
+                    "index",
+                    "source",
+                    "target"
+                ],
+                "diagramConfiguration": {
+                    "layoutKind": 1,
+                    "needsClientLayout": true,
+                    "animatedUpdate": true
+                }
+            },
+            "clientId": "tasklist-diagram_0"
+        }
+    }
+}
+4:43:16 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+4:43:16 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+4:43:16 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+4:43:16 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+4:43:20 PM info -  [DefaultGLSPServer] process [action=createNode, clientId=tasklist-diagram_0] 
+4:43:20 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+4:43:21 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 

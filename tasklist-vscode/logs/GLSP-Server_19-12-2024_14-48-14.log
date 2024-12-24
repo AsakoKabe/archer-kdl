@@ -1,0 +1,66 @@
+2:48:14 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 51704 
+2:48:15 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+2:48:15 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: 3f5376d1-e89c-4baf-99e7-3b5d0c9e9ebb, protocolVersion: 1.0.0 
+2:48:15 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+2:48:15 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+2:48:15 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+2:48:15 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+2:48:15 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+2:48:18 PM info -  [DefaultGLSPServer] process [action=changeBounds, clientId=tasklist-diagram_0] 
+2:48:18 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+2:48:19 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+2:48:21 PM info -  [DefaultGLSPServer] process [action=requestEditValidation, clientId=tasklist-diagram_0] 
+2:48:22 PM info -  [DefaultGLSPServer] process [action=requestEditValidation, clientId=tasklist-diagram_0] 
+2:48:22 PM info -  [DefaultGLSPServer] process [action=applyLabelEdit, clientId=tasklist-diagram_0] 
+2:48:22 PM error -  [DefaultCommandStack] An error occurred during command execution. CommandStack will be flushed! Could not retrieve the parent task for the label with id d8e8c599-aebc-48de-9c74-be437ae716aa_label
+            Error: Could not retrieve the parent task for the label with id d8e8c599-aebc-48de-9c74-be437ae716aa_label
+    at JsonRecordingCommand.doExecute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:46043:27)
+    at JsonRecordingCommand.execute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:7768:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async DefaultCommandStack.execute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:7558:13)
+2:48:22 PM error -  [DefaultGLSPServer] Could not process action: 'applyLabelEdit 
+2:48:22 PM error -  [DefaultGLSPServer] Error: Could not retrieve the parent task for the label with id d8e8c599-aebc-48de-9c74-be437ae716aa_label 
+2:48:27 PM info -  [DefaultGLSPServer] process [action=createNode, clientId=tasklist-diagram_0] 
+2:48:27 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+2:48:28 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+2:48:29 PM info -  [DefaultGLSPServer] process [action=requestEditValidation, clientId=tasklist-diagram_0] 
+2:48:29 PM info -  [DefaultGLSPServer] process [action=requestEditValidation, clientId=tasklist-diagram_0] 
+2:48:29 PM info -  [DefaultGLSPServer] process [action=requestEditValidation, clientId=tasklist-diagram_0] 
+2:48:29 PM info -  [DefaultGLSPServer] process [action=applyLabelEdit, clientId=tasklist-diagram_0] 
+2:48:29 PM error -  [DefaultCommandStack] An error occurred during command execution. CommandStack will be flushed! Could not retrieve the parent task for the label with id 8e13bb6f-14ad-451b-8be5-0740d42da949_label
+            Error: Could not retrieve the parent task for the label with id 8e13bb6f-14ad-451b-8be5-0740d42da949_label
+    at JsonRecordingCommand.doExecute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:46043:27)
+    at JsonRecordingCommand.execute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:7768:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async DefaultCommandStack.execute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:7558:13)
+2:48:29 PM error -  [DefaultGLSPServer] Could not process action: 'applyLabelEdit 
+2:48:29 PM error -  [DefaultGLSPServer] Error: Could not retrieve the parent task for the label with id 8e13bb6f-14ad-451b-8be5-0740d42da949_label 
+2:48:30 PM info -  [DefaultGLSPServer] process [action=requestPopupModel, clientId=tasklist-diagram_0] 
+2:48:30 PM warn -  [RequestPopupModelActionHandler] Could not process `RequestPopupModelAction`. No `PopupModelFactory` is bound 
+2:48:36 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+2:48:36 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+2:48:37 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+2:48:39 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+2:48:39 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+2:48:40 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+2:48:41 PM info -  [DefaultGLSPServer] process [action=requestEditValidation, clientId=tasklist-diagram_0] 
+2:48:41 PM info -  [DefaultGLSPServer] process [action=requestEditValidation, clientId=tasklist-diagram_0] 
+2:48:41 PM info -  [DefaultGLSPServer] process [action=applyLabelEdit, clientId=tasklist-diagram_0] 
+2:48:41 PM error -  [DefaultCommandStack] An error occurred during command execution. CommandStack will be flushed! Could not retrieve the parent task for the label with id 6c5c2751-92bc-4da8-aa15-10610346b36a_label
+            Error: Could not retrieve the parent task for the label with id 6c5c2751-92bc-4da8-aa15-10610346b36a_label
+    at JsonRecordingCommand.doExecute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:46043:27)
+    at JsonRecordingCommand.execute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:7768:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async DefaultCommandStack.execute (/Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/tasklist-vscode/extension/dist/tasklist-glsp-server.js:7558:13)
+2:48:41 PM error -  [DefaultGLSPServer] Could not process action: 'applyLabelEdit 
+2:48:41 PM error -  [DefaultGLSPServer] Error: Could not retrieve the parent task for the label with id 6c5c2751-92bc-4da8-aa15-10610346b36a_label 
+2:48:42 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+2:48:42 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+2:48:43 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+2:48:46 PM info -  [DefaultGLSPServer] process [action=requestPopupModel, clientId=tasklist-diagram_0] 
+2:48:46 PM warn -  [RequestPopupModelActionHandler] Could not process `RequestPopupModelAction`. No `PopupModelFactory` is bound 
+2:48:51 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+2:48:51 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+2:48:52 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+2:48:53 PM info -  [DefaultGLSPServer] process [action=requestPopupModel, clientId=tasklist-diagram_0] 
+2:48:53 PM warn -  [RequestPopupModelActionHandler] Could not process `RequestPopupModelAction`. No `PopupModelFactory` is bound 
