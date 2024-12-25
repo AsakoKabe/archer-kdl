@@ -1,0 +1,33 @@
+5:35:04 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 57811 
+5:35:04 PM warn -  [OperationHandlerRegistry] Could not register key-value pair. Key is already registered {
+    "key": "changeBounds",
+    "value": {
+        "operationType": "changeBounds",
+        "modelState": {
+            "properties": {},
+            "editMode": "editable",
+            "index": {
+                "idToElement": {},
+                "typeToElements": {},
+                "idToTaskListElements": {}
+            },
+            "serializer": {
+                "reservedKeys": [
+                    "children",
+                    "parent",
+                    "index",
+                    "source",
+                    "target"
+                ],
+                "diagramConfiguration": {
+                    "layoutKind": 1,
+                    "needsClientLayout": true,
+                    "animatedUpdate": true
+                }
+            },
+            "clientId": "tempId"
+        }
+    }
+}
+5:35:04 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+5:35:04 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: b18b0a7a-664c-4416-bd79-417a2b2fc601, protocolVersion: 1.0.0 

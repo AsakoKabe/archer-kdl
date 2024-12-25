@@ -1,0 +1,20 @@
+1:56:08 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 53676 
+1:56:08 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+1:56:08 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: 7004c3e9-9396-4293-940f-aecd32f92ef8, protocolVersion: 1.0.0 
+1:56:09 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+1:56:09 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+1:56:09 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+1:56:09 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:56:09 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+1:56:10 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:56:10 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:56:11 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+1:56:17 PM info -  [DefaultGLSPServer] process [action=createNode, clientId=tasklist-diagram_0] 
+1:56:17 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:56:18 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+1:56:20 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:56:20 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:56:21 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+1:56:21 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:56:21 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:56:22 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 

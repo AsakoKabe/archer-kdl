@@ -2,52 +2,82 @@
   "id": "d63b4a87-ca5e-41f8-b800-83ff4947a1ce",
   "tasks": [
     {
-      "id": "8ed1cf47-ae0a-4901-9e00-e3490d1b2cc6",
+      "id": "5395ba55-0d38-4df4-9719-7ff0595ac3e2",
       "name": "NewTaskNode0",
       "description": "New task description",
       "position": {
-        "x": 233,
-        "y": 109
+        "x": 333.70010278352186,
+        "y": 411.1251056089547
+      },
+      "size": {
+        "width": 139.6953125,
+        "height": 144.00000000000006
+      }
+    },
+    {
+      "id": "1f2d190f-1b35-4d88-bc67-c1f9fee9263e",
+      "name": "NewTaskNode4",
+      "description": "New task description",
+      "position": {
+        "x": 378,
+        "y": 507
+      },
+      "size": {
+        "width": 84.6953125,
+        "height": 22
       }
     }
   ],
   "transitions": [],
-  "ingresses": [],
-  "clusters": [
+  "ingresses": [
     {
-      "id": "ff9e221e-26a9-46bf-b4ae-463d4d948b7e",
-      "name": "NewClusterNode0",
+      "id": "f87ac4a3-95df-4a09-a55c-1154af4b3ab4",
+      "name": "NewIngressNode0",
       "position": {
-        "x": 87,
-        "y": 192
+        "x": 68.50053843655337,
+        "y": 82.14093947596433
       },
       "size": {
-        "width": 191.546875,
-        "height": 110
+        "width": 87.7421875,
+        "height": 12
       }
     },
     {
-      "id": "fd1699dd-46db-4cfa-bcfc-0e1350bc9704",
+      "id": "0df3fe6d-f040-43c5-8b65-3329ba254feb",
+      "name": "NewIngressNode0",
+      "position": {
+        "x": 315.6511300016556,
+        "y": 124.2648640273288
+      },
+      "size": {
+        "width": 87.7421875,
+        "height": 12
+      }
+    },
+    {
+      "id": "85fb5e00-7026-452c-84e9-81f3e4208335",
+      "name": "NewIngressNode2",
+      "position": {
+        "x": 79.0160180739091,
+        "y": 186.4831643423596
+      },
+      "size": {
+        "width": 87.7421875,
+        "height": 12
+      }
+    }
+  ],
+  "clusters": [
+    {
+      "id": "c080b1fc-226d-474a-8cb2-20ea0588e662",
       "name": "NewClusterNode0",
       "position": {
-        "x": 126,
-        "y": 421
-      }
-    },
-    {
-      "id": "2fdacfa9-2bab-41c9-bddd-9fbb5f6069ac",
-      "name": "NewClusterNode2",
-      "position": {
-        "x": 40,
-        "y": 101
-      }
-    },
-    {
-      "id": "c4c8dbc6-f162-413f-81d3-3310f85d0e14",
-      "name": "NewClusterNode3",
-      "position": {
-        "x": -25.257118886360928,
-        "y": 37.41225440599347
+        "x": 63.290810355002066,
+        "y": 172.4118687027397
+      },
+      "size": {
+        "width": 219.890625,
+        "height": 235.86536404310274
       }
     }
   ]

@@ -1,0 +1,19 @@
+3:30:39 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 55916 
+3:30:39 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+3:30:39 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: d21f1490-2787-4908-95a4-e15fffe926c7, protocolVersion: 1.0.0 
+3:30:40 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+3:30:40 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+3:30:40 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+3:30:40 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+3:30:40 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+3:30:41 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+3:30:41 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+3:30:42 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+3:30:59 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+3:30:59 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+3:31:00 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+3:31:01 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+3:31:01 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+3:31:02 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+3:31:02 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+3:31:03 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 

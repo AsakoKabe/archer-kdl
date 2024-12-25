@@ -1,0 +1,80 @@
+5:34:21 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 57769 
+5:34:21 PM warn -  [OperationHandlerRegistry] Could not register key-value pair. Key is already registered {
+    "key": "changeBounds",
+    "value": {
+        "operationType": "changeBounds",
+        "modelState": {
+            "properties": {},
+            "editMode": "editable",
+            "index": {
+                "idToElement": {},
+                "typeToElements": {},
+                "idToTaskListElements": {}
+            },
+            "serializer": {
+                "reservedKeys": [
+                    "children",
+                    "parent",
+                    "index",
+                    "source",
+                    "target"
+                ],
+                "diagramConfiguration": {
+                    "layoutKind": 1,
+                    "needsClientLayout": true,
+                    "animatedUpdate": true
+                }
+            },
+            "clientId": "tempId"
+        }
+    }
+}
+5:34:21 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+5:34:21 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: c284e76a-1879-4561-be22-9a47930474e2, protocolVersion: 1.0.0 
+5:34:21 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+5:34:21 PM warn -  [OperationHandlerRegistry] Could not register key-value pair. Key is already registered {
+    "key": "changeBounds",
+    "value": {
+        "operationType": "changeBounds",
+        "modelState": {
+            "properties": {},
+            "editMode": "editable",
+            "index": {
+                "idToElement": {},
+                "typeToElements": {},
+                "idToTaskListElements": {}
+            },
+            "serializer": {
+                "reservedKeys": [
+                    "children",
+                    "parent",
+                    "index",
+                    "source",
+                    "target"
+                ],
+                "diagramConfiguration": {
+                    "layoutKind": 1,
+                    "needsClientLayout": true,
+                    "animatedUpdate": true
+                }
+            },
+            "clientId": "tasklist-diagram_0"
+        }
+    }
+}
+5:34:21 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+5:34:21 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+5:34:21 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+5:34:21 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+5:34:33 PM info -  [DefaultGLSPServer] process [action=layout, clientId=tasklist-diagram_0] 
+5:34:33 PM warn -  [LayoutOperationHandler] Could not execute layout operation. No `LayoutEngine` is bound! 
+5:34:33 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+5:34:42 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+5:34:42 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+5:34:43 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+5:34:46 PM info -  [DefaultGLSPServer] process [action=layout, clientId=tasklist-diagram_0] 
+5:34:46 PM warn -  [LayoutOperationHandler] Could not execute layout operation. No `LayoutEngine` is bound! 
+5:34:46 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+5:34:50 PM info -  [DefaultGLSPServer] process [action=layout, clientId=tasklist-diagram_0] 
+5:34:50 PM warn -  [LayoutOperationHandler] Could not execute layout operation. No `LayoutEngine` is bound! 
+5:34:50 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 

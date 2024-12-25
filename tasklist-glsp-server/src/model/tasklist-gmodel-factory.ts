@@ -14,8 +14,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
+import { ArgsUtil, DefaultTypes, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import * as uuid from 'uuid';
 import { Task, Transition, Cluster, Ingress, TaskList } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 
@@ -57,16 +58,20 @@ export class TaskListGModelFactory implements GModelFactory {
     }
 
     protected createClusterNode(cluster: Cluster, taskList: TaskList): GCompartment {
-        // const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
+        const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
 
         const builder = GCompartment.builder()
             // .type(ModelTypes.CLUSTER)
+            .type(DefaultTypes.NODE_CIRCLE)
             .id(cluster.id)
             .addCssClass('kdl-cluster')
             .add(GLabel.builder().text(cluster.name).id(`${cluster.id}_label`).build())
-            // .addChildren(ingressNodes)
+            // .add(GLabel.builder().text(cluster.name + '123').id(`${uuid.v4()}_label`).build())
+            .addChildren(...ingressNodes)
             .layout('hbox')
-            .addLayoutOption('paddingLeft', 5)
+            .addLayoutOption('hGap', 15)
+            // .addLayoutOption('hAlign', 'center')
+            // .addLayoutOption('paddingLeft', 5)
             .position(cluster.position)
             .addArgs(ArgsUtil.cornerRadius(3));
 
@@ -85,9 +90,9 @@ export class TaskListGModelFactory implements GModelFactory {
             // .type(ModelTypes.INGRESS)
             .id(ingress.id)
             .addCssClass('kdl-ingress')
-            .add(GLabel.builder().text(ingress.name).id(`${ingress.id}_label`).build())
-            .layout('hbox')
-            .addLayoutOption('paddingLeft', 5)
+            .add(GLabel.builder().text(ingress.name).id(uuid.v4()).build())
+            // .layout('hbox')
+            // .addLayoutOption('paddingLeft', 5)
             .position(ingress.position)
             .addArgs(ArgsUtil.cornerRadius(3));
 

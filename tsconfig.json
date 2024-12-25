@@ -2,7 +2,9 @@
   "extends": "@eclipse-glsp/ts-config",
   "include": [],
   "compilerOptions": {
-    "composite": true
+    "composite": true,
+    "jsx":"react",
+    "reactNamespace":"JSX"
   },
   "references": [
     {

@@ -1,0 +1,26 @@
+1:27:44 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 52994 
+1:27:44 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+1:27:44 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: e0382c36-6a36-484d-b37c-b5714dfd6d10, protocolVersion: 1.0.0 
+1:27:45 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+1:27:45 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+1:27:45 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+1:27:45 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:27:45 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+1:27:46 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:27:46 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:27:46 PM info -  [DefaultGLSPServer] process [action=requestPopupModel, clientId=tasklist-diagram_0] 
+1:27:46 PM warn -  [RequestPopupModelActionHandler] Could not process `RequestPopupModelAction`. No `PopupModelFactory` is bound 
+1:27:47 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+1:27:50 PM info -  [DefaultGLSPServer] process [action=requestPopupModel, clientId=tasklist-diagram_0] 
+1:27:50 PM warn -  [RequestPopupModelActionHandler] Could not process `RequestPopupModelAction`. No `PopupModelFactory` is bound 
+1:27:51 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:27:51 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:27:52 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+1:27:53 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:27:53 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:27:54 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:27:54 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:27:55 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+1:27:55 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+1:27:55 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+1:27:56 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 

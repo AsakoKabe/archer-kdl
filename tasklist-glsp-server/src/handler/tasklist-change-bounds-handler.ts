@@ -15,7 +15,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 
-import { ChangeBoundsOperation, Command, Dimension, GCompartment, JsonOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
+import {
+    ChangeBoundsOperation,
+    ChangeContainerOperation,
+    Command,
+    Dimension,
+    ElementAndBounds,
+    hasArrayProp,
+    // GCompartment,
+    // GNode,
+    // GNode,
+    JsonOperationHandler,
+    MaybePromise,
+    Operation,
+    Point
+} from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
@@ -38,13 +52,50 @@ export class TaskListChangeBoundsHandler extends JsonOperationHandler {
     protected changeElementBounds(elementId: string, newSize: Dimension, newPosition?: Point): void {
         console.error(elementId);
         const index = this.modelState.index;
-        const item = index.findByClass(elementId, GCompartment);
-        const box = item ? index.findBoxes(item.id) : undefined;
+        const box = index.findBoxes(elementId);
         if (box) {
             box.size = newSize;
             if (newPosition) {
                 box.position = newPosition;
             }
         }
+    }
+}
+
+@injectable()
+export class ContainerChangeHandler extends JsonOperationHandler {
+    readonly operationType = ChangeContainerOperation.KIND;
+
+    @inject(TaskListModelState)
+    protected override modelState: TaskListModelState;
+
+    override createCommand(operation: ChangeContainerOperation): MaybePromise<Command | undefined> {
+        return this.commandOf(() => {
+            console.error(operation);
+        });
+    }
+}
+
+export interface IntersectContainerOperation extends Operation {
+    kind: typeof IntersectContainerOperation.KIND;
+
+    newBounds: ElementAndBounds[];
+    containerId?: string;
+}
+
+export namespace IntersectContainerOperation {
+    export const KIND = 'changeBounds';
+
+    export function is(object: unknown): object is IntersectContainerOperation {
+        return Operation.hasKind(object, KIND) && hasArrayProp(object, 'newBounds') && hasArrayProp(object, 'containerId');
+    }
+
+    export function create(newBounds: ElementAndBounds[], options: { containerId?: string }): IntersectContainerOperation {
+        return {
+            kind: KIND,
+            isOperation: true,
+            newBounds,
+            ...options
+        };
     }
 }

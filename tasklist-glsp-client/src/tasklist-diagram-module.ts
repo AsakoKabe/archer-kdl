@@ -22,11 +22,12 @@ import {
     DefaultTypes,
     editLabelFeature,
     GCompartment,
-    GCompartmentView,
+    // GCompartmentView,
     GLabel,
     GLabelView,
     initializeDiagramContainer,
     LogLevel,
+    StructureCompartmentView,
     TYPES
 } from '@eclipse-glsp/client';
 import 'balloon-css/balloon.min.css';
@@ -39,7 +40,7 @@ const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind
     const context = { bind, unbind, isBound, rebind };
     configureDefaultModelElements(context);
     configureModelElement(context, DefaultTypes.LABEL, GLabel, GLabelView, { enable: [editLabelFeature] });
-    configureModelElement(context, DefaultTypes.COMPARTMENT, GCompartment, GCompartmentView, {enable: [editLabelFeature]});
+    configureModelElement(context, 'struct', GCompartment, StructureCompartmentView);
 });
 
 export function initializeTasklistDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {
