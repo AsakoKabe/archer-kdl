@@ -20,7 +20,7 @@ import { Cluster, Ingress, Task, TaskList, Transition } from './tasklist-model';
 
 @injectable()
 export class TaskListModelIndex extends GModelIndex {
-    protected idToTaskListElements = new Map<string, Task | Transition | Cluster>();
+    protected idToTaskListElements = new Map<string, Task | Transition | Cluster | Ingress>();
 
     indexTaskList(taskList: TaskList): void {
         this.idToTaskListElements.clear();
@@ -49,7 +49,7 @@ export class TaskListModelIndex extends GModelIndex {
         return Task.is(element) || Cluster.is(element) || Ingress.is(element) ? element : undefined;
     }
 
-    findElement(id: string): Transition | Cluster | Task | undefined {
+    findElement(id: string): Transition | Cluster | Task | Ingress | undefined {
         return this.idToTaskListElements.get(id);
     }
 }

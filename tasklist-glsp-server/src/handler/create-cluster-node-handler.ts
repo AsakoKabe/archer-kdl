@@ -17,8 +17,6 @@
 import {
     Command,
     CreateNodeOperation,
-    GCompartment,
-    // DefaultTypes,
     JsonCreateNodeOperationHandler,
     MaybePromise,
     Point
@@ -50,11 +48,11 @@ export class CreateClusterHandler extends JsonCreateNodeOperationHandler {
     }
 
     protected createCluster(position: Point): Cluster {
-        const nodeCounter = this.modelState.index.getAllByClass(GCompartment).length;
         return {
             id: uuid.v4(),
-            name: `NewClusterNode${nodeCounter}`,
-            position
+            name: 'NewCluster',
+            position,
+            size: { width: 100, height: 100 }
         };
     }
 }

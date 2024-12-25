@@ -1,0 +1,22 @@
+6:35:08 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 56302 
+6:35:08 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+6:35:08 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: 33236983-e7b4-41f6-a48b-8ebad4a14696, protocolVersion: 1.0.0 
+6:35:08 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+6:35:08 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+6:35:08 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+6:35:08 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:35:08 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+6:35:12 PM info -  [DefaultGLSPServer] process [action=changeBounds, clientId=tasklist-diagram_0] 
+6:35:12 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:35:13 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+6:35:15 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+6:35:15 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:35:15 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+6:35:15 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:35:17 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+6:35:17 PM info -  [DefaultGLSPServer] process [action=changeBounds, clientId=tasklist-diagram_0] 
+6:35:17 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:35:18 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+6:35:19 PM info -  [DefaultGLSPServer] process [action=changeBounds, clientId=tasklist-diagram_0] 
+6:35:19 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:35:20 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 

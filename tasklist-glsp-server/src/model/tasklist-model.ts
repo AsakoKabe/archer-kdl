@@ -78,7 +78,7 @@ export interface Cluster {
     id: string;
     name: string;
     position: { x: number; y: number };
-    size?: { width: number; height: number };
+    size: { width: number; height: number };
 }
 
 export namespace Cluster {
@@ -87,7 +87,8 @@ export namespace Cluster {
             AnyObject.is(object) &&
             hasStringProp(object, 'id') &&
             hasStringProp(object, 'name') &&
-            hasObjectProp(object, 'position')
+            hasObjectProp(object, 'position') &&
+            hasObjectProp(object, 'size')
         );
     }
 }

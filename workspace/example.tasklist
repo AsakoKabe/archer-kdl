@@ -2,82 +2,32 @@
   "id": "d63b4a87-ca5e-41f8-b800-83ff4947a1ce",
   "tasks": [
     {
-      "id": "5395ba55-0d38-4df4-9719-7ff0595ac3e2",
+      "id": "aa3e7b66-eb37-4fd5-917c-060ab3d3eff6",
       "name": "NewTaskNode0",
       "description": "New task description",
       "position": {
-        "x": 333.70010278352186,
-        "y": 411.1251056089547
+        "x": 235.4702927439213,
+        "y": 63.8122400352093
       },
       "size": {
-        "width": 139.6953125,
-        "height": 144.00000000000006
-      }
-    },
-    {
-      "id": "1f2d190f-1b35-4d88-bc67-c1f9fee9263e",
-      "name": "NewTaskNode4",
-      "description": "New task description",
-      "position": {
-        "x": 378,
-        "y": 507
-      },
-      "size": {
-        "width": 84.6953125,
-        "height": 22
+        "width": 261.1194219204619,
+        "height": 231.50907665772394
       }
     }
   ],
   "transitions": [],
-  "ingresses": [
-    {
-      "id": "f87ac4a3-95df-4a09-a55c-1154af4b3ab4",
-      "name": "NewIngressNode0",
-      "position": {
-        "x": 68.50053843655337,
-        "y": 82.14093947596433
-      },
-      "size": {
-        "width": 87.7421875,
-        "height": 12
-      }
-    },
-    {
-      "id": "0df3fe6d-f040-43c5-8b65-3329ba254feb",
-      "name": "NewIngressNode0",
-      "position": {
-        "x": 315.6511300016556,
-        "y": 124.2648640273288
-      },
-      "size": {
-        "width": 87.7421875,
-        "height": 12
-      }
-    },
-    {
-      "id": "85fb5e00-7026-452c-84e9-81f3e4208335",
-      "name": "NewIngressNode2",
-      "position": {
-        "x": 79.0160180739091,
-        "y": 186.4831643423596
-      },
-      "size": {
-        "width": 87.7421875,
-        "height": 12
-      }
-    }
-  ],
+  "ingresses": [],
   "clusters": [
     {
-      "id": "c080b1fc-226d-474a-8cb2-20ea0588e662",
-      "name": "NewClusterNode0",
+      "id": "f3ae2211-9698-47ea-8a2e-5bb4560b1d35",
+      "name": "NewCluster",
       "position": {
-        "x": 63.290810355002066,
-        "y": 172.4118687027397
+        "x": -153.4632216558012,
+        "y": 10.299660268371525
       },
       "size": {
-        "width": 219.890625,
-        "height": 235.86536404310274
+        "width": 182.1171875,
+        "height": 72
       }
     }
   ]

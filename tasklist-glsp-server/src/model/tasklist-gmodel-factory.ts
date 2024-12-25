@@ -58,22 +58,22 @@ export class TaskListGModelFactory implements GModelFactory {
     }
 
     protected createClusterNode(cluster: Cluster, taskList: TaskList): GCompartment {
-        const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
+        // const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
 
-        const builder = GCompartment.builder()
-            // .type(ModelTypes.CLUSTER)
-            .type(DefaultTypes.NODE_CIRCLE)
+        const builder = GNode.builder()
+            .type(DefaultTypes.NODE_RECTANGLE)
             .id(cluster.id)
             .addCssClass('kdl-cluster')
             .add(GLabel.builder().text(cluster.name).id(`${cluster.id}_label`).build())
             // .add(GLabel.builder().text(cluster.name + '123').id(`${uuid.v4()}_label`).build())
-            .addChildren(...ingressNodes)
-            .layout('hbox')
-            .addLayoutOption('hGap', 15)
+            // .addChildren(...ingressNodes)
+            // .layout('hbox')
+            // .addLayoutOption('hGap', 15)
             // .addLayoutOption('hAlign', 'center')
             // .addLayoutOption('paddingLeft', 5)
+            // .size(cluster.size)
             .position(cluster.position)
-            .addArgs(ArgsUtil.cornerRadius(3));
+            .addArgs(ArgsUtil.cornerRadius(10));
 
         if (cluster.size) {
             builder.addLayoutOptions({

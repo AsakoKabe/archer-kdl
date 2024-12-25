@@ -1,0 +1,17 @@
+6:21:39 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 55912 
+6:21:39 PM info -  [SocketServerLauncher] Starting GLSP server connection 
+6:21:39 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: e0d411b6-8653-4f9e-9ad1-2fc03a5fe4ac, protocolVersion: 1.0.0 
+6:21:40 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
+6:21:40 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
+6:21:40 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
+6:21:40 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:21:40 PM info -  [DefaultGLSPServer] process [action=requestTypeHints, clientId=tasklist-diagram_0] 
+6:21:42 PM info -  [DefaultGLSPServer] process [action=changeBounds, clientId=tasklist-diagram_0] 
+6:21:42 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:21:43 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+6:21:47 PM info -  [DefaultGLSPServer] process [action=compound, clientId=tasklist-diagram_0] 
+6:21:47 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:21:48 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 
+6:21:49 PM info -  [DefaultGLSPServer] process [action=changeBounds, clientId=tasklist-diagram_0] 
+6:21:49 PM info -  [DefaultGLSPServer] process [action=computedBounds, clientId=tasklist-diagram_0] 
+6:21:50 PM info -  [DefaultGLSPServer] process [action=saveModel, clientId=tasklist-diagram_0] 

@@ -33,7 +33,7 @@ import { CreateTaskHandler } from '../handler/create-task-node-handler';
 import { CreateTransitionHandler } from '../handler/create-transition-handler';
 import { DeleteElementHandler } from '../handler/delete-element-handler';
 import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-edit-handler';
-import { ContainerChangeHandler, TaskListChangeBoundsHandler } from '../handler/tasklist-change-bounds-handler';
+import { TaskListChangeBoundsHandler } from '../handler/tasklist-change-bounds-handler';
 import { TaskListLabelEditValidator } from '../handler/tasklist-label-edit-validator';
 import { TaskListGModelFactory } from '../model/tasklist-gmodel-factory';
 import { TaskListModelIndex } from '../model/tasklist-model-index';
@@ -79,7 +79,6 @@ export class TaskListDiagramModule extends DiagramModule {
 
         binding.add(CreateClusterHandler);
         binding.add(CreateIngressHandler);
-        binding.add(ContainerChangeHandler);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {
