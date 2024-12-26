@@ -1,8 +1,0 @@
-2:07:43 PM info -  [SocketServerLauncher] The GLSP server is ready to accept new client requests on port: 58907 
-2:07:44 PM info -  [SocketServerLauncher] Starting GLSP server connection 
-2:07:44 PM info -  [DefaultGLSPServer] Initializing server with: applicationId: 097868ff-8bf8-48e2-b1a5-5dac7e34b30e, protocolVersion: 1.0.0 
-2:07:44 PM info -  [DefaultGLSPServer] Initializing client session with: clientSessionId: 'tasklist-diagram_0', diagramType: 'tasklist-diagram' 
-2:07:44 PM info -  [DefaultGLSPServer] process [action=requestContextActions, clientId=tasklist-diagram_0] 
-2:07:44 PM info -  [DefaultGLSPServer] process [action=requestModel, clientId=tasklist-diagram_0] 
-2:07:44 PM error -  [DefaultGLSPServer] Could not process action: 'requestModel 
-2:07:44 PM error -  [DefaultGLSPServer] Error: Could not load model from file: file:///Users/work/Desktop/glsp-examples/project-templates/node-json-vscode/workspace/example.tasklist 

@@ -18,13 +18,17 @@ import {
     DefaultTypes,
     DiagramConfiguration,
     EdgeTypeHint,
+    GCompartment,
     getDefaultMapping,
+    GLabel,
     GModelElement,
     GModelElementConstructor,
     ServerLayoutKind,
     ShapeTypeHint
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
+import { ClusterNode } from '../model/cluster-node';
+import { ModelTypes } from '../utils/model-types';
 
 @injectable()
 export class TaskListDiagramConfiguration implements DiagramConfiguration {
@@ -33,7 +37,13 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
     animatedUpdate = true;
 
     get typeMapping(): Map<string, GModelElementConstructor<GModelElement>> {
-        return getDefaultMapping();
+        const mapping = getDefaultMapping();
+        mapping.set(ModelTypes.LABEL_HEADING, GLabel);
+        mapping.set(ModelTypes.LABEL_TEXT, GLabel);
+        mapping.set(ModelTypes.COMP_HEADER, GCompartment);
+        mapping.set(ModelTypes.CLUSTER, ClusterNode);
+        mapping.set(ModelTypes.STRUCTURE, GCompartment);
+        return mapping;
     }
 
     get shapeTypeHints(): ShapeTypeHint[] {
@@ -44,7 +54,11 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
                 reparentable: false,
                 repositionable: true,
                 resizable: true
-            }
+            },
+            createDefaultShapeTypeHint({
+                elementTypeId: ModelTypes.CLUSTER,
+                containableElementTypeIds: [ModelTypes.TASK]
+            })
         ];
     }
 
@@ -60,4 +74,13 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
             }
         ];
     }
+}
+
+export function createDefaultShapeTypeHint(template: { elementTypeId: string } & Partial<ShapeTypeHint>): ShapeTypeHint;
+export function createDefaultShapeTypeHint(elementId: string): ShapeTypeHint;
+export function createDefaultShapeTypeHint(
+    elementIdOrTemplate: string | ({ elementTypeId: string } & Partial<ShapeTypeHint>)
+): ShapeTypeHint {
+    const template = typeof elementIdOrTemplate === 'string' ? { elementTypeId: elementIdOrTemplate } : elementIdOrTemplate;
+    return { repositionable: true, deletable: true, resizable: true, reparentable: true, ...template };
 }

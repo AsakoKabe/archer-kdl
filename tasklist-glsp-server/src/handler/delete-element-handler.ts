@@ -25,15 +25,15 @@ import {
     toTypeGuard
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import { KDLModelState } from '../model/kdl-model-state';
 import { Cluster, Ingress, Task, Transition } from '../model/tasklist-model';
-import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
 export class DeleteElementHandler extends JsonOperationHandler {
     readonly operationType = DeleteElementOperation.KIND;
 
-    @inject(TaskListModelState)
-    protected override modelState: TaskListModelState;
+    @inject(KDLModelState)
+    protected override modelState: KDLModelState;
 
     override createCommand(operation: DeleteElementOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {

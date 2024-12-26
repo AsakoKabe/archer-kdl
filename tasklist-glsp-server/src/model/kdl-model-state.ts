@@ -16,13 +16,13 @@
  ********************************************************************************/
 import { DefaultModelState, JsonModelState } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import { KDLModelIndex } from './kdl-model-index';
 import { TaskList } from './tasklist-model';
-import { TaskListModelIndex } from './tasklist-model-index';
 
 @injectable()
-export class TaskListModelState extends DefaultModelState implements JsonModelState<TaskList> {
-    @inject(TaskListModelIndex)
-    override readonly index: TaskListModelIndex;
+export class KDLModelState extends DefaultModelState implements JsonModelState<TaskList> {
+    @inject(KDLModelIndex)
+    override readonly index: KDLModelIndex;
 
     protected _taskList: TaskList;
 

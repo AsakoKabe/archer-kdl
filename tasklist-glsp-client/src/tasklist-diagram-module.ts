@@ -22,24 +22,34 @@ import {
     DefaultTypes,
     editLabelFeature,
     GCompartment,
+    GCompartmentView,
+    GGraph,
     // GCompartmentView,
     GLabel,
     GLabelView,
+    GLSPProjectionView,
     initializeDiagramContainer,
     LogLevel,
+    overrideModelElement,
+    RoundedCornerNodeView,
     StructureCompartmentView,
     TYPES
 } from '@eclipse-glsp/client';
 import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
+import { ClusterNode } from './model';
 
 const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
     rebind(TYPES.LogLevel).toConstantValue(LogLevel.warn);
     const context = { bind, unbind, isBound, rebind };
     configureDefaultModelElements(context);
-    configureModelElement(context, DefaultTypes.LABEL, GLabel, GLabelView, { enable: [editLabelFeature] });
+    configureModelElement(context, 'label:heading', GLabel, GLabelView, { enable: [editLabelFeature] });
+    configureModelElement(context, 'comp:comp', GCompartment, GCompartmentView);
+    configureModelElement(context, 'label:icon', GLabel, GLabelView);
+    overrideModelElement(context, DefaultTypes.GRAPH, GGraph, GLSPProjectionView);
+    configureModelElement(context, 'cluster', ClusterNode, RoundedCornerNodeView);
     configureModelElement(context, 'struct', GCompartment, StructureCompartmentView);
 });
 

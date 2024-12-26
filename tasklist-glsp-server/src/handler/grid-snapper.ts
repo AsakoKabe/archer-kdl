@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2024 EclipseSource and others.
+ * Copyright (c) 2022-2023 STMicroelectronics and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,26 +13,20 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-export namespace ModelTypes {
-    export const TASK = 'task';
-    export const CLUSTER = 'cluster';
-    export const INGRESS = 'ingress';
-    export const LABEL_HEADING = 'label:heading';
-    export const LABEL_TEXT = 'label:text';
-    export const COMP_HEADER = 'comp:header';
-    export const STRUCTURE = 'struct';
+import { Point } from '@eclipse-glsp/server';
 
-    export function toNodeType(type: string): string {
-        switch (type) {
-            case CLUSTER:
-                return 'cluster';
-            case TASK:
-                return 'task';
-            case INGRESS:
-                return 'ingress';
-            default:
-                return 'unknown';
+export class GridSnapper {
+    public static GRID_X = 10.0;
+    public static GRID_Y = 10.0;
+
+    public static snap(originalPoint: Point | undefined): Point | undefined {
+        if (originalPoint) {
+            return {
+                x: Math.round(originalPoint.x / this.GRID_X) * this.GRID_X,
+                y: Math.round(originalPoint.y / this.GRID_Y) * this.GRID_Y
+            };
+        } else {
+            return undefined;
         }
     }
-
 }

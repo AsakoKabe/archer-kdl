@@ -17,26 +17,22 @@
 import { ArgsUtil, DefaultTypes, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { Task, Transition, Cluster, Ingress, TaskList } from './tasklist-model';
-import { TaskListModelState } from './tasklist-model-state';
+import { KDLModelState } from './kdl-model-state';
+import { Cluster, Ingress, Task, TaskList, Transition } from './tasklist-model';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
-    @inject(TaskListModelState)
-    protected modelState: TaskListModelState;
+    @inject(KDLModelState)
+    protected modelState: KDLModelState;
 
     createModel(): void {
+        console.error('createModel');
         const taskList = this.modelState.sourceModel;
         this.modelState.index.indexTaskList(taskList);
         const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
         const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
         const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster, taskList));
-        const newRoot = GGraph.builder()
-            .id(taskList.id)
-            .addChildren(childNodes)
-            .addChildren(childEdges)
-            .addChildren(clusterNodes)
-            .build();
+        const newRoot = GGraph.builder().id(taskList.id).addChildren(childNodes).addChildren(childEdges).addChildren(clusterNodes).build();
         this.modelState.updateRoot(newRoot);
     }
 

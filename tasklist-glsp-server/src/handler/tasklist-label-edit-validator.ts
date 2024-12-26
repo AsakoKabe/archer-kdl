@@ -16,15 +16,15 @@
  ********************************************************************************/
 import { GModelElement, LabelEditValidator, ValidationStatus } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { KDLModelState } from '../model/kdl-model-state';
 
 /**
  * A simple edit label validator that verifies that the given name label is not empty.
  */
 @injectable()
 export class TaskListLabelEditValidator implements LabelEditValidator {
-    @inject(TaskListModelState)
-    protected modelState: TaskListModelState;
+    @inject(KDLModelState)
+    protected modelState: KDLModelState;
 
     validate(label: string, element: GModelElement): ValidationStatus {
         if (label.length < 1) {

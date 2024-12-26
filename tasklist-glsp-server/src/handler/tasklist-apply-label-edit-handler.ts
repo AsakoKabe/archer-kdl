@@ -17,14 +17,14 @@
 import { ApplyLabelEditOperation } from '@eclipse-glsp/protocol';
 import { Command, GLSPServerError, GNode, JsonOperationHandler, MaybePromise, toTypeGuard } from '@eclipse-glsp/server/node';
 import { inject, injectable } from 'inversify';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { KDLModelState } from '../model/kdl-model-state';
 
 @injectable()
 export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
     readonly operationType = ApplyLabelEditOperation.KIND;
 
-    @inject(TaskListModelState)
-    protected override readonly modelState: TaskListModelState;
+    @inject(KDLModelState)
+    protected override readonly modelState: KDLModelState;
 
     override createCommand(operation: ApplyLabelEditOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {

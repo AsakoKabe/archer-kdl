@@ -19,7 +19,7 @@ import { injectable } from 'inversify';
 import { Cluster, Ingress, Task, TaskList, Transition } from './tasklist-model';
 
 @injectable()
-export class TaskListModelIndex extends GModelIndex {
+export class KDLModelIndex extends GModelIndex {
     protected idToTaskListElements = new Map<string, Task | Transition | Cluster | Ingress>();
 
     indexTaskList(taskList: TaskList): void {

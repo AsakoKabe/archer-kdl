@@ -18,13 +18,13 @@
 import { AbstractJsonModelStorage, MaybePromise, RequestModelAction, SaveModelAction } from '@eclipse-glsp/server/node';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
+import { KDLModelState } from './kdl-model-state';
 import { TaskList } from './tasklist-model';
-import { TaskListModelState } from './tasklist-model-state';
 
 @injectable()
-export class TaskListStorage extends AbstractJsonModelStorage {
-    @inject(TaskListModelState)
-    protected override modelState: TaskListModelState;
+export class KDLStorage extends AbstractJsonModelStorage {
+    @inject(KDLModelState)
+    protected override modelState: KDLModelState;
 
     loadSourceModel(action: RequestModelAction): MaybePromise<void> {
         const sourceUri = this.getSourceUri(action);

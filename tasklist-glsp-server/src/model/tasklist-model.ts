@@ -16,6 +16,7 @@
  ********************************************************************************/
 
 import { AnyObject, hasArrayProp, hasObjectProp, hasStringProp } from '@eclipse-glsp/server';
+import { ClusterNode } from './cluster-node';
 
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
@@ -31,12 +32,14 @@ export interface TaskList {
 
 export namespace TaskList {
     export function is(object: any): object is TaskList {
-        return AnyObject.is(object) &&
-                hasStringProp(object, 'id') &&
-                hasArrayProp(object, 'tasks') &&
-                hasArrayProp(object, 'transitions') &&
-                hasArrayProp(object, 'clusters') &&
-                hasArrayProp(object, 'ingresses');
+        return (
+            AnyObject.is(object) &&
+            hasStringProp(object, 'id') &&
+            hasArrayProp(object, 'tasks') &&
+            hasArrayProp(object, 'transitions') &&
+            hasArrayProp(object, 'clusters') &&
+            hasArrayProp(object, 'ingresses')
+        );
     }
 }
 
@@ -50,10 +53,13 @@ export interface Task {
 
 export namespace Task {
     export function is(object: any): object is Task {
-        return AnyObject.is(object) &&
-            hasStringProp(object, 'id') && hasStringProp(object, 'name') &&
+        return (
+            AnyObject.is(object) &&
+            hasStringProp(object, 'id') &&
+            hasStringProp(object, 'name') &&
             hasObjectProp(object, 'position') &&
-            hasStringProp(object, 'description');
+            hasStringProp(object, 'description')
+        );
     }
 }
 
@@ -91,6 +97,15 @@ export namespace Cluster {
             hasObjectProp(object, 'size')
         );
     }
+
+    export function createFromNode(clusterNode: ClusterNode): Cluster {
+        return {
+            id: clusterNode.id,
+            name: clusterNode.name,
+            position: clusterNode.position,
+            size: clusterNode.size
+        };
+    }
 }
 
 export interface Ingress {
@@ -102,12 +117,6 @@ export interface Ingress {
 
 export namespace Ingress {
     export function is(object: any): object is Ingress {
-        return (
-            AnyObject.is(object) &&
-            hasStringProp(object, 'id') &&
-            hasStringProp(object, 'name') &&
-            hasObjectProp(object, 'position')
-        );
+        return AnyObject.is(object) && hasStringProp(object, 'id') && hasStringProp(object, 'name') && hasObjectProp(object, 'position');
     }
 }
-

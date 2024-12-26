@@ -15,16 +15,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 
-import {
-    ChangeBoundsOperation,
-    Command,
-    Dimension,
-    JsonOperationHandler,
-    MaybePromise,
-    Point
-} from '@eclipse-glsp/server';
+import { ChangeBoundsOperation, Command, Dimension, JsonOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { TaskListModelState } from '../model/tasklist-model-state';
+import { KDLModelState } from '../model/kdl-model-state';
 import { ModelTypes } from '../utils/model-types';
 
 @injectable()
@@ -33,8 +26,8 @@ export class TaskListChangeBoundsHandler extends JsonOperationHandler {
 
     readonly operationType = ChangeBoundsOperation.KIND;
 
-    @inject(TaskListModelState)
-    protected override modelState: TaskListModelState;
+    @inject(KDLModelState)
+    protected override modelState: KDLModelState;
 
     override createCommand(operation: ChangeBoundsOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
