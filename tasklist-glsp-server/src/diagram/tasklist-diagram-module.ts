@@ -41,6 +41,7 @@ import { TaskListModelState } from '../model/tasklist-model-state';
 import { TaskListStorage } from '../model/tasklist-storage';
 import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
 import { CreateClusterHandler } from '../handler/create-cluster-node-handler';
+import { CreateIngressHandler } from '../handler/create-ingress-node-handler';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
@@ -76,6 +77,7 @@ export class TaskListDiagramModule extends DiagramModule {
         binding.add(DeleteElementHandler);
 
         binding.add(CreateClusterHandler);
+        binding.add(CreateIngressHandler);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {

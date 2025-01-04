@@ -18,6 +18,7 @@
 import { AnyObject, hasArrayProp, hasObjectProp, hasStringProp } from '@eclipse-glsp/server';
 import { ClusterNode } from './cluster-node';
 import { ModelTypes } from '../utils/model-types';
+import { IngressNode } from './ingress-node';
 
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
@@ -28,6 +29,7 @@ export interface TaskList {
     tasks: Task[];
     transitions: Transition[];
     clusters: Cluster[];
+    ingresses: Ingress[];
 }
 
 export namespace TaskList {
@@ -114,5 +116,31 @@ export interface KDLShapeElement {
 export namespace KDLShapeElement {
     export function is(object: any): object is KDLShapeElement {
         return AnyObject.is(object) && hasObjectProp(object, 'position');
+    }
+}
+
+export interface Ingress extends KDLBaseElement, KDLShapeElement {
+    name: string;
+}
+
+export namespace Ingress {
+    export function is(object: any): object is Ingress {
+        return (
+            AnyObject.is(object) &&
+            KDLShapeElement.is(object) &&
+            KDLBaseElement.is(object) &&
+            hasStringProp(object, 'name') &&
+            object.nodeType === ModelTypes.INGRESS
+        );
+    }
+
+    export function createFromNode(ingressNode: IngressNode): Ingress {
+        return {
+            id: ingressNode.id,
+            name: ingressNode.name,
+            position: ingressNode.position,
+            size: ingressNode.size,
+            nodeType: ingressNode.nodeType
+        };
     }
 }

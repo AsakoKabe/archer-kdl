@@ -1,7 +1,49 @@
 {
   "id": "d63b4a87-ca5e-41f8-b800-83ff4947a1ce",
-  "tasks": [],
+  "tasks": [
+    {
+      "id": "d8b6e55a-71dd-4132-be53-7f4234ce11a8",
+      "name": "NewTaskNode1",
+      "size": {
+        "width": 100,
+        "height": 100
+      },
+      "position": {
+        "x": 447,
+        "y": 244
+      },
+      "nodeType": "task"
+    }
+  ],
   "transitions": [],
-  "ingresses": [],
-  "clusters": []
+  "ingresses": [
+    {
+      "id": "b7422298-8c6f-40e1-ae8d-bac64ac9571f",
+      "name": "Ingress0",
+      "position": {
+        "x": 17.40625,
+        "y": 49
+      },
+      "size": {
+        "width": 100,
+        "height": 100
+      },
+      "nodeType": "ingress"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "31e8a29a-8401-4815-859a-353332fbfd70",
+      "name": "Cluster0",
+      "position": {
+        "x": 141.140625,
+        "y": 117.5
+      },
+      "size": {
+        "width": 100,
+        "height": 100
+      },
+      "nodeType": "cluster"
+    }
+  ]
 }

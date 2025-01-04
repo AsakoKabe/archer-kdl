@@ -33,7 +33,7 @@ import {
 import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
-import { ClusterNode } from './model';
+import { ClusterNode, IngressNode } from './model';
 
 const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -45,6 +45,7 @@ const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind
     // overrideModelElement(context, DefaultTypes.GRAPH, GGraph, GLSPProjectionView);
     configureModelElement(context, 'cluster', ClusterNode, RoundedCornerNodeView);
     configureModelElement(context, 'struct', GCompartment, StructureCompartmentView);
+    configureModelElement(context, 'ingress', IngressNode, RoundedCornerNodeView);
 });
 
 export function initializeTasklistDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {

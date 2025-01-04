@@ -16,10 +16,11 @@
  ********************************************************************************/
 import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Task, TaskList, Transition } from './tasklist-model';
+import { Cluster, Ingress, Task, TaskList, Transition } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from './cluster-node';
+import { IngressNode } from './ingress-node';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
@@ -32,12 +33,13 @@ export class TaskListGModelFactory implements GModelFactory {
         const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
         const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
         const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster, taskList));
-
+        const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
         const newRoot = GGraph.builder() //
             .id(taskList.id)
             .addChildren(childNodes)
             .addChildren(childEdges)
             .addChildren(clusterNodes)
+            .addChildren(ingressNodes)
             .build();
         this.modelState.updateRoot(newRoot);
     }
@@ -66,33 +68,8 @@ export class TaskListGModelFactory implements GModelFactory {
             .targetId(transition.targetTaskId)
             .build();
     }
+
     protected createClusterNode(cluster: Cluster, taskList: TaskList): GCompartment {
-        // const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
-
-        // const builder = GNode.builder()
-        //     .type(DefaultTypes.NODE_RECTANGLE)
-        //     .id(cluster.id)
-        //     .addCssClass('kdl-cluster')
-        //     .add(GLabel.builder().text(cluster.name).id(`${cluster.id}_label`).build())
-        //     // .add(GLabel.builder().text(cluster.name + '123').id(`${uuid.v4()}_label`).build())
-        //     // .addChildren(...ingressNodes)
-        //     // .layout('hbox')
-        //     // .addLayoutOption('hGap', 15)
-        //     // .addLayoutOption('hAlign', 'center')
-        //     // .addLayoutOption('paddingLeft', 5)
-        //     // .size(cluster.size)
-        //     .position(cluster.position)
-        //     .addArgs(ArgsUtil.cornerRadius(10));
-
-        // if (cluster.size) {
-        //     builder.addLayoutOptions({
-        //         prefWidth: cluster.size.width,
-        //         prefHeight: cluster.size.height
-        //     });
-        // }
-
-        // return builder.build();
-        // console.error(cluster);
         const builder = ClusterNode.builder()
             .type(ModelTypes.CLUSTER)
             .position(cluster.position)
@@ -103,6 +80,21 @@ export class TaskListGModelFactory implements GModelFactory {
 
         if (cluster.size) {
             builder.addLayoutOptions({ prefWidth: cluster.size.width, prefHeight: cluster.size.height });
+        }
+        return builder.build();
+    }
+
+    protected createIngressNode(ingress: Ingress): GCompartment {
+        const builder = IngressNode.builder()
+            .type(ModelTypes.INGRESS)
+            .position(ingress.position)
+            .name(ingress.name)
+            .id(ingress.id)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .children();
+
+        if (ingress.size) {
+            builder.addLayoutOptions({ prefWidth: ingress.size.width, prefHeight: ingress.size.height });
         }
         return builder.build();
     }
