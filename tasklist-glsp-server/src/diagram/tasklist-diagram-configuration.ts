@@ -68,7 +68,6 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
         ];
     }
 
-
     get edgeTypeHints(): EdgeTypeHint[] {
         return [
             {
@@ -90,4 +89,3 @@ export function createDefaultShapeTypeHint(
     const template = typeof elementIdOrTemplate === 'string' ? { elementTypeId: elementIdOrTemplate } : elementIdOrTemplate;
     return { repositionable: true, deletable: true, resizable: true, reparentable: true, ...template };
 }
-

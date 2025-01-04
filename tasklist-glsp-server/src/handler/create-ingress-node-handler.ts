@@ -19,6 +19,7 @@ import {
     CreateNodeOperation,
     GCompartment,
     GhostElement,
+    GLSPServerError,
     GModelCreateNodeOperationHandler,
     GModelElement,
     GNode,
@@ -27,7 +28,7 @@ import {
 import { inject, injectable } from 'inversify';
 import { ModelTypes } from '../utils/model-types';
 import { TaskListModelState } from '../model/tasklist-model-state';
-import { Ingress } from '../model/tasklist-model';
+import { Cluster, Ingress } from '../model/tasklist-model';
 import { IngressNode, IngressNodeBuilder } from '../model/ingress-node';
 
 @injectable()
@@ -62,7 +63,15 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
     }
 
     createNode(operation: CreateNodeOperation, relativeLocation?: Point): GNode {
+        console.error(operation.args);
+        if (!operation.containerId){
+            throw new GLSPServerError("Ingress can't be outside cluster");
+        }
         const ingressNode = this.builder(relativeLocation).build();
+        const parent = this.modelState.index.findElement(operation.containerId);
+        if (Cluster.is(parent)){
+            parent.ingress_ids.push(ingressNode.id);
+        }
         this.modelState.sourceModel.ingresses.push(Ingress.createFromNode(ingressNode));
         return ingressNode;
     }

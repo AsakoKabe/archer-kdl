@@ -33,13 +33,13 @@ export class TaskListGModelFactory implements GModelFactory {
         const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
         const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
         const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster, taskList));
-        const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
+        // const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
         const newRoot = GGraph.builder() //
             .id(taskList.id)
             .addChildren(childNodes)
             .addChildren(childEdges)
             .addChildren(clusterNodes)
-            .addChildren(ingressNodes)
+            // .addChildren(ingressNodes)
             .build();
         this.modelState.updateRoot(newRoot);
     }
@@ -81,6 +81,12 @@ export class TaskListGModelFactory implements GModelFactory {
         if (cluster.size) {
             builder.addLayoutOptions({ prefWidth: cluster.size.width, prefHeight: cluster.size.height });
         }
+        const ingressNodes = cluster.ingress_ids
+            .map(id => this.modelState.index.findElement(id))
+            .filter(e => e !== undefined)
+            .map(ingress => this.createIngressNode(ingress as Ingress));
+        builder.addChildren(ingressNodes);
+
         return builder.build();
     }
 

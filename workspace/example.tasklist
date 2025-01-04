@@ -2,15 +2,15 @@
   "id": "d63b4a87-ca5e-41f8-b800-83ff4947a1ce",
   "tasks": [
     {
-      "id": "d8b6e55a-71dd-4132-be53-7f4234ce11a8",
+      "id": "2fe2e2aa-1562-45ce-b5de-acdc9e19cd23",
       "name": "NewTaskNode1",
       "size": {
         "width": 100,
         "height": 100
       },
       "position": {
-        "x": 447,
-        "y": 244
+        "x": 5,
+        "y": 345
       },
       "nodeType": "task"
     }
@@ -18,11 +18,24 @@
   "transitions": [],
   "ingresses": [
     {
-      "id": "b7422298-8c6f-40e1-ae8d-bac64ac9571f",
+      "id": "ca3eb8ae-6018-4150-857e-dcd9cf11a695",
       "name": "Ingress0",
       "position": {
-        "x": 17.40625,
-        "y": 49
+        "x": 12.40625,
+        "y": 24
+      },
+      "size": {
+        "width": 100,
+        "height": 100
+      },
+      "nodeType": "ingress"
+    },
+    {
+      "id": "7c15b8d8-d6b7-4a36-bb60-d2fc85b9e48d",
+      "name": "Ingress1",
+      "position": {
+        "x": 199.6784624381711,
+        "y": 34.046644693967366
       },
       "size": {
         "width": 100,
@@ -33,17 +46,21 @@
   ],
   "clusters": [
     {
-      "id": "31e8a29a-8401-4815-859a-353332fbfd70",
+      "id": "468a9520-9442-4e5b-afeb-3801ff9ca826",
       "name": "Cluster0",
       "position": {
-        "x": 141.140625,
-        "y": 117.5
+        "x": 67.76378650591528,
+        "y": -4.049632571917968
       },
       "size": {
-        "width": 100,
-        "height": 100
+        "width": 381.30170037013545,
+        "height": 177.59903448602893
       },
-      "nodeType": "cluster"
+      "nodeType": "cluster",
+      "ingress_ids": [
+        "ca3eb8ae-6018-4150-857e-dcd9cf11a695",
+        "7c15b8d8-d6b7-4a36-bb60-d2fc85b9e48d"
+      ]
     }
   ]
 }

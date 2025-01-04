@@ -73,6 +73,7 @@ export namespace Transition {
 
 export interface Cluster extends KDLBaseElement, KDLShapeElement {
     name: string;
+    ingress_ids: string[];
 }
 
 export namespace Cluster {
@@ -82,6 +83,7 @@ export namespace Cluster {
             KDLShapeElement.is(object) &&
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
+            hasArrayProp(object, 'ingress_ids') &&
             object.nodeType === ModelTypes.CLUSTER
         );
     }
@@ -92,7 +94,8 @@ export namespace Cluster {
             name: clusterNode.name,
             position: clusterNode.position,
             size: clusterNode.size,
-            nodeType: clusterNode.nodeType
+            nodeType: clusterNode.nodeType,
+            ingress_ids: []
         };
     }
 }
