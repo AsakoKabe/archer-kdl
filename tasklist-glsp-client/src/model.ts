@@ -28,6 +28,7 @@ import {
     nameFeature,
     popupFeature,
     RectangularNode,
+    resizeFeature,
     selectFeature,
     WithEditableLabel,
     withEditLabelFeature
@@ -44,7 +45,8 @@ export class ClusterNode extends RectangularNode implements Nameable, WithEditab
         hoverFeedbackFeature,
         popupFeature,
         nameFeature,
-        withEditLabelFeature
+        withEditLabelFeature,
+        resizeFeature
     ];
 
     name = '';

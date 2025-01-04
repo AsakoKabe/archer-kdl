@@ -17,15 +17,15 @@
 import { Command, CreateEdgeOperation, DefaultTypes, JsonCreateEdgeOperationHandler, MaybePromise } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { KDLModelState } from '../model/kdl-model-state';
 import { Transition } from '../model/tasklist-model';
+import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
 export class CreateTransitionHandler extends JsonCreateEdgeOperationHandler {
     readonly elementTypeIds = [DefaultTypes.EDGE];
 
-    @inject(KDLModelState)
-    protected override modelState: KDLModelState;
+    @inject(TaskListModelState)
+    protected override modelState: TaskListModelState;
 
     override createCommand(operation: CreateEdgeOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {

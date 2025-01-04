@@ -27,8 +27,8 @@ import {
     ShapeTypeHint
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { ClusterNode } from '../model/cluster-node';
 import { ModelTypes } from '../utils/model-types';
+import { ClusterNode } from '../model/cluster-node';
 
 @injectable()
 export class TaskListDiagramConfiguration implements DiagramConfiguration {
@@ -57,10 +57,11 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
             },
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.CLUSTER,
-                containableElementTypeIds: [ModelTypes.TASK]
+                containableElementTypeIds: [ModelTypes.TASK, ModelTypes.CLUSTER]
             })
         ];
     }
+
 
     get edgeTypeHints(): EdgeTypeHint[] {
         return [
@@ -75,7 +76,6 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
         ];
     }
 }
-
 export function createDefaultShapeTypeHint(template: { elementTypeId: string } & Partial<ShapeTypeHint>): ShapeTypeHint;
 export function createDefaultShapeTypeHint(elementId: string): ShapeTypeHint;
 export function createDefaultShapeTypeHint(
@@ -84,3 +84,4 @@ export function createDefaultShapeTypeHint(
     const template = typeof elementIdOrTemplate === 'string' ? { elementTypeId: elementIdOrTemplate } : elementIdOrTemplate;
     return { repositionable: true, deletable: true, resizable: true, reparentable: true, ...template };
 }
+

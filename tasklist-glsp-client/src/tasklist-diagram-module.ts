@@ -19,18 +19,13 @@ import {
     configureModelElement,
     ConsoleLogger,
     ContainerConfiguration,
-    DefaultTypes,
     editLabelFeature,
     GCompartment,
     GCompartmentView,
-    GGraph,
-    // GCompartmentView,
     GLabel,
     GLabelView,
-    GLSPProjectionView,
     initializeDiagramContainer,
     LogLevel,
-    overrideModelElement,
     RoundedCornerNodeView,
     StructureCompartmentView,
     TYPES
@@ -47,8 +42,7 @@ const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind
     configureDefaultModelElements(context);
     configureModelElement(context, 'label:heading', GLabel, GLabelView, { enable: [editLabelFeature] });
     configureModelElement(context, 'comp:comp', GCompartment, GCompartmentView);
-    configureModelElement(context, 'label:icon', GLabel, GLabelView);
-    overrideModelElement(context, DefaultTypes.GRAPH, GGraph, GLSPProjectionView);
+    // overrideModelElement(context, DefaultTypes.GRAPH, GGraph, GLSPProjectionView);
     configureModelElement(context, 'cluster', ClusterNode, RoundedCornerNodeView);
     configureModelElement(context, 'struct', GCompartment, StructureCompartmentView);
 });

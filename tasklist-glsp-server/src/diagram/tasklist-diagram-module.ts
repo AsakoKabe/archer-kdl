@@ -19,7 +19,7 @@ import {
     BindingTarget,
     ComputedBoundsActionHandler,
     DiagramConfiguration,
-    GModelDiagramModule,
+    DiagramModule,
     GModelFactory,
     GModelIndex,
     InstanceMultiBinding,
@@ -29,22 +29,21 @@ import {
     SourceModelStorage
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { CreateClusterHandler } from '../handler/create-cluster-node-handler';
 import { CreateTaskHandler } from '../handler/create-task-node-handler';
 import { CreateTransitionHandler } from '../handler/create-transition-handler';
 import { DeleteElementHandler } from '../handler/delete-element-handler';
 import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-edit-handler';
 import { TaskListChangeBoundsHandler } from '../handler/tasklist-change-bounds-handler';
 import { TaskListLabelEditValidator } from '../handler/tasklist-label-edit-validator';
-import { KDLModelIndex } from '../model/kdl-model-index';
-import { KDLModelState } from '../model/kdl-model-state';
 import { TaskListGModelFactory } from '../model/tasklist-gmodel-factory';
-import { KDLStorage } from '../model/tasklist-storage';
+import { TaskListModelIndex } from '../model/tasklist-model-index';
+import { TaskListModelState } from '../model/tasklist-model-state';
+import { TaskListStorage } from '../model/tasklist-storage';
 import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
-// import { CreateIngressHandler } from '../handler/create-ingress-node-handler';
+import { CreateClusterHandler } from '../handler/create-cluster-node-handler';
 
 @injectable()
-export class TaskListDiagramModule extends GModelDiagramModule {
+export class TaskListDiagramModule extends DiagramModule {
     readonly diagramType = 'tasklist-diagram';
 
     protected bindDiagramConfiguration(): BindingTarget<DiagramConfiguration> {
@@ -52,14 +51,14 @@ export class TaskListDiagramModule extends GModelDiagramModule {
     }
 
     protected bindSourceModelStorage(): BindingTarget<SourceModelStorage> {
-        return KDLStorage;
+        return TaskListStorage;
     }
 
-    protected override bindModelState(): BindingTarget<ModelState> {
-        return { service: KDLModelState };
+    protected bindModelState(): BindingTarget<ModelState> {
+        return { service: TaskListModelState };
     }
 
-    protected override bindGModelFactory(): BindingTarget<GModelFactory> {
+    protected bindGModelFactory(): BindingTarget<GModelFactory> {
         return TaskListGModelFactory;
     }
 
@@ -77,12 +76,11 @@ export class TaskListDiagramModule extends GModelDiagramModule {
         binding.add(DeleteElementHandler);
 
         binding.add(CreateClusterHandler);
-        // binding.add(CreateIngressHandler);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {
-        this.context.bind(KDLModelIndex).toSelf().inSingletonScope();
-        return { service: KDLModelIndex };
+        this.context.bind(TaskListModelIndex).toSelf().inSingletonScope();
+        return { service: TaskListModelIndex };
     }
 
     protected override bindLabelEditValidator(): BindingTarget<LabelEditValidator> | undefined {

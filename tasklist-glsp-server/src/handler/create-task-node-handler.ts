@@ -14,19 +14,27 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import { Command, CreateNodeOperation, GNode, JsonCreateNodeOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
+import {
+    Command,
+    CreateNodeOperation,
+    DefaultTypes,
+    GNode,
+    JsonCreateNodeOperationHandler,
+    MaybePromise,
+    Point
+} from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { KDLModelState } from '../model/kdl-model-state';
 import { Task } from '../model/tasklist-model';
+import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 
 @injectable()
 export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
-    readonly elementTypeIds = [ModelTypes.TASK];
+    readonly elementTypeIds = [DefaultTypes.NODE];
 
-    @inject(KDLModelState)
-    protected override modelState: KDLModelState;
+    @inject(TaskListModelState)
+    protected override modelState: TaskListModelState;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
@@ -42,8 +50,9 @@ export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
         return {
             id: uuid.v4(),
             name: `NewTaskNode${nodeCounter}`,
-            description: 'New task description',
-            position
+            size: { width: 100, height: 100 },
+            position: position,
+            nodeType: ModelTypes.TASK
         };
     }
 

@@ -14,31 +14,36 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import { ArgsUtil, DefaultTypes, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
+import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
-import { KDLModelState } from './kdl-model-state';
-import { Cluster, Ingress, Task, TaskList, Transition } from './tasklist-model';
+import { Cluster, Task, TaskList, Transition } from './tasklist-model';
+import { TaskListModelState } from './tasklist-model-state';
+import { ModelTypes } from '../utils/model-types';
+import { ClusterNode } from './cluster-node';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
-    @inject(KDLModelState)
-    protected modelState: KDLModelState;
+    @inject(TaskListModelState)
+    protected modelState: TaskListModelState;
 
     createModel(): void {
-        console.error('createModel');
         const taskList = this.modelState.sourceModel;
         this.modelState.index.indexTaskList(taskList);
         const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
         const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
         const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster, taskList));
-        const newRoot = GGraph.builder().id(taskList.id).addChildren(childNodes).addChildren(childEdges).addChildren(clusterNodes).build();
+
+        const newRoot = GGraph.builder() //
+            .id(taskList.id)
+            .addChildren(childNodes)
+            .addChildren(childEdges)
+            .addChildren(clusterNodes)
+            .build();
         this.modelState.updateRoot(newRoot);
     }
 
     protected createTaskNode(task: Task): GNode {
         const builder = GNode.builder()
-            // .type(ModelTypes.TASK)
             .id(task.id)
             .addCssClass('tasklist-node')
             .add(GLabel.builder().text(task.name).id(`${task.id}_label`).build())
@@ -53,61 +58,52 @@ export class TaskListGModelFactory implements GModelFactory {
         return builder.build();
     }
 
-    protected createClusterNode(cluster: Cluster, taskList: TaskList): GCompartment {
-        // const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
-
-        const builder = GNode.builder()
-            .type(DefaultTypes.NODE_RECTANGLE)
-            .id(cluster.id)
-            .addCssClass('kdl-cluster')
-            .add(GLabel.builder().text(cluster.name).id(`${cluster.id}_label`).build())
-            // .add(GLabel.builder().text(cluster.name + '123').id(`${uuid.v4()}_label`).build())
-            // .addChildren(...ingressNodes)
-            // .layout('hbox')
-            // .addLayoutOption('hGap', 15)
-            // .addLayoutOption('hAlign', 'center')
-            // .addLayoutOption('paddingLeft', 5)
-            // .size(cluster.size)
-            .position(cluster.position)
-            .addArgs(ArgsUtil.cornerRadius(10));
-
-        if (cluster.size) {
-            builder.addLayoutOptions({
-                prefWidth: cluster.size.width,
-                prefHeight: cluster.size.height
-            });
-        }
-
-        return builder.build();
-    }
-
-    protected createIngressNode(ingress: Ingress): GNode {
-        const builder = GNode.builder()
-            // .type(ModelTypes.INGRESS)
-            .id(ingress.id)
-            .addCssClass('kdl-ingress')
-            .add(GLabel.builder().text(ingress.name).id(uuid.v4()).build())
-            // .layout('hbox')
-            // .addLayoutOption('paddingLeft', 5)
-            .position(ingress.position)
-            .addArgs(ArgsUtil.cornerRadius(3));
-
-        if (ingress.size) {
-            builder.addLayoutOptions({
-                prefWidth: ingress.size.width,
-                prefHeight: ingress.size.height
-            });
-        }
-
-        return builder.build();
-    }
-
     protected createTransitionEdge(transition: Transition): GEdge {
-        return GEdge.builder()
+        return GEdge.builder() //
             .id(transition.id)
             .addCssClass('tasklist-transition')
             .sourceId(transition.sourceTaskId)
             .targetId(transition.targetTaskId)
             .build();
+    }
+    protected createClusterNode(cluster: Cluster, taskList: TaskList): GCompartment {
+        // const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
+
+        // const builder = GNode.builder()
+        //     .type(DefaultTypes.NODE_RECTANGLE)
+        //     .id(cluster.id)
+        //     .addCssClass('kdl-cluster')
+        //     .add(GLabel.builder().text(cluster.name).id(`${cluster.id}_label`).build())
+        //     // .add(GLabel.builder().text(cluster.name + '123').id(`${uuid.v4()}_label`).build())
+        //     // .addChildren(...ingressNodes)
+        //     // .layout('hbox')
+        //     // .addLayoutOption('hGap', 15)
+        //     // .addLayoutOption('hAlign', 'center')
+        //     // .addLayoutOption('paddingLeft', 5)
+        //     // .size(cluster.size)
+        //     .position(cluster.position)
+        //     .addArgs(ArgsUtil.cornerRadius(10));
+
+        // if (cluster.size) {
+        //     builder.addLayoutOptions({
+        //         prefWidth: cluster.size.width,
+        //         prefHeight: cluster.size.height
+        //     });
+        // }
+
+        // return builder.build();
+        // console.error(cluster);
+        const builder = ClusterNode.builder()
+            .type(ModelTypes.CLUSTER)
+            .position(cluster.position)
+            .name(cluster.name)
+            .id(cluster.id)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .children();
+
+        if (cluster.size) {
+            builder.addLayoutOptions({ prefWidth: cluster.size.width, prefHeight: cluster.size.height });
+        }
+        return builder.build();
     }
 }

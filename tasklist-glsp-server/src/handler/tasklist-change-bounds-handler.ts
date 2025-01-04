@@ -17,17 +17,14 @@
 
 import { ChangeBoundsOperation, Command, Dimension, JsonOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { KDLModelState } from '../model/kdl-model-state';
-import { ModelTypes } from '../utils/model-types';
+import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
 export class TaskListChangeBoundsHandler extends JsonOperationHandler {
-    readonly elementTypeIds = [ModelTypes.CLUSTER];
-
     readonly operationType = ChangeBoundsOperation.KIND;
 
-    @inject(KDLModelState)
-    protected override modelState: KDLModelState;
+    @inject(TaskListModelState)
+    protected override modelState: TaskListModelState;
 
     override createCommand(operation: ChangeBoundsOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
@@ -36,7 +33,6 @@ export class TaskListChangeBoundsHandler extends JsonOperationHandler {
     }
 
     protected changeElementBounds(elementId: string, newSize: Dimension, newPosition?: Point): void {
-        console.error(elementId);
         const index = this.modelState.index;
         const box = index.findBoxes(elementId);
 

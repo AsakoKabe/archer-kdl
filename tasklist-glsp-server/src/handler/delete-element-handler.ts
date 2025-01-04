@@ -25,15 +25,15 @@ import {
     toTypeGuard
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { KDLModelState } from '../model/kdl-model-state';
-import { Cluster, Ingress, Task, Transition } from '../model/tasklist-model';
+import { Cluster, KDLBaseElement, Task, Transition } from '../model/tasklist-model';
+import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
 export class DeleteElementHandler extends JsonOperationHandler {
     readonly operationType = DeleteElementOperation.KIND;
 
-    @inject(KDLModelState)
-    protected override modelState: KDLModelState;
+    @inject(TaskListModelState)
+    protected override modelState: TaskListModelState;
 
     override createCommand(operation: DeleteElementOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
@@ -47,7 +47,9 @@ export class DeleteElementHandler extends JsonOperationHandler {
         const gModelElementId = gModelElement?.id ?? elementId;
         const gEdgeIds = this.getIncomingAndOutgoingEdgeIds(gModelElement);
 
-        [...gEdgeIds, gModelElementId].map(id => index.findElement(id)).forEach(modelElement => this.deleteModelElement(modelElement));
+        [...gEdgeIds, gModelElementId]
+            .map(id => index.findElement(id))
+            .forEach(modelElement => this.deleteModelElement(modelElement));
     }
 
     private getGModelElementToDelete(elementId: string): GNode | GEdge | undefined {
@@ -70,15 +72,17 @@ export class DeleteElementHandler extends JsonOperationHandler {
         return [];
     }
 
-    private deleteModelElement(modelElement: Task | Transition | Cluster | Ingress | undefined): void {
+    private deleteModelElement(modelElement: KDLBaseElement | undefined): void {
+        console.error(modelElement);
         if (Task.is(modelElement)) {
+            console.error('is task');
             remove(this.modelState.sourceModel.tasks, modelElement);
         } else if (Transition.is(modelElement)) {
             remove(this.modelState.sourceModel.transitions, modelElement);
         } else if (Cluster.is(modelElement)) {
+            console.error('is cluster');
             remove(this.modelState.sourceModel.clusters, modelElement);
-        } else if (Ingress.is(modelElement)) {
-            remove(this.modelState.sourceModel.ingresses, modelElement);
         }
+        console.error(this.modelState.sourceModel);
     }
 }

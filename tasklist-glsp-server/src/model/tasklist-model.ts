@@ -17,6 +17,7 @@
 
 import { AnyObject, hasArrayProp, hasObjectProp, hasStringProp } from '@eclipse-glsp/server';
 import { ClusterNode } from './cluster-node';
+import { ModelTypes } from '../utils/model-types';
 
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
@@ -27,38 +28,26 @@ export interface TaskList {
     tasks: Task[];
     transitions: Transition[];
     clusters: Cluster[];
-    ingresses: Ingress[];
 }
 
 export namespace TaskList {
     export function is(object: any): object is TaskList {
-        return (
-            AnyObject.is(object) &&
-            hasStringProp(object, 'id') &&
-            hasArrayProp(object, 'tasks') &&
-            hasArrayProp(object, 'transitions') &&
-            hasArrayProp(object, 'clusters') &&
-            hasArrayProp(object, 'ingresses')
-        );
+        return AnyObject.is(object) && hasStringProp(object, 'id') && hasArrayProp(object, 'tasks');
     }
 }
 
-export interface Task {
-    id: string;
+export interface Task extends KDLBaseElement, KDLShapeElement {
     name: string;
-    description: string;
-    position: { x: number; y: number };
-    size?: { width: number; height: number };
 }
 
 export namespace Task {
     export function is(object: any): object is Task {
         return (
             AnyObject.is(object) &&
-            hasStringProp(object, 'id') &&
+            KDLShapeElement.is(object) &&
+            KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
-            hasObjectProp(object, 'position') &&
-            hasStringProp(object, 'description')
+            object.nodeType === ModelTypes.TASK
         );
     }
 }
@@ -80,21 +69,18 @@ export namespace Transition {
     }
 }
 
-export interface Cluster {
-    id: string;
+export interface Cluster extends KDLBaseElement, KDLShapeElement {
     name: string;
-    position: { x: number; y: number };
-    size: { width: number; height: number };
 }
 
 export namespace Cluster {
     export function is(object: any): object is Cluster {
         return (
             AnyObject.is(object) &&
-            hasStringProp(object, 'id') &&
+            KDLShapeElement.is(object) &&
+            KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
-            hasObjectProp(object, 'position') &&
-            hasObjectProp(object, 'size')
+            object.nodeType === ModelTypes.CLUSTER
         );
     }
 
@@ -103,20 +89,30 @@ export namespace Cluster {
             id: clusterNode.id,
             name: clusterNode.name,
             position: clusterNode.position,
-            size: clusterNode.size
+            size: clusterNode.size,
+            nodeType: clusterNode.nodeType
         };
     }
 }
 
-export interface Ingress {
+export interface KDLBaseElement {
     id: string;
-    name: string;
+    nodeType: string;
+}
+
+export namespace KDLBaseElement {
+    export function is(object: any): object is KDLBaseElement {
+        return AnyObject.is(object) && hasStringProp(object, 'id') && hasStringProp(object, 'nodeType');
+    }
+}
+
+export interface KDLShapeElement {
     position: { x: number; y: number };
     size?: { width: number; height: number };
 }
 
-export namespace Ingress {
-    export function is(object: any): object is Ingress {
-        return AnyObject.is(object) && hasStringProp(object, 'id') && hasStringProp(object, 'name') && hasObjectProp(object, 'position');
+export namespace KDLShapeElement {
+    export function is(object: any): object is KDLShapeElement {
+        return AnyObject.is(object) && hasObjectProp(object, 'position');
     }
 }

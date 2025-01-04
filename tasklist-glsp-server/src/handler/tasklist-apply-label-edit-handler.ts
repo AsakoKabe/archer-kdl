@@ -15,29 +15,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 import { ApplyLabelEditOperation } from '@eclipse-glsp/protocol';
-import { Command, GLSPServerError, GNode, JsonOperationHandler, MaybePromise, toTypeGuard } from '@eclipse-glsp/server/node';
+import { Command, JsonOperationHandler, MaybePromise } from '@eclipse-glsp/server/node';
 import { inject, injectable } from 'inversify';
-import { KDLModelState } from '../model/kdl-model-state';
+import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
 export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
     readonly operationType = ApplyLabelEditOperation.KIND;
 
-    @inject(KDLModelState)
-    protected override readonly modelState: KDLModelState;
+    @inject(TaskListModelState)
+    protected override readonly modelState: TaskListModelState;
 
     override createCommand(operation: ApplyLabelEditOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
-            const index = this.modelState.index;
-            // Retrieve the parent node of the label that should be edited
-            const taskNode = index.findParentElement(operation.labelId, toTypeGuard(GNode));
-            if (taskNode) {
-                const task = index.findTask(taskNode.id);
-                if (!task) {
-                    throw new GLSPServerError(`Could not retrieve the parent task for the label with id ${operation.labelId}`);
-                }
-                task.name = operation.text;
-            }
+            // const index = this.modelState.index;
+            // // Retrieve the parent node of the label that should be edited
+            // const taskNode = index.findParentElement(operation.labelId, toTypeGuard(GNode));
+            // if (taskNode) {
+            //     const task = index.findTask(taskNode.id);
+            //     if (!task) {
+            //         throw new GLSPServerError(`Could not retrieve the parent task for the label with id ${operation.labelId}`);
+            //     }
+            //     task.name = operation.text;
+            // }
         });
     }
 }

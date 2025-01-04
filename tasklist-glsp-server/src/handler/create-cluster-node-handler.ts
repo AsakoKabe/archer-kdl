@@ -26,52 +26,21 @@ import {
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { ClusterNode, ClusterNodeBuilder } from '../model/cluster-node';
-import { KDLModelState } from '../model/kdl-model-state';
-import { Cluster } from '../model/tasklist-model';
 import { ModelTypes } from '../utils/model-types';
-import { GridSnapper } from './grid-snapper';
-
-// @injectable()
-// export class CreateClusterHandler extends JsonCreateNodeOperationHandler {
-//     readonly elementTypeIds = [ModelTypes.CLUSTER];
-
-//     @inject(TaskListModelState)
-//     protected override modelState: TaskListModelState;
-
-//     get label(): string {
-//         return 'Cluster';
-//     }
-
-//     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-//         return this.commandOf(() => {
-//             const relativeLocation = this.getRelativeLocation(operation) ?? Point.ORIGIN;
-//             const cluster = this.createCluster(relativeLocation);
-//             const taskList = this.modelState.sourceModel;
-//             taskList.clusters.push(cluster);
-//         });
-//     }
-
-//     protected createCluster(position: Point): Cluster {
-//         return {
-//             id: uuid.v4(),
-//             name: 'NewCluster',
-//             position,
-//             size: { width: 100, height: 100 }
-//         };
-//     }
-// }
+import { TaskListModelState } from '../model/tasklist-model-state';
+import { Cluster } from '../model/tasklist-model';
 
 @injectable()
 export class CreateClusterHandler extends GModelCreateNodeOperationHandler {
     elementTypeIds = [ModelTypes.CLUSTER];
     label = 'Cluster';
 
-    @inject(KDLModelState)
-    protected override modelState: KDLModelState;
+    @inject(TaskListModelState)
+    protected override modelState: TaskListModelState;
 
-    override getLocation(operation: CreateNodeOperation): Point | undefined {
-        return GridSnapper.snap(operation.location);
-    }
+    // override getLocation(operation: CreateNodeOperation): Point | undefined {
+    //     return GridSnapper.snap(operation.location);
+    // }
 
     override getContainer(operation: CreateNodeOperation): GModelElement | undefined {
         const container = super.getContainer(operation);
@@ -94,7 +63,6 @@ export class CreateClusterHandler extends GModelCreateNodeOperationHandler {
 
     createNode(operation: CreateNodeOperation, relativeLocation?: Point): GNode {
         const clusterNode = this.builder(relativeLocation).build();
-        console.error(clusterNode);
         this.modelState.sourceModel.clusters.push(Cluster.createFromNode(clusterNode));
         return clusterNode;
     }
@@ -103,9 +71,11 @@ export class CreateClusterHandler extends GModelCreateNodeOperationHandler {
         return ClusterNode.builder()
             .type(elementTypeId)
             .position(point)
+            .size(100, 100)
             .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(ClusterNode).length)
             .addArgs(ArgsUtil.cornerRadius(5))
-            .children();
+            .children()
+            .nodeType(ModelTypes.CLUSTER);
     }
 
     override createTriggerGhostElement(elementTypeId: string): GhostElement | undefined {
