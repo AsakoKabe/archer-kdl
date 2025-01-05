@@ -71,7 +71,6 @@ export class DeleteElementHandler extends JsonOperationHandler {
     }
 
     private deleteModelElement(modelElement: KDLBaseElement | undefined): void {
-        console.error(modelElement);
         if (Task.is(modelElement)) {
             remove(this.modelState.sourceModel.tasks, modelElement);
         } else if (Transition.is(modelElement)) {
@@ -80,6 +79,9 @@ export class DeleteElementHandler extends JsonOperationHandler {
             remove(this.modelState.sourceModel.clusters, modelElement);
         } else if (Ingress.is(modelElement)) {
             remove(this.modelState.sourceModel.ingresses, modelElement);
+            this.modelState.sourceModel.clusters.forEach(cluster => {
+                cluster.ingress_ids = cluster.ingress_ids.filter(id => id !== modelElement.id);
+            });
         }
     }
 }
