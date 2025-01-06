@@ -5,14 +5,14 @@
   "ingresses": [
     {
       "id": "83d76c11-fc81-4fbd-8adc-c0b1dc3e4338",
-      "name": "Ingress0",
-      "host": "example.com",
+      "name": "312",
+      "host": "example.con",
       "position": {
-        "x": 183.47263669859166,
-        "y": 152.02506036678506
+        "x": 236.47263669859166,
+        "y": 144.02506036678506
       },
       "size": {
-        "width": 171.90625,
+        "width": 165.4296875,
         "height": 45
       },
       "nodeType": "ingress"
@@ -21,14 +21,14 @@
   "clusters": [
     {
       "id": "10f5cd39-021e-4245-bdb1-1955582018f6",
-      "name": "Cluster0",
+      "name": "fsdfs",
       "position": {
-        "x": 190.07423830140834,
-        "y": -150.02506036678506
+        "x": 53.07423830140834,
+        "y": 163.97493963321494
       },
       "size": {
-        "width": 445.6744561283317,
-        "height": 266.7530305549558
+        "width": 480.6744561283317,
+        "height": 301.7530305549558
       },
       "nodeType": "cluster",
       "ingress_ids": [

@@ -40,7 +40,6 @@ export class TaskListGModelFactory implements GModelFactory {
             .addChildren(clusterNodes)
             .build();
         this.modelState.updateRoot(newRoot);
-        console.error(newRoot.children[0]);
     }
 
     protected createTaskNode(task: Task): GNode {
