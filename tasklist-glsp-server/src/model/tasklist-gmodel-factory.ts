@@ -16,7 +16,7 @@
  ********************************************************************************/
 import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Ingress, Task, TaskList, Transition } from './tasklist-model';
+import { Cluster, Ingress, Task, Transition } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from './cluster-node';
@@ -32,16 +32,15 @@ export class TaskListGModelFactory implements GModelFactory {
         this.modelState.index.indexTaskList(taskList);
         const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
         const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
-        const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster, taskList));
-        // const ingressNodes = taskList.ingresses.map(ingress => this.createIngressNode(ingress));
+        const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster));
         const newRoot = GGraph.builder() //
             .id(taskList.id)
             .addChildren(childNodes)
             .addChildren(childEdges)
             .addChildren(clusterNodes)
-            // .addChildren(ingressNodes)
             .build();
         this.modelState.updateRoot(newRoot);
+        console.error(newRoot.children[0]);
     }
 
     protected createTaskNode(task: Task): GNode {
@@ -61,7 +60,7 @@ export class TaskListGModelFactory implements GModelFactory {
     }
 
     protected createTransitionEdge(transition: Transition): GEdge {
-        return GEdge.builder() //
+        return GEdge.builder()
             .id(transition.id)
             .addCssClass('tasklist-transition')
             .sourceId(transition.sourceTaskId)
@@ -69,23 +68,24 @@ export class TaskListGModelFactory implements GModelFactory {
             .build();
     }
 
-    protected createClusterNode(cluster: Cluster, taskList: TaskList): GCompartment {
+    protected createClusterNode(cluster: Cluster): GCompartment {
+        const ingressNodes = cluster.ingress_ids
+            .map(id => this.modelState.index.findElement(id))
+            .filter(e => e !== undefined)
+            .map(ingress => this.createIngressNode(ingress as Ingress));
+
         const builder = ClusterNode.builder()
             .type(ModelTypes.CLUSTER)
             .position(cluster.position)
             .name(cluster.name)
             .id(cluster.id)
             .addArgs(ArgsUtil.cornerRadius(5))
-            .children();
+            .children()
+            .addIngressNodes(ingressNodes);
 
         if (cluster.size) {
             builder.addLayoutOptions({ prefWidth: cluster.size.width, prefHeight: cluster.size.height });
         }
-        const ingressNodes = cluster.ingress_ids
-            .map(id => this.modelState.index.findElement(id))
-            .filter(e => e !== undefined)
-            .map(ingress => this.createIngressNode(ingress as Ingress));
-        builder.addChildren(ingressNodes);
 
         return builder.build();
     }
@@ -96,7 +96,7 @@ export class TaskListGModelFactory implements GModelFactory {
             .position(ingress.position)
             .name(ingress.name)
             .id(ingress.id)
-            .addArgs(ArgsUtil.cornerRadius(5))
+            // .addArgs(ArgsUtil.cornerRadius(5))
             .children();
 
         if (ingress.size) {

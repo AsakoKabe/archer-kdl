@@ -6,8 +6,7 @@
     "reactNamespace": "JSX",
     "skipLibCheck": true,
     "types": [],
-    "composite": true,
-    "jsx":"react",
+    "composite": true
   },
   "include": ["src"]
 }

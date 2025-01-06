@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder } from '@eclipse-glsp/server';
+import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '../utils/model-types';
 
 export class IngressNode extends GNode {
@@ -25,7 +25,9 @@ export class IngressNode extends GNode {
         return new IngressNodeBuilder(IngressNode)
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
-            .addCssClass('ingress');
+            .addCssClass('ingress')
+            .resizeLocations(GResizeLocation.CORNERS)
+            ;
     }
 }
 
@@ -66,7 +68,7 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
 
     protected createStructCompartment(): GCompartment {
         return new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.STRUCTURE)
+            .type(ModelTypes.INGRESS_BODY)
             .id(this.proxy.id + '_struct')
             .layout('freeform')
             .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })

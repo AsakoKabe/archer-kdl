@@ -15,7 +15,6 @@
  ********************************************************************************/
 
 import {
-    ArgsUtil,
     CreateNodeOperation,
     GCompartment,
     GhostElement,
@@ -26,10 +25,10 @@ import {
     Point
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { ModelTypes } from '../utils/model-types';
-import { TaskListModelState } from '../model/tasklist-model-state';
-import { Cluster, Ingress } from '../model/tasklist-model';
 import { IngressNode, IngressNodeBuilder } from '../model/ingress-node';
+import { Cluster, Ingress } from '../model/tasklist-model';
+import { TaskListModelState } from '../model/tasklist-model-state';
+import { ModelTypes } from '../utils/model-types';
 
 @injectable()
 export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
@@ -64,12 +63,12 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
 
     createNode(operation: CreateNodeOperation, relativeLocation?: Point): GNode {
         console.error(operation.args);
-        if (!operation.containerId){
+        if (!operation.containerId) {
             throw new GLSPServerError("Ingress can't be outside cluster");
         }
         const ingressNode = this.builder(relativeLocation).build();
         const parent = this.modelState.index.findElement(operation.containerId);
-        if (Cluster.is(parent)){
+        if (Cluster.is(parent)) {
             parent.ingress_ids.push(ingressNode.id);
         }
         this.modelState.sourceModel.ingresses.push(Ingress.createFromNode(ingressNode));
@@ -77,14 +76,16 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
     }
 
     protected builder(point: Point = Point.ORIGIN, elementTypeId = this.elementTypeIds[0]): IngressNodeBuilder {
-        return IngressNode.builder()
-            .type(elementTypeId)
-            .position(point)
-            .size(100, 100)
-            .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(IngressNode).length)
-            .addArgs(ArgsUtil.cornerRadius(5))
-            .children()
-            .nodeType(ModelTypes.INGRESS);
+        return (
+            IngressNode.builder()
+                .type(elementTypeId)
+                .position(point)
+                // .size(100, 100)
+                .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(IngressNode).length)
+                // .addArgs(ArgsUtil.cornerRadius(5))
+                .children()
+                .nodeType(ModelTypes.INGRESS)
+        );
     }
 
     override createTriggerGhostElement(elementTypeId: string): GhostElement | undefined {

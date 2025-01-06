@@ -20,6 +20,7 @@ import { ModelTypes } from '../utils/model-types';
 export class ClusterNode extends GNode {
     name: string;
     nodeType: string;
+    container: GCompartment;
 
     static override builder(): ClusterNodeBuilder {
         return new ClusterNodeBuilder(ClusterNode)
@@ -37,11 +38,25 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
 
     children(): this {
         this.proxy.children.push(this.createLabelCompartment());
-        this.proxy.children.push(this.createStructCompartment());
+        // this.proxy.children.push(this.createStructCompartment());
         return this;
     }
     nodeType(nodeType: string): this {
         this.proxy.nodeType = nodeType;
+        return this;
+    }
+    addIngressNodes(ingressNodes: GCompartment[]): this {
+        const builder = new GCompartmentBuilder(GCompartment)
+            .type(ModelTypes.STRUCTURE)
+            .id(this.proxy.id + '_ingress')
+            .layout('freeform')
+            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
+
+        if (ingressNodes) {
+            builder.addChildren(ingressNodes);
+        }
+        this.proxy.children.push(builder.build());
+
         return this;
     }
 
@@ -65,11 +80,12 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
     }
 
     protected createStructCompartment(): GCompartment {
-        return new GCompartmentBuilder(GCompartment)
+        const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.STRUCTURE)
             .id(this.proxy.id + '_struct')
             .layout('freeform')
-            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })
-            .build();
+            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
+
+        return builder.build();
     }
 }

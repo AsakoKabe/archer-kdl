@@ -17,18 +17,20 @@
 import {
     boundsFeature,
     deletableFeature,
+    DiamondNode,
     EditableLabel,
     fadeFeature,
     GChildElement,
     hoverFeedbackFeature,
     isEditableLabel,
+    layoutableChildFeature,
     layoutContainerFeature,
     moveFeature,
     Nameable,
     nameFeature,
     popupFeature,
     RectangularNode,
-    resizeFeature,
+    ResizableModelElement,
     selectFeature,
     WithEditableLabel,
     withEditLabelFeature
@@ -45,8 +47,7 @@ export class ClusterNode extends RectangularNode implements Nameable, WithEditab
         hoverFeedbackFeature,
         popupFeature,
         nameFeature,
-        withEditLabelFeature,
-        resizeFeature
+        withEditLabelFeature
     ];
 
     name = '';
@@ -60,7 +61,7 @@ export class ClusterNode extends RectangularNode implements Nameable, WithEditab
     }
 }
 
-export class IngressNode extends RectangularNode implements Nameable, WithEditableLabel {
+export class IngressNode extends DiamondNode implements Nameable, WithEditableLabel, ResizableModelElement {
     static override readonly DEFAULT_FEATURES = [
         deletableFeature,
         selectFeature,
@@ -72,8 +73,8 @@ export class IngressNode extends RectangularNode implements Nameable, WithEditab
         popupFeature,
         nameFeature,
         withEditLabelFeature,
-        resizeFeature
-    ];
+        layoutableChildFeature
+        ];
 
     name = '';
 

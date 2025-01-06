@@ -21,6 +21,7 @@ export namespace ModelTypes {
     export const LABEL_TEXT = 'label:text';
     export const COMP_HEADER = 'comp:header';
     export const STRUCTURE = 'struct';
+    export const INGRESS_BODY = 'ingress:body';
 
     export function toNodeType(type: string): string {
         switch (type) {
