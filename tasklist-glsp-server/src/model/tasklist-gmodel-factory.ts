@@ -95,13 +95,14 @@ export class TaskListGModelFactory implements GModelFactory {
             .type(ModelTypes.INGRESS)
             .position(ingress.position)
             .name(ingress.name)
-            .id(ingress.id)
-            // .addArgs(ArgsUtil.cornerRadius(5))
-            .children();
+            .id(ingress.id);
 
         if (ingress.size) {
             builder.addLayoutOptions({ prefWidth: ingress.size.width, prefHeight: ingress.size.height });
         }
-        return builder.build();
+        if (ingress.host){
+            builder.host(ingress.host);
+        }
+        return builder.children().build();
     }
 }

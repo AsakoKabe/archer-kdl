@@ -62,7 +62,6 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
     }
 
     createNode(operation: CreateNodeOperation, relativeLocation?: Point): GNode {
-        console.error(operation.args);
         if (!operation.containerId) {
             throw new GLSPServerError("Ingress can't be outside cluster");
         }
@@ -83,6 +82,7 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
                 // .size(100, 100)
                 .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(IngressNode).length)
                 // .addArgs(ArgsUtil.cornerRadius(5))
+                .host('example.com')
                 .children()
                 .nodeType(ModelTypes.INGRESS)
         );

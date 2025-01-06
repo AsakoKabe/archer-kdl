@@ -124,6 +124,7 @@ export namespace KDLShapeElement {
 
 export interface Ingress extends KDLBaseElement, KDLShapeElement {
     name: string;
+    host: string;
 }
 
 export namespace Ingress {
@@ -141,6 +142,7 @@ export namespace Ingress {
         return {
             id: ingressNode.id,
             name: ingressNode.name,
+            host: ingressNode.host,
             position: ingressNode.position,
             size: ingressNode.size,
             nodeType: ingressNode.nodeType

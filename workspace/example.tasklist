@@ -4,28 +4,16 @@
   "transitions": [],
   "ingresses": [
     {
-      "id": "480a1abb-265c-437f-935d-32b2714c3c58",
+      "id": "83d76c11-fc81-4fbd-8adc-c0b1dc3e4338",
       "name": "Ingress0",
+      "host": "example.com",
       "position": {
-        "x": 70.72873680540417,
-        "y": -354.51335013153505
+        "x": 183.47263669859166,
+        "y": 152.02506036678506
       },
       "size": {
-        "width": 354.9457193229275,
-        "height": 131.8452120161491
-      },
-      "nodeType": "ingress"
-    },
-    {
-      "id": "ce1f8e3d-dfa8-44c1-87d8-bb041f7deddc",
-      "name": "Ingress1",
-      "position": {
-        "x": 268.3526551489061,
-        "y": -166.24185253413117
-      },
-      "size": {
-        "width": 174.62108293527513,
-        "height": 120.77006421576397
+        "width": 171.90625,
+        "height": 45
       },
       "nodeType": "ingress"
     }
@@ -35,17 +23,16 @@
       "id": "10f5cd39-021e-4245-bdb1-1955582018f6",
       "name": "Cluster0",
       "position": {
-        "x": 26.241374361793703,
-        "y": 345.19872650116605
+        "x": 190.07423830140834,
+        "y": -150.02506036678506
       },
       "size": {
         "width": 445.6744561283317,
-        "height": 455.3275037381993
+        "height": 266.7530305549558
       },
       "nodeType": "cluster",
       "ingress_ids": [
-        "480a1abb-265c-437f-935d-32b2714c3c58",
-        "ce1f8e3d-dfa8-44c1-87d8-bb041f7deddc"
+        "83d76c11-fc81-4fbd-8adc-c0b1dc3e4338"
       ]
     }
   ]

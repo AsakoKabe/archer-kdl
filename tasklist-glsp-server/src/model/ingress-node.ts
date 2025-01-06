@@ -20,14 +20,14 @@ import { ModelTypes } from '../utils/model-types';
 export class IngressNode extends GNode {
     name: string;
     nodeType: string;
+    host: string;
 
     static override builder(): IngressNodeBuilder {
         return new IngressNodeBuilder(IngressNode)
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
             .addCssClass('ingress')
-            .resizeLocations(GResizeLocation.CORNERS)
-            ;
+            .resizeLocations(GResizeLocation.CORNERS);
     }
 }
 
@@ -39,30 +39,45 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
 
     children(): this {
         this.proxy.children.push(this.createLabelCompartment());
-        this.proxy.children.push(this.createStructCompartment());
+        // this.proxy.children.push(this.createLabelCompartment());
         return this;
     }
     nodeType(nodeType: string): this {
         this.proxy.nodeType = nodeType;
         return this;
     }
+    host(host: string): this {
+        this.proxy.host = host;
+        return this;
+    }
 
     protected createLabelCompartment(): GCompartment {
         const layoutOptions: Args = {};
-        return new GCompartmentBuilder(GCompartment)
+        const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_header')
-            .layout('hbox')
-            .addLayoutOptions(layoutOptions)
-            .add(this.createCompartmentHeader())
+            .layout('vbox')
+            .addLayoutOptions(layoutOptions);
+        if (this.proxy.host) {
+            builder.add(this.addIngressHost());
+        }
+        builder.add(this.addIngressName());
+        return builder.build();
+    }
+
+    protected addIngressName(): GLabel {
+        return new GLabelBuilder(GLabel)
+            .type(ModelTypes.LABEL_HEADING)
+            .id(this.proxy.id + '_name')
+            .text(this.proxy.name)
             .build();
     }
 
-    protected createCompartmentHeader(): GLabel {
+    protected addIngressHost(): GLabel {
         return new GLabelBuilder(GLabel)
             .type(ModelTypes.LABEL_HEADING)
-            .id(this.proxy.id + '_classname')
-            .text(this.proxy.name)
+            .id(this.proxy.id + '_host')
+            .text(this.proxy.host)
             .build();
     }
 
