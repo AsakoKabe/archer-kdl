@@ -19,7 +19,7 @@ import { Command, JsonOperationHandler, MaybePromise } from '@eclipse-glsp/serve
 import { inject, injectable } from 'inversify';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
-import { Cluster, Ingress } from '../model/tasklist-model';
+import { Cluster, Ingress, Pod } from '../model/tasklist-model';
 
 @injectable()
 export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
@@ -30,24 +30,6 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
 
     override createCommand(operation: ApplyLabelEditOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
-            // console.error(operation);
-            // const index = this.modelState.index;
-            // const parent = index.findParentElement(operation.labelId, toTypeGuard(GNode));
-            // console.error(parent);
-            // if (parent) {
-            //     const node = parent.children.find(child => child.id === operation.labelId);
-            //     if (!node) {
-            //         throw new GLSPServerError(`Could not retrieve the parent element for the label with id ${operation.labelId}`);
-            //     }
-            //     switch (node.type) {
-            //         case ModelTypes.CLUSTER:
-            //             (node as ClusterNode).name = operation.text;
-            //             break;
-            //         case ModelTypes.INGRESS:
-            //             (node as IngressNode).name = operation.text;
-            //             break;
-            //     }
-            // }
             const labelId = operation.labelId.split('_')[0];
             const labelField = operation.labelId.split('_')[1];
             const parent = this.modelState.index.findElement(labelId);
@@ -62,6 +44,9 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
                         } else if (labelField === 'host'){
                             (parent as Ingress).host = operation.text;
                         }
+                        break;
+                    case ModelTypes.POD:
+                        (parent as Pod).name = operation.text;
                         break;
                 }
             }

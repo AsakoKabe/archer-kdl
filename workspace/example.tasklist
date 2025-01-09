@@ -4,36 +4,54 @@
   "transitions": [],
   "ingresses": [
     {
-      "id": "83d76c11-fc81-4fbd-8adc-c0b1dc3e4338",
-      "name": "312",
-      "host": "example.con",
+      "id": "62dc17b7-d2a6-4aad-a523-420a919df520",
+      "name": "Ingress0",
+      "host": "example.com",
       "position": {
-        "x": 236.47263669859166,
-        "y": 144.02506036678506
+        "x": 40.11273206779862,
+        "y": 41.602993381279404
       },
       "size": {
-        "width": 165.4296875,
-        "height": 45
+        "width": 83.43300247192383,
+        "height": 46.07285499572754
       },
       "nodeType": "ingress"
     }
   ],
   "clusters": [
     {
-      "id": "10f5cd39-021e-4245-bdb1-1955582018f6",
-      "name": "fsdfs",
+      "id": "5285c575-21c2-46f3-a0e0-e0a9d1d52480",
+      "name": "Cluster0",
       "position": {
-        "x": 53.07423830140834,
-        "y": 163.97493963321494
+        "x": 48.781712720609505,
+        "y": 82.412809257036
       },
       "size": {
-        "width": 480.6744561283317,
-        "height": 301.7530305549558
+        "width": 507,
+        "height": 334
       },
       "nodeType": "cluster",
       "ingress_ids": [
-        "83d76c11-fc81-4fbd-8adc-c0b1dc3e4338"
+        "62dc17b7-d2a6-4aad-a523-420a919df520"
+      ],
+      "pod_ids": [
+        "31f7216f-105a-44b4-a16a-08098462b40f"
       ]
+    }
+  ],
+  "pods": [
+    {
+      "id": "31f7216f-105a-44b4-a16a-08098462b40f",
+      "name": "fdsfsdf",
+      "position": {
+        "x": 248.31067647743316,
+        "y": 122.23128254614679
+      },
+      "size": {
+        "width": 117.421875,
+        "height": 78
+      },
+      "nodeType": "pod"
     }
   ]
 }

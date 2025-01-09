@@ -22,6 +22,7 @@ export namespace ModelTypes {
     export const COMP_HEADER = 'comp:header';
     export const STRUCTURE = 'struct';
     export const INGRESS_BODY = 'ingress:body';
+    export const POD = 'pod';
 
     export function toNodeType(type: string): string {
         switch (type) {
@@ -31,6 +32,8 @@ export namespace ModelTypes {
                 return 'task';
             case INGRESS:
                 return 'ingress';
+            case POD:
+                return 'pod';
             default:
                 return 'unknown';
         }

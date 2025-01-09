@@ -38,7 +38,7 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
 
     children(): this {
         this.proxy.children.push(this.createLabelCompartment());
-        // this.proxy.children.push(this.createStructCompartment());
+        this.proxy.children.push(this.createStructCompartment());
         return this;
     }
     nodeType(nodeType: string): this {
@@ -46,16 +46,34 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
         return this;
     }
     addIngressNodes(ingressNodes: GCompartment[]): this {
-        const builder = new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.STRUCTURE)
-            .id(this.proxy.id + '_ingress')
-            .layout('freeform')
-            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
+        // const builder = new GCompartmentBuilder(GCompartment)
+        //     .type(ModelTypes.STRUCTURE)
+        //     .id(this.proxy.id + '_ingress')
+        //     .layout('freeform')
+        //     .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
 
-        if (ingressNodes) {
-            builder.addChildren(ingressNodes);
-        }
-        this.proxy.children.push(builder.build());
+        // if (ingressNodes) {
+        //     builder.addChildren(ingressNodes);
+        // }
+        // this.proxy.children.push(builder.build());
+        (this.proxy.children.at(-1) as GCompartment).children.push(...ingressNodes);
+
+        return this;
+    }
+
+    addPodNodes(podNodes: GCompartment[]): this {
+        // const builder = new GCompartmentBuilder(GCompartment)
+        //     .type(ModelTypes.STRUCTURE)
+        //     .id(this.proxy.id + '_pod')
+        //     .layout('freeform')
+        //     .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
+
+        // if (podNodes) {
+        //     builder.addChildren(podNodes);
+        // }
+        // this.proxy.children.push(builder.build());
+        // console.error(this.proxy.children.at(-1));
+        (this.proxy.children.at(-1) as GCompartment).children.push(...podNodes);
 
         return this;
     }

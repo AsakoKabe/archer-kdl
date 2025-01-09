@@ -43,7 +43,8 @@ export class TaskListStorage extends AbstractJsonModelStorage {
             tasks: [],
             transitions: [],
             clusters: [],
-            ingresses: []
+            ingresses: [],
+            pods: []
         };
     }
 }

@@ -19,6 +19,7 @@ import { AnyObject, hasArrayProp, hasObjectProp, hasStringProp } from '@eclipse-
 import { ClusterNode } from './cluster-node';
 import { ModelTypes } from '../utils/model-types';
 import { IngressNode } from './ingress-node';
+import { PodNode } from './pod-node';
 
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
@@ -30,6 +31,7 @@ export interface TaskList {
     transitions: Transition[];
     clusters: Cluster[];
     ingresses: Ingress[];
+    pods: Pod[];
 }
 
 export namespace TaskList {
@@ -74,6 +76,7 @@ export namespace Transition {
 export interface Cluster extends KDLBaseElement, KDLShapeElement {
     name: string;
     ingress_ids: string[];
+    pod_ids: string[];
 }
 
 export namespace Cluster {
@@ -95,7 +98,8 @@ export namespace Cluster {
             position: clusterNode.position,
             size: clusterNode.size,
             nodeType: clusterNode.nodeType,
-            ingress_ids: []
+            ingress_ids: [],
+            pod_ids: []
         };
     }
 }
@@ -134,6 +138,7 @@ export namespace Ingress {
             KDLShapeElement.is(object) &&
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
+            hasStringProp(object, 'host') &&
             object.nodeType === ModelTypes.INGRESS
         );
     }
@@ -146,6 +151,32 @@ export namespace Ingress {
             position: ingressNode.position,
             size: ingressNode.size,
             nodeType: ingressNode.nodeType
+        };
+    }
+}
+
+export interface Pod extends KDLBaseElement, KDLShapeElement {
+    name: string;
+}
+
+export namespace Pod {
+    export function is(object: any): object is Ingress {
+        return (
+            AnyObject.is(object) &&
+            KDLShapeElement.is(object) &&
+            KDLBaseElement.is(object) &&
+            hasStringProp(object, 'name') &&
+            object.nodeType === ModelTypes.POD
+        );
+    }
+
+    export function createFromNode(podNode: PodNode): Pod {
+        return {
+            id: podNode.id,
+            name: podNode.name,
+            position: podNode.position,
+            size: podNode.size,
+            nodeType: podNode.nodeType
         };
     }
 }

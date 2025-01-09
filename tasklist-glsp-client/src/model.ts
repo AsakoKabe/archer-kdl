@@ -87,3 +87,30 @@ export class IngressNode extends DiamondNode implements Nameable, WithEditableLa
     }
 }
 
+export class PodNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
+    static override readonly DEFAULT_FEATURES = [
+        deletableFeature,
+        selectFeature,
+        boundsFeature,
+        moveFeature,
+        layoutContainerFeature,
+        fadeFeature,
+        hoverFeedbackFeature,
+        popupFeature,
+        nameFeature,
+        withEditLabelFeature,
+        layoutableChildFeature
+        ];
+
+    name = '';
+
+    get editableLabel(): (GChildElement & EditableLabel) | undefined {
+        const label = this.children.find(element => element.type === 'label:heading');
+        if (label && isEditableLabel(label)) {
+            return label;
+        }
+        return undefined;
+    }
+}
+
+

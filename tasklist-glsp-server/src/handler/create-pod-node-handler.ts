@@ -15,6 +15,7 @@
  ********************************************************************************/
 
 import {
+    ArgsUtil,
     CreateNodeOperation,
     GCompartment,
     GhostElement,
@@ -25,15 +26,15 @@ import {
     Point
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { IngressNode, IngressNodeBuilder } from '../model/ingress-node';
-import { Cluster, Ingress } from '../model/tasklist-model';
+import { Cluster, Pod,  } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
+import { PodNode, PodNodeBuilder } from '../model/pod-node';
 
 @injectable()
-export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
-    elementTypeIds = [ModelTypes.INGRESS];
-    label = 'Ingress';
+export class CreatePodHandler extends GModelCreateNodeOperationHandler {
+    elementTypeIds = [ModelTypes.POD];
+    label = 'Pod';
 
     @inject(TaskListModelState)
     protected override modelState: TaskListModelState;
@@ -45,7 +46,7 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
     override getContainer(operation: CreateNodeOperation): GModelElement | undefined {
         const container = super.getContainer(operation);
 
-        if (container instanceof IngressNode) {
+        if (container instanceof PodNode) {
             const structComp = this.getPodCompartment(container);
             if (structComp) {
                 return structComp;
@@ -54,8 +55,8 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
         return container;
     }
 
-    getPodCompartment(ingress: IngressNode): GCompartment | undefined {
-        return ingress.children
+    getPodCompartment(pod: PodNode): GCompartment | undefined {
+        return pod.children
             .filter(child => child instanceof GCompartment)
             .map(child => child as GCompartment)
             .find(comp => ModelTypes.STRUCTURE === comp.type);
@@ -63,28 +64,27 @@ export class CreateIngressHandler extends GModelCreateNodeOperationHandler {
 
     createNode(operation: CreateNodeOperation, relativeLocation?: Point): GNode {
         if (!operation.containerId) {
-            throw new GLSPServerError("Ingress can't be outside cluster");
+            throw new GLSPServerError("Pod can't be outside cluster");
         }
-        const ingressNode = this.builder(relativeLocation).build();
+        const podNode = this.builder(relativeLocation).build();
         const parent = this.modelState.index.findElement(operation.containerId);
         if (Cluster.is(parent)) {
-            parent.ingress_ids.push(ingressNode.id);
+            parent.pod_ids.push(podNode.id);
         }
-        this.modelState.sourceModel.ingresses.push(Ingress.createFromNode(ingressNode));
-        return ingressNode;
+        this.modelState.sourceModel.pods.push(Pod.createFromNode(podNode));
+        return podNode;
     }
 
-    protected builder(point: Point = Point.ORIGIN, elementTypeId = this.elementTypeIds[0]): IngressNodeBuilder {
+    protected builder(point: Point = Point.ORIGIN, elementTypeId = this.elementTypeIds[0]): PodNodeBuilder {
         return (
-            IngressNode.builder()
+            PodNode.builder()
                 .type(elementTypeId)
                 .position(point)
                 // .size(100, 100)
-                .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(IngressNode).length)
-                // .addArgs(ArgsUtil.cornerRadius(5))
-                .host('example.com')
+                .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(PodNode).length)
+                .addArgs(ArgsUtil.cornerRadius(5))
                 .children()
-                .nodeType(ModelTypes.INGRESS)
+                .nodeType(ModelTypes.POD)
         );
     }
 

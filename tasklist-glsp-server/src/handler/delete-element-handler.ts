@@ -25,7 +25,7 @@ import {
     toTypeGuard
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Ingress, KDLBaseElement, Task, Transition } from '../model/tasklist-model';
+import { Cluster, Ingress, KDLBaseElement, Pod, Task, Transition } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
@@ -81,6 +81,11 @@ export class DeleteElementHandler extends JsonOperationHandler {
             remove(this.modelState.sourceModel.ingresses, modelElement);
             this.modelState.sourceModel.clusters.forEach(cluster => {
                 cluster.ingress_ids = cluster.ingress_ids.filter(id => id !== modelElement.id);
+            });
+        } else if (Pod.is(modelElement)) {
+            remove(this.modelState.sourceModel.pods, modelElement);
+            this.modelState.sourceModel.clusters.forEach(cluster => {
+                cluster.pod_ids = cluster.pod_ids.filter(id => id !== modelElement.id);
             });
         }
     }

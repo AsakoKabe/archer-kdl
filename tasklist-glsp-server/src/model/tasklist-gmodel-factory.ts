@@ -16,11 +16,12 @@
  ********************************************************************************/
 import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Ingress, Task, Transition } from './tasklist-model';
+import { Cluster, Ingress, Pod, Task, Transition } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from './cluster-node';
 import { IngressNode } from './ingress-node';
+import { PodNode } from './pod-node';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
@@ -73,6 +74,11 @@ export class TaskListGModelFactory implements GModelFactory {
             .filter(e => e !== undefined)
             .map(ingress => this.createIngressNode(ingress as Ingress));
 
+        const podNodes = cluster.pod_ids
+            .map(id => this.modelState.index.findElement(id))
+            .filter(e => e !== undefined)
+            .map(pod => this.createPodNode(pod as Pod));
+
         const builder = ClusterNode.builder()
             .type(ModelTypes.CLUSTER)
             .position(cluster.position)
@@ -80,7 +86,8 @@ export class TaskListGModelFactory implements GModelFactory {
             .id(cluster.id)
             .addArgs(ArgsUtil.cornerRadius(5))
             .children()
-            .addIngressNodes(ingressNodes);
+            .addIngressNodes(ingressNodes)
+            .addPodNodes(podNodes);
 
         if (cluster.size) {
             builder.addLayoutOptions({ prefWidth: cluster.size.width, prefHeight: cluster.size.height });
@@ -101,6 +108,20 @@ export class TaskListGModelFactory implements GModelFactory {
         }
         if (ingress.host){
             builder.host(ingress.host);
+        }
+        return builder.children().build();
+    }
+
+    protected createPodNode(pod: Pod): GCompartment {
+        const builder = PodNode.builder()
+            .type(ModelTypes.POD)
+            .position(pod.position)
+            .name(pod.name)
+            .id(pod.id)
+            .addArgs(ArgsUtil.cornerRadius(5));
+
+        if (pod.size) {
+            builder.addLayoutOptions({ prefWidth: pod.size.width, prefHeight: pod.size.height });
         }
         return builder.children().build();
     }

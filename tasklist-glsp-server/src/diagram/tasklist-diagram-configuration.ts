@@ -30,6 +30,7 @@ import { injectable } from 'inversify';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from '../model/cluster-node';
 import { IngressNode } from '../model/ingress-node';
+import { PodNode } from '../model/pod-node';
 
 @injectable()
 export class TaskListDiagramConfiguration implements DiagramConfiguration {
@@ -45,6 +46,7 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
         mapping.set(ModelTypes.CLUSTER, ClusterNode);
         mapping.set(ModelTypes.STRUCTURE, GCompartment);
         mapping.set(ModelTypes.INGRESS, IngressNode);
+        mapping.set(ModelTypes.POD, PodNode);
         return mapping;
     }
 
@@ -59,10 +61,14 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
             },
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.CLUSTER,
-                containableElementTypeIds: [ModelTypes.INGRESS]
+                containableElementTypeIds: [ModelTypes.INGRESS, ModelTypes.POD]
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.INGRESS,
+                containableElementTypeIds: []
+            }),
+            createDefaultShapeTypeHint({
+                elementTypeId: ModelTypes.POD,
                 containableElementTypeIds: []
             })
         ];

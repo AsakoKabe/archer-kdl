@@ -33,7 +33,7 @@ import {
 import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
-import { ClusterNode, IngressNode } from './model';
+import { ClusterNode, IngressNode, PodNode } from './model';
 import { IngressNodeView } from './view';
 
 const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
@@ -48,6 +48,8 @@ const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind
     configureModelElement(context, 'struct', GCompartment, StructureCompartmentView);
     configureModelElement(context, 'ingress', IngressNode, IngressNodeView);
     configureModelElement(context, 'ingress:body', GCompartment, IngressNodeView);
+    configureModelElement(context, 'pod', PodNode, RoundedCornerNodeView);
+
 });
 
 export function initializeTasklistDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {

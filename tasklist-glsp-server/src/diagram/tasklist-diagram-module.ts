@@ -42,6 +42,7 @@ import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
 import { CreateClusterHandler } from '../handler/create-cluster-node-handler';
 import { CreateIngressHandler } from '../handler/create-ingress-node-handler';
 import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-edit-handler';
+import { CreatePodHandler } from '../handler/create-pod-node-handler';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
@@ -78,6 +79,7 @@ export class TaskListDiagramModule extends DiagramModule {
 
         binding.add(CreateClusterHandler);
         binding.add(CreateIngressHandler);
+        binding.add(CreatePodHandler);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {
