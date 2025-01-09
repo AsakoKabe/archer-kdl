@@ -20,6 +20,7 @@ import { ClusterNode } from './cluster-node';
 import { ModelTypes } from '../utils/model-types';
 import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
+import { ServiceNode } from './service-node';
 
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
@@ -32,6 +33,7 @@ export interface TaskList {
     clusters: Cluster[];
     ingresses: Ingress[];
     pods: Pod[];
+    services: Service[];
 }
 
 export namespace TaskList {
@@ -77,6 +79,7 @@ export interface Cluster extends KDLBaseElement, KDLShapeElement {
     name: string;
     ingress_ids: string[];
     pod_ids: string[];
+    service_ids: string[];
 }
 
 export namespace Cluster {
@@ -87,6 +90,8 @@ export namespace Cluster {
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
             hasArrayProp(object, 'ingress_ids') &&
+            hasArrayProp(object, 'pod_ids') &&
+            hasArrayProp(object, 'service_ids') &&
             object.nodeType === ModelTypes.CLUSTER
         );
     }
@@ -99,7 +104,8 @@ export namespace Cluster {
             size: clusterNode.size,
             nodeType: clusterNode.nodeType,
             ingress_ids: [],
-            pod_ids: []
+            pod_ids: [],
+            service_ids: []
         };
     }
 }
@@ -160,7 +166,7 @@ export interface Pod extends KDLBaseElement, KDLShapeElement {
 }
 
 export namespace Pod {
-    export function is(object: any): object is Ingress {
+    export function is(object: any): object is Pod {
         return (
             AnyObject.is(object) &&
             KDLShapeElement.is(object) &&
@@ -177,6 +183,32 @@ export namespace Pod {
             position: podNode.position,
             size: podNode.size,
             nodeType: podNode.nodeType
+        };
+    }
+}
+
+export interface Service extends KDLBaseElement, KDLShapeElement {
+    name: string;
+}
+
+export namespace Service {
+    export function is(object: any): object is Service {
+        return (
+            AnyObject.is(object) &&
+            KDLShapeElement.is(object) &&
+            KDLBaseElement.is(object) &&
+            hasStringProp(object, 'name') &&
+            object.nodeType === ModelTypes.SERVICE
+        );
+    }
+
+    export function createFromNode(serviceNode: ServiceNode): Service {
+        return {
+            id: serviceNode.id,
+            name: serviceNode.name,
+            position: serviceNode.position,
+            size: serviceNode.size,
+            nodeType: serviceNode.nodeType
         };
     }
 }

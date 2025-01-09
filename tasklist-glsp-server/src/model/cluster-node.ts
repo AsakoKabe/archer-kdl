@@ -78,6 +78,12 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
         return this;
     }
 
+    addServiceNodes(serviceNodes: GCompartment[]): this {
+        (this.proxy.children.at(-1) as GCompartment).children.push(...serviceNodes);
+
+        return this;
+    }
+
     protected createLabelCompartment(): GCompartment {
         const layoutOptions: Args = {};
         return new GCompartmentBuilder(GCompartment)

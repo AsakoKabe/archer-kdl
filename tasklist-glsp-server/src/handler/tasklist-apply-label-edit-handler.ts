@@ -19,7 +19,7 @@ import { Command, JsonOperationHandler, MaybePromise } from '@eclipse-glsp/serve
 import { inject, injectable } from 'inversify';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
-import { Cluster, Ingress, Pod } from '../model/tasklist-model';
+import { Cluster, Ingress, Pod, Service } from '../model/tasklist-model';
 
 @injectable()
 export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
@@ -47,6 +47,11 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
                         break;
                     case ModelTypes.POD:
                         (parent as Pod).name = operation.text;
+                        break;
+                    case ModelTypes.SERVICE:
+                        (parent as Service).name = operation.text;
+                        break;
+                    default:
                         break;
                 }
             }

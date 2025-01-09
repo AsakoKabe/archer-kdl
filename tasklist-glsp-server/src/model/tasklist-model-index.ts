@@ -24,7 +24,7 @@ export class TaskListModelIndex extends GModelIndex {
 
     indexTaskList(taskList: TaskList): void {
         this.idToTaskListElements.clear();
-        for (const element of [...taskList.clusters, ...taskList.tasks, ...taskList.ingresses, ...taskList.pods]) {
+        for (const element of [...taskList.clusters, ...taskList.tasks, ...taskList.ingresses, ...taskList.pods, ...taskList.services]) {
             this.idToTaskListElements.set(element.id, element);
         }
     }
@@ -49,8 +49,6 @@ export class TaskListModelIndex extends GModelIndex {
 
     findBoxes(id: string): KDLShapeElement | undefined {
         const element = this.findElement(id);
-        return KDLShapeElement.is(element)
-            ? element
-            : undefined;
+        return KDLShapeElement.is(element) ? element : undefined;
     }
 }

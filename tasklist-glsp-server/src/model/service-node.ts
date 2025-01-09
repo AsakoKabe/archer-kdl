@@ -17,20 +17,20 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '../utils/model-types';
 
-export class PodNode extends GNode {
+export class ServiceNode extends GNode {
     name: string;
     nodeType: string;
 
-    static override builder(): PodNodeBuilder {
-        return new PodNodeBuilder(PodNode)
+    static override builder(): ServiceNodeBuilder {
+        return new ServiceNodeBuilder(ServiceNode)
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
-            .addCssClass('pod')
+            .addCssClass('service')
             .resizeLocations(GResizeLocation.CORNERS);
     }
 }
 
-export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T> {
+export class ServiceNodeBuilder<T extends ServiceNode = ServiceNode> extends GNodeBuilder<T> {
     name(name: string): this {
         this.proxy.name = name;
         return this;
@@ -38,7 +38,7 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
 
     children(): this {
         this.proxy.children.push(this.createLabelCompartment());
-        this.proxy.children.push(this.createStructCompartment());
+        // this.proxy.children.push(this.createStructCompartment());
         return this;
     }
     nodeType(nodeType: string): this {
@@ -53,11 +53,11 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
             .id(this.proxy.id + '_header')
             .layout('vbox')
             .addLayoutOptions(layoutOptions);
-        builder.add(this.addPodName());
+        builder.add(this.addServiceName());
         return builder.build();
     }
 
-    protected addPodName(): GLabel {
+    protected addServiceName(): GLabel {
         return new GLabelBuilder(GLabel)
             .type(ModelTypes.LABEL_HEADING)
             .id(this.proxy.id + '_name')

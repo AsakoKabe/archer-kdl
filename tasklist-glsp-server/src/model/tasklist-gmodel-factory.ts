@@ -16,12 +16,13 @@
  ********************************************************************************/
 import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Ingress, Pod, Task, Transition } from './tasklist-model';
+import { Cluster, Ingress, Pod, Service, Task, Transition } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from './cluster-node';
 import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
+import { ServiceNode } from './service-node';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
@@ -79,6 +80,11 @@ export class TaskListGModelFactory implements GModelFactory {
             .filter(e => e !== undefined)
             .map(pod => this.createPodNode(pod as Pod));
 
+        const serviceNodes = cluster.service_ids
+            .map(id => this.modelState.index.findElement(id))
+            .filter(e => e !== undefined)
+            .map(service => this.createServiceNode(service as Service));
+
         const builder = ClusterNode.builder()
             .type(ModelTypes.CLUSTER)
             .position(cluster.position)
@@ -87,7 +93,8 @@ export class TaskListGModelFactory implements GModelFactory {
             .addArgs(ArgsUtil.cornerRadius(5))
             .children()
             .addIngressNodes(ingressNodes)
-            .addPodNodes(podNodes);
+            .addPodNodes(podNodes)
+            .addServiceNodes(serviceNodes);
 
         if (cluster.size) {
             builder.addLayoutOptions({ prefWidth: cluster.size.width, prefHeight: cluster.size.height });
@@ -122,6 +129,20 @@ export class TaskListGModelFactory implements GModelFactory {
 
         if (pod.size) {
             builder.addLayoutOptions({ prefWidth: pod.size.width, prefHeight: pod.size.height });
+        }
+        return builder.children().build();
+    }
+
+    protected createServiceNode(service: Service): GCompartment {
+        const builder = ServiceNode.builder()
+            .type(ModelTypes.SERVICE)
+            .position(service.position)
+            .name(service.name)
+            .id(service.id)
+            .addArgs(ArgsUtil.cornerRadius(50));
+
+        if (service.size) {
+            builder.addLayoutOptions({ prefWidth: service.size.width, prefHeight: service.size.height });
         }
         return builder.children().build();
     }
