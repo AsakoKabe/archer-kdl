@@ -24,6 +24,7 @@ export namespace ModelTypes {
     export const INGRESS_BODY = 'ingress:body';
     export const POD = 'pod';
     export const SERVICE = 'service';
+    export const CONTAINER = 'container';
 
     export function toNodeType(type: string): string {
         switch (type) {
@@ -37,6 +38,8 @@ export namespace ModelTypes {
                 return 'pod';
             case SERVICE:
                 return 'service';
+            case CONTAINER:
+                return 'container';
             default:
                 return 'unknown';
         }

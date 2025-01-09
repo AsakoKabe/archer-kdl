@@ -24,7 +24,14 @@ export class TaskListModelIndex extends GModelIndex {
 
     indexTaskList(taskList: TaskList): void {
         this.idToTaskListElements.clear();
-        for (const element of [...taskList.clusters, ...taskList.tasks, ...taskList.ingresses, ...taskList.pods, ...taskList.services]) {
+        for (const element of [
+            ...taskList.clusters,
+            ...taskList.tasks,
+            ...taskList.ingresses,
+            ...taskList.pods,
+            ...taskList.services,
+            ...taskList.containers
+        ]) {
             this.idToTaskListElements.set(element.id, element);
         }
     }

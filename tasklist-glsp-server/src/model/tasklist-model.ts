@@ -34,6 +34,7 @@ export interface TaskList {
     ingresses: Ingress[];
     pods: Pod[];
     services: Service[];
+    containers: Container[];
 }
 
 export namespace TaskList {
@@ -105,7 +106,7 @@ export namespace Cluster {
             nodeType: clusterNode.nodeType,
             ingress_ids: [],
             pod_ids: [],
-            service_ids: []
+            service_ids: [],
         };
     }
 }
@@ -163,6 +164,7 @@ export namespace Ingress {
 
 export interface Pod extends KDLBaseElement, KDLShapeElement {
     name: string;
+    container_ids: string[];
 }
 
 export namespace Pod {
@@ -172,6 +174,7 @@ export namespace Pod {
             KDLShapeElement.is(object) &&
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
+            hasArrayProp(object, 'container_ids') &&
             object.nodeType === ModelTypes.POD
         );
     }
@@ -182,7 +185,8 @@ export namespace Pod {
             name: podNode.name,
             position: podNode.position,
             size: podNode.size,
-            nodeType: podNode.nodeType
+            nodeType: podNode.nodeType,
+            container_ids: []
         };
     }
 }
@@ -209,6 +213,32 @@ export namespace Service {
             position: serviceNode.position,
             size: serviceNode.size,
             nodeType: serviceNode.nodeType
+        };
+    }
+}
+
+export interface Container extends KDLBaseElement, KDLShapeElement {
+    name: string;
+}
+
+export namespace Container {
+    export function is(object: any): object is Container {
+        return (
+            AnyObject.is(object) &&
+            KDLShapeElement.is(object) &&
+            KDLBaseElement.is(object) &&
+            hasStringProp(object, 'name') &&
+            object.nodeType === ModelTypes.CONTAINER
+        );
+    }
+
+    export function createFromNode(containerNode: Container): Container {
+        return {
+            id: containerNode.id,
+            name: containerNode.name,
+            position: containerNode.position,
+            size: containerNode.size,
+            nodeType: containerNode.nodeType
         };
     }
 }

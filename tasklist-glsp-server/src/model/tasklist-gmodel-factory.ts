@@ -16,13 +16,14 @@
  ********************************************************************************/
 import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Ingress, Pod, Service, Task, Transition } from './tasklist-model';
+import { Cluster, Container, Ingress, Pod, Service, Task, Transition } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from './cluster-node';
 import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
 import { ServiceNode } from './service-node';
+import { ContainerNode } from './container-node';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
@@ -116,21 +117,30 @@ export class TaskListGModelFactory implements GModelFactory {
         if (ingress.host){
             builder.host(ingress.host);
         }
-        return builder.children().build();
+        builder.children();
+
+        return builder.build();
     }
 
     protected createPodNode(pod: Pod): GCompartment {
+        const containerNodes = pod.container_ids
+            .map(id => this.modelState.index.findElement(id))
+            .filter(e => e !== undefined)
+            .map(container => this.createContainerNode(container as Container));
+
         const builder = PodNode.builder()
             .type(ModelTypes.POD)
             .position(pod.position)
             .name(pod.name)
             .id(pod.id)
-            .addArgs(ArgsUtil.cornerRadius(5));
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .children()
+            .addContainerNodes(containerNodes);
 
         if (pod.size) {
             builder.addLayoutOptions({ prefWidth: pod.size.width, prefHeight: pod.size.height });
         }
-        return builder.children().build();
+        return builder.build();
     }
 
     protected createServiceNode(service: Service): GCompartment {
@@ -139,11 +149,27 @@ export class TaskListGModelFactory implements GModelFactory {
             .position(service.position)
             .name(service.name)
             .id(service.id)
-            .addArgs(ArgsUtil.cornerRadius(50));
+            .addArgs(ArgsUtil.cornerRadius(50))
+            .children();
 
         if (service.size) {
             builder.addLayoutOptions({ prefWidth: service.size.width, prefHeight: service.size.height });
         }
-        return builder.children().build();
+        return builder.build();
+    }
+
+    protected createContainerNode(container: Container): GCompartment {
+        const builder = ContainerNode.builder()
+            .type(ModelTypes.CONTAINER)
+            .position(container.position)
+            .name(container.name)
+            .id(container.id)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .children();
+
+        if (container.size) {
+            builder.addLayoutOptions({ prefWidth: container.size.width, prefHeight: container.size.height });
+        }
+        return builder.build();
     }
 }
