@@ -26,15 +26,15 @@ import {
     Point
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Pod  } from '../model/tasklist-model';
+import { Pod, Port, Service  } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
-import { PodNode, PodNodeBuilder } from '../model/pod-node';
+import { PortNode, PortNodeBuilder } from '../model/port-node';
 
 @injectable()
-export class CreatePodHandler extends GModelCreateNodeOperationHandler {
-    elementTypeIds = [ModelTypes.POD];
-    label = 'Pod';
+export class CreatePortHandler extends GModelCreateNodeOperationHandler {
+    elementTypeIds = [ModelTypes.PORT];
+    label = 'Port';
 
     @inject(TaskListModelState)
     protected override modelState: TaskListModelState;
@@ -46,8 +46,8 @@ export class CreatePodHandler extends GModelCreateNodeOperationHandler {
     override getContainer(operation: CreateNodeOperation): GModelElement | undefined {
         const container = super.getContainer(operation);
 
-        if (container instanceof PodNode) {
-            const structComp = this.getPodCompartment(container);
+        if (container instanceof PortNode) {
+            const structComp = this.getPortCompartment(container);
             if (structComp) {
                 return structComp;
             }
@@ -55,8 +55,8 @@ export class CreatePodHandler extends GModelCreateNodeOperationHandler {
         return container;
     }
 
-    getPodCompartment(pod: PodNode): GCompartment | undefined {
-        return pod.children
+    getPortCompartment(port: PortNode): GCompartment | undefined {
+        return port.children
             .filter(child => child instanceof GCompartment)
             .map(child => child as GCompartment)
             .find(comp => ModelTypes.STRUCTURE === comp.type);
@@ -64,27 +64,28 @@ export class CreatePodHandler extends GModelCreateNodeOperationHandler {
 
     createNode(operation: CreateNodeOperation, relativeLocation?: Point): GNode {
         if (!operation.containerId) {
-            throw new GLSPServerError("Pod can't be outside cluster");
+            throw new GLSPServerError("Port can't be outside service or pod");
         }
-        const podNode = this.builder(relativeLocation).build();
+        const portNode = this.builder(relativeLocation).build();
         const parent = this.modelState.index.findElement(operation.containerId);
-        if (Cluster.is(parent)) {
-            parent.pod_ids.push(podNode.id);
+        if (Pod.is(parent) || Service.is(parent)) {
+            parent.port_ids.push(portNode.id);
         }
-        this.modelState.sourceModel.pods.push(Pod.createFromNode(podNode));
-        return podNode;
+        this.modelState.sourceModel.ports.push(Port.createFromNode(portNode));
+        return portNode;
     }
 
-    protected builder(point: Point = Point.ORIGIN, elementTypeId = this.elementTypeIds[0]): PodNodeBuilder {
+    protected builder(point: Point = Point.ORIGIN, elementTypeId = this.elementTypeIds[0]): PortNodeBuilder {
         return (
-            PodNode.builder()
+            PortNode.builder()
                 .type(elementTypeId)
                 .position(point)
-                .size(100, 100)
-                .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(PodNode).length)
+                // .size(100, 100)
+                .name(this.label.replace(' ', '') + this.modelState.index.getAllByClass(PortNode).length)
+                .number('8080')
                 .addArgs(ArgsUtil.cornerRadius(5))
                 .children()
-                .nodeType(ModelTypes.POD)
+                .nodeType(ModelTypes.PORT)
         );
     }
 

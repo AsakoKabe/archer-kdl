@@ -25,7 +25,7 @@ import {
     toTypeGuard
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Container, Ingress, KDLBaseElement, Pod, Service, Task, Transition } from '../model/tasklist-model';
+import { Cluster, Container, Ingress, KDLBaseElement, Pod, Port, Service } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
@@ -70,33 +70,76 @@ export class DeleteElementHandler extends JsonOperationHandler {
         return [];
     }
 
+    private deleteIngress(ingress: Ingress): void {
+        remove(this.modelState.sourceModel.ingresses, ingress);
+        this.modelState.sourceModel.clusters.forEach(cluster => {
+            cluster.ingress_ids = cluster.ingress_ids.filter(id => id !== ingress.id);
+        });
+    }
+
+    private deletePod(pod: Pod): void {
+        pod.container_ids.forEach(id => {
+            const element = this.modelState.index.findElement(id);
+            remove(this.modelState.sourceModel.containers, element);
+        });
+        pod.port_ids.forEach(id => {
+            const element = this.modelState.index.findElement(id);
+            remove(this.modelState.sourceModel.ports, element);
+        });
+        remove(this.modelState.sourceModel.pods, pod);
+        this.modelState.sourceModel.clusters.forEach(cluster => {
+            cluster.pod_ids = cluster.pod_ids.filter(id => id !== pod.id);
+        });
+    }
+
+    private deleteService(service: Service): void {
+        service.port_ids.forEach(id => {
+            const element = this.modelState.index.findElement(id);
+            remove(this.modelState.sourceModel.ports, element);
+        });
+        remove(this.modelState.sourceModel.services, service);
+        this.modelState.sourceModel.clusters.forEach(cluster => {
+            cluster.service_ids = cluster.service_ids.filter(id => id !== service.id);
+        });
+    }
+
+    private deleteContainer(container: Container): void {
+        remove(this.modelState.sourceModel.containers, container);
+        this.modelState.sourceModel.pods.forEach(pod => {
+            pod.container_ids = pod.container_ids.filter(id => id !== container.id);
+        });
+    }
+
+    private deletePort(port: Port): void {
+        remove(this.modelState.sourceModel.ports, port);
+        this.modelState.sourceModel.pods.forEach(pod => {
+            pod.port_ids = pod.port_ids.filter(id => id !== port.id);
+        });
+        this.modelState.sourceModel.services.forEach(service => {
+            service.port_ids = service.port_ids.filter(id => id !== port.id);
+        });
+    }
+
+    private deleteCluster(cluster: Cluster): void {
+        cluster.ingress_ids.concat(cluster.pod_ids, cluster.service_ids).forEach(id => {
+            this.deleteModelElement(this.modelState.index.findElement(id));
+        });
+        remove(this.modelState.sourceModel.clusters, cluster);
+    }
+
     private deleteModelElement(modelElement: KDLBaseElement | undefined): void {
-        if (Task.is(modelElement)) {
-            remove(this.modelState.sourceModel.tasks, modelElement);
-        } else if (Transition.is(modelElement)) {
-            remove(this.modelState.sourceModel.transitions, modelElement);
-        } else if (Cluster.is(modelElement)) {
-            remove(this.modelState.sourceModel.clusters, modelElement);
+       if (Cluster.is(modelElement)) {
+            this.deleteCluster(modelElement);
         } else if (Ingress.is(modelElement)) {
-            remove(this.modelState.sourceModel.ingresses, modelElement);
-            this.modelState.sourceModel.clusters.forEach(cluster => {
-                cluster.ingress_ids = cluster.ingress_ids.filter(id => id !== modelElement.id);
-            });
+            this.deleteIngress(modelElement);
         } else if (Pod.is(modelElement)) {
-            remove(this.modelState.sourceModel.pods, modelElement);
-            this.modelState.sourceModel.clusters.forEach(cluster => {
-                cluster.pod_ids = cluster.pod_ids.filter(id => id !== modelElement.id);
-            });
+            this.deletePod(modelElement);
         } else if (Service.is(modelElement)) {
-            remove(this.modelState.sourceModel.services, modelElement);
-            this.modelState.sourceModel.clusters.forEach(cluster => {
-                cluster.service_ids = cluster.service_ids.filter(id => id !== modelElement.id);
-            });
-        }else if (Container.is(modelElement)) {
-            remove(this.modelState.sourceModel.containers, modelElement);
-            this.modelState.sourceModel.pods.forEach(pod => {
-                pod.container_ids = pod.container_ids.filter(id => id !== modelElement.id);
-            });
+            this.deleteService(modelElement);
+        } else if (Container.is(modelElement)) {
+            this.deleteContainer(modelElement);
+        } else if (Port.is(modelElement)) {
+            this.deletePort(modelElement);
         }
     }
 }

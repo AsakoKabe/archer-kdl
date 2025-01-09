@@ -21,6 +21,8 @@ import { ModelTypes } from '../utils/model-types';
 import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
 import { ServiceNode } from './service-node';
+import { ContainerNode } from './container-node';
+import { PortNode } from './port-node';
 
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
@@ -35,6 +37,7 @@ export interface TaskList {
     pods: Pod[];
     services: Service[];
     containers: Container[];
+    ports: Port[];
 }
 
 export namespace TaskList {
@@ -165,6 +168,7 @@ export namespace Ingress {
 export interface Pod extends KDLBaseElement, KDLShapeElement {
     name: string;
     container_ids: string[];
+    port_ids: string[];
 }
 
 export namespace Pod {
@@ -175,6 +179,7 @@ export namespace Pod {
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
             hasArrayProp(object, 'container_ids') &&
+            hasArrayProp(object, 'port_ids') &&
             object.nodeType === ModelTypes.POD
         );
     }
@@ -186,13 +191,15 @@ export namespace Pod {
             position: podNode.position,
             size: podNode.size,
             nodeType: podNode.nodeType,
-            container_ids: []
+            container_ids: [],
+            port_ids: [],
         };
     }
 }
 
 export interface Service extends KDLBaseElement, KDLShapeElement {
     name: string;
+    port_ids: string[];
 }
 
 export namespace Service {
@@ -202,6 +209,7 @@ export namespace Service {
             KDLShapeElement.is(object) &&
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
+            hasArrayProp(object, 'port_ids') &&
             object.nodeType === ModelTypes.SERVICE
         );
     }
@@ -212,7 +220,8 @@ export namespace Service {
             name: serviceNode.name,
             position: serviceNode.position,
             size: serviceNode.size,
-            nodeType: serviceNode.nodeType
+            nodeType: serviceNode.nodeType,
+            port_ids: []
         };
     }
 }
@@ -232,13 +241,42 @@ export namespace Container {
         );
     }
 
-    export function createFromNode(containerNode: Container): Container {
+    export function createFromNode(containerNode: ContainerNode): Container {
         return {
             id: containerNode.id,
             name: containerNode.name,
             position: containerNode.position,
             size: containerNode.size,
             nodeType: containerNode.nodeType
+        };
+    }
+}
+
+export interface Port extends KDLBaseElement, KDLShapeElement {
+    name: string;
+    number: string;
+}
+
+export namespace Port {
+    export function is(object: any): object is Port {
+        return (
+            AnyObject.is(object) &&
+            KDLShapeElement.is(object) &&
+            KDLBaseElement.is(object) &&
+            hasStringProp(object, 'name') &&
+            hasStringProp(object, 'number') &&
+            object.nodeType === ModelTypes.PORT
+        );
+    }
+
+    export function createFromNode(portNode: PortNode): Port {
+        return {
+            id: portNode.id,
+            name: portNode.name,
+            number: portNode.number,
+            position: portNode.position,
+            size: portNode.size,
+            nodeType: portNode.nodeType
         };
     }
 }

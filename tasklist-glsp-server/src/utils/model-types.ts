@@ -25,6 +25,7 @@ export namespace ModelTypes {
     export const POD = 'pod';
     export const SERVICE = 'service';
     export const CONTAINER = 'container';
+    export const PORT = 'port';
 
     export function toNodeType(type: string): string {
         switch (type) {
@@ -40,6 +41,8 @@ export namespace ModelTypes {
                 return 'service';
             case CONTAINER:
                 return 'container';
+            case PORT:
+                return 'port';
             default:
                 return 'unknown';
         }

@@ -16,7 +16,7 @@
  ********************************************************************************/
 import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Container, Ingress, Pod, Service, Task, Transition } from './tasklist-model';
+import { Cluster, Container, Ingress, Pod, Port, Service, Task, Transition } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from './cluster-node';
@@ -24,6 +24,7 @@ import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
 import { ServiceNode } from './service-node';
 import { ContainerNode } from './container-node';
+import { PortNode } from './port-node';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
@@ -128,6 +129,11 @@ export class TaskListGModelFactory implements GModelFactory {
             .filter(e => e !== undefined)
             .map(container => this.createContainerNode(container as Container));
 
+        const portNodes = pod.port_ids
+            .map(id => this.modelState.index.findElement(id))
+            .filter(e => e !== undefined)
+            .map(port => this.createPortNode(port as Port));
+
         const builder = PodNode.builder()
             .type(ModelTypes.POD)
             .position(pod.position)
@@ -135,7 +141,8 @@ export class TaskListGModelFactory implements GModelFactory {
             .id(pod.id)
             .addArgs(ArgsUtil.cornerRadius(5))
             .children()
-            .addContainerNodes(containerNodes);
+            .addContainerNodes(containerNodes)
+            .addPortNodes(portNodes);
 
         if (pod.size) {
             builder.addLayoutOptions({ prefWidth: pod.size.width, prefHeight: pod.size.height });
@@ -144,13 +151,19 @@ export class TaskListGModelFactory implements GModelFactory {
     }
 
     protected createServiceNode(service: Service): GCompartment {
+        const portNodes = service.port_ids
+            .map(id => this.modelState.index.findElement(id))
+            .filter(e => e !== undefined)
+            .map(port => this.createPortNode(port as Port));
+
         const builder = ServiceNode.builder()
             .type(ModelTypes.SERVICE)
             .position(service.position)
             .name(service.name)
             .id(service.id)
             .addArgs(ArgsUtil.cornerRadius(50))
-            .children();
+            .children()
+            .addPortNodes(portNodes);
 
         if (service.size) {
             builder.addLayoutOptions({ prefWidth: service.size.width, prefHeight: service.size.height });
@@ -169,6 +182,22 @@ export class TaskListGModelFactory implements GModelFactory {
 
         if (container.size) {
             builder.addLayoutOptions({ prefWidth: container.size.width, prefHeight: container.size.height });
+        }
+        return builder.build();
+    }
+
+    protected createPortNode(port: Port): GCompartment {
+        const builder = PortNode.builder()
+            .type(ModelTypes.PORT)
+            .position(port.position)
+            .name(port.name)
+            .number(port.number)
+            .id(port.id)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .children();
+
+        if (port.size) {
+            builder.addLayoutOptions({ prefWidth: port.size.width, prefHeight: port.size.height });
         }
         return builder.build();
     }

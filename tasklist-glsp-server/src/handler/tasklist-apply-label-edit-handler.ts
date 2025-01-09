@@ -19,7 +19,7 @@ import { Command, JsonOperationHandler, MaybePromise } from '@eclipse-glsp/serve
 import { inject, injectable } from 'inversify';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
-import { Cluster, Container, Ingress, Pod, Service } from '../model/tasklist-model';
+import { Cluster, Container, Ingress, Pod, Port, Service } from '../model/tasklist-model';
 
 @injectable()
 export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
@@ -39,9 +39,9 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
                         (parent as Cluster).name = operation.text;
                         break;
                     case ModelTypes.INGRESS:
-                        if (labelField === 'name'){
+                        if (labelField === 'name') {
                             (parent as Ingress).name = operation.text;
-                        } else if (labelField === 'host'){
+                        } else if (labelField === 'host') {
                             (parent as Ingress).host = operation.text;
                         }
                         break;
@@ -54,11 +54,17 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
                     case ModelTypes.CONTAINER:
                         (parent as Container).name = operation.text;
                         break;
+                    case ModelTypes.PORT:
+                        if (labelField === 'name') {
+                            (parent as Port).name = operation.text;
+                        } else if (labelField === 'number') {
+                            (parent as Port).number = operation.text;
+                        }
+                        break;
                     default:
                         break;
                 }
             }
-
         });
     }
 }

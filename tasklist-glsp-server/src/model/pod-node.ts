@@ -51,6 +51,11 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
         return this;
     }
 
+    addPortNodes(portNodes: GCompartment[]): this {
+        (this.proxy.children.at(-1) as GCompartment).children.push(...portNodes);
+        return this;
+    }
+
     protected createLabelCompartment(): GCompartment {
         const layoutOptions: Args = {};
         const builder = new GCompartmentBuilder(GCompartment)

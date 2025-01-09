@@ -33,6 +33,7 @@ import { IngressNode } from '../model/ingress-node';
 import { PodNode } from '../model/pod-node';
 import { ServiceNode } from '../model/service-node';
 import { ContainerNode } from '../model/container-node';
+import { PortNode } from '../model/port-node';
 
 @injectable()
 export class TaskListDiagramConfiguration implements DiagramConfiguration {
@@ -51,6 +52,7 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
         mapping.set(ModelTypes.POD, PodNode);
         mapping.set(ModelTypes.SERVICE, ServiceNode);
         mapping.set(ModelTypes.CONTAINER, ContainerNode);
+        mapping.set(ModelTypes.PORT, PortNode);
         return mapping;
     }
 
@@ -73,14 +75,18 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.POD,
-                containableElementTypeIds: [ModelTypes.CONTAINER]
+                containableElementTypeIds: [ModelTypes.CONTAINER, ModelTypes.PORT]
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.SERVICE,
-                containableElementTypeIds: []
+                containableElementTypeIds: [ModelTypes.PORT]
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.CONTAINER,
+                containableElementTypeIds: []
+            }),
+            createDefaultShapeTypeHint({
+                elementTypeId: ModelTypes.PORT,
                 containableElementTypeIds: []
             })
         ];

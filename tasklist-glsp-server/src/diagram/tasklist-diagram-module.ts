@@ -45,6 +45,7 @@ import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-e
 import { CreatePodHandler } from '../handler/create-pod-node-handler';
 import { CreateServiceHandler } from '../handler/create-service-node-handler';
 import { CreateContainerHandler } from '../handler/create-container-node-handler';
+import { CreatePortHandler } from '../handler/create-port-node-handler';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
@@ -84,6 +85,7 @@ export class TaskListDiagramModule extends DiagramModule {
         binding.add(CreatePodHandler);
         binding.add(CreateServiceHandler);
         binding.add(CreateContainerHandler);
+        binding.add(CreatePortHandler);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {

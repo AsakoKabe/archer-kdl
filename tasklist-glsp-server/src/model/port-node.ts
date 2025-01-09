@@ -17,66 +17,82 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '../utils/model-types';
 
-export class ServiceNode extends GNode {
+export class PortNode extends GNode {
     name: string;
+    number: string;
     nodeType: string;
 
-    static override builder(): ServiceNodeBuilder {
-        return new ServiceNodeBuilder(ServiceNode)
+    static override builder(): PortNodeBuilder {
+        return new PortNodeBuilder(PortNode)
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
-            .addCssClass('service')
+            .addCssClass('port')
             .resizeLocations(GResizeLocation.CORNERS);
     }
 }
 
-export class ServiceNodeBuilder<T extends ServiceNode = ServiceNode> extends GNodeBuilder<T> {
+export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder<T> {
     name(name: string): this {
         this.proxy.name = name;
         return this;
     }
 
     children(): this {
-        this.proxy.children.push(this.createLabelCompartment());
-        this.proxy.children.push(this.createStructCompartment());
+        this.proxy.children.push(this.addNumber());
+        this.proxy.children.push(this.addName());
         return this;
     }
     nodeType(nodeType: string): this {
         this.proxy.nodeType = nodeType;
         return this;
     }
-
-    addPortNodes(portNodes: GCompartment[]): this {
-        (this.proxy.children.at(-1) as GCompartment).children.push(...portNodes);
+    number(number: string): this {
+        this.proxy.number = number;
         return this;
     }
 
-    protected createLabelCompartment(): GCompartment {
-        const layoutOptions: Args = { vGrab: true, vAlign: 'center'};
+    protected addName(): GCompartment {
+        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
-            .id(this.proxy.id + '_header')
+            .id(this.proxy.id + '_label_name')
             .layout('hbox')
             .addLayoutOptions(layoutOptions);
-        builder.add(this.addServiceName());
+        builder.add(
+            new GLabelBuilder(GLabel)
+                .type(ModelTypes.LABEL_HEADING)
+                .id(this.proxy.id + '_name')
+                .text(this.proxy.name)
+                .build()
+        );
         return builder.build();
     }
 
-    protected addServiceName(): GLabel {
-        return new GLabelBuilder(GLabel)
-            .type(ModelTypes.LABEL_HEADING)
-            .id(this.proxy.id + '_name')
-            .text(this.proxy.name)
-            .build();
+    protected addNumber(): GCompartment {
+        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
+        const builder = new GCompartmentBuilder(GCompartment)
+            .type(ModelTypes.COMP_HEADER)
+            .id(this.proxy.id + '_number')
+            .layout('hbox')
+            .addLayoutOptions(layoutOptions);
+        if (this.proxy.number) {
+            builder.add(
+                new GLabelBuilder(GLabel)
+                    .type(ModelTypes.LABEL_HEADING)
+                    .id(this.proxy.id + '_label_number')
+                    .text(this.proxy.number)
+                    .build()
+            );
+        }
+        return builder.build();
     }
 
     protected createStructCompartment(): GCompartment {
         return new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.STRUCTURE)
+            .type(ModelTypes.INGRESS_BODY)
             .id(this.proxy.id + '_struct')
             .layout('freeform')
             .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })
             .build();
     }
-
 }

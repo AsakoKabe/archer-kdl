@@ -30,7 +30,8 @@ export class TaskListModelIndex extends GModelIndex {
             ...taskList.ingresses,
             ...taskList.pods,
             ...taskList.services,
-            ...taskList.containers
+            ...taskList.containers,
+            ...taskList.ports
         ]) {
             this.idToTaskListElements.set(element.id, element);
         }
