@@ -47,11 +47,11 @@ export class ServiceNodeBuilder<T extends ServiceNode = ServiceNode> extends GNo
     }
 
     protected createLabelCompartment(): GCompartment {
-        const layoutOptions: Args = {};
+        const layoutOptions: Args = { vGrab: true, vAlign: 'center'};
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_header')
-            .layout('vbox')
+            .layout('hbox')
             .addLayoutOptions(layoutOptions);
         builder.add(this.addServiceName());
         return builder.build();

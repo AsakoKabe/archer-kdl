@@ -38,7 +38,8 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
     }
 
     children(): this {
-        this.proxy.children.push(this.createLabelCompartment());
+        this.proxy.children.push(this.addHost());
+        this.proxy.children.push(this.addName());
         // this.proxy.children.push(this.createLabelCompartment());
         return this;
     }
@@ -51,34 +52,40 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
         return this;
     }
 
-    protected createLabelCompartment(): GCompartment {
-        const layoutOptions: Args = {};
+    protected addName(): GCompartment {
+        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
-            .id(this.proxy.id + '_header')
-            .layout('vbox')
+            .id(this.proxy.id + '_label_name')
+            .layout('hbox')
             .addLayoutOptions(layoutOptions);
-        if (this.proxy.host) {
-            builder.add(this.addIngressHost());
-        }
-        builder.add(this.addIngressName());
+        builder.add(
+            new GLabelBuilder(GLabel)
+                .type(ModelTypes.LABEL_HEADING)
+                .id(this.proxy.id + '_name')
+                .text(this.proxy.name)
+                .build()
+        );
         return builder.build();
     }
 
-    protected addIngressName(): GLabel {
-        return new GLabelBuilder(GLabel)
-            .type(ModelTypes.LABEL_HEADING)
-            .id(this.proxy.id + '_name')
-            .text(this.proxy.name)
-            .build();
-    }
-
-    protected addIngressHost(): GLabel {
-        return new GLabelBuilder(GLabel)
-            .type(ModelTypes.LABEL_HEADING)
+    protected addHost(): GCompartment {
+        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
+        const builder = new GCompartmentBuilder(GCompartment)
+            .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_host')
-            .text(this.proxy.host)
-            .build();
+            .layout('hbox')
+            .addLayoutOptions(layoutOptions);
+        if (this.proxy.host) {
+            builder.add(
+                new GLabelBuilder(GLabel)
+                    .type(ModelTypes.LABEL_HEADING)
+                    .id(this.proxy.id + '_label_host')
+                    .text(this.proxy.host)
+                    .build()
+            );
+        }
+        return builder.build();
     }
 
     protected createStructCompartment(): GCompartment {

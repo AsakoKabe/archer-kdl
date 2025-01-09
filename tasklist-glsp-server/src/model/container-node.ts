@@ -24,7 +24,7 @@ export class ContainerNode extends GNode {
     static override builder(): ContainerNodeBuilder {
         return new ContainerNodeBuilder(ContainerNode)
             .layout('vbox')
-            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
+            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('container')
             .resizeLocations(GResizeLocation.CORNERS);
     }
@@ -38,7 +38,7 @@ export class ContainerNodeBuilder<T extends ContainerNode = ContainerNode> exten
 
     children(): this {
         this.proxy.children.push(this.createLabelCompartment());
-        this.proxy.children.push(this.createStructCompartment());
+        // this.proxy.children.push(this.createStructCompartment());
         return this;
     }
     nodeType(nodeType: string): this {
@@ -47,11 +47,11 @@ export class ContainerNodeBuilder<T extends ContainerNode = ContainerNode> exten
     }
 
     protected createLabelCompartment(): GCompartment {
-        const layoutOptions: Args = {};
+        const layoutOptions: Args = { vGrab: true, vAlign: 'center'};
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_header')
-            .layout('vbox')
+            .layout('hbox')
             .addLayoutOptions(layoutOptions);
         builder.add(this.addContainerName());
         return builder.build();
