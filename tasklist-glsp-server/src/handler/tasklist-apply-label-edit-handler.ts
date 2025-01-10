@@ -17,9 +17,9 @@
 import { ApplyLabelEditOperation } from '@eclipse-glsp/protocol';
 import { Command, JsonOperationHandler, MaybePromise } from '@eclipse-glsp/server/node';
 import { inject, injectable } from 'inversify';
+import { Cluster, Container, Ingress, Pod, Port, Service } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
-import { Cluster, Container, Ingress, Pod, Port, Service } from '../model/tasklist-model';
 
 @injectable()
 export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
@@ -34,7 +34,7 @@ export class TaskListApplyLabelEditHandler extends JsonOperationHandler {
             const labelField = operation.labelId.split('_')[1];
             const parent = this.modelState.index.findElement(labelId);
             if (parent) {
-                switch (parent.nodeType) {
+                switch (parent.type) {
                     case ModelTypes.CLUSTER:
                         (parent as Cluster).name = operation.text;
                         break;

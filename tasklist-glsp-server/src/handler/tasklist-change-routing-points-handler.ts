@@ -14,33 +14,34 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import { Command, CreateEdgeOperation, DefaultTypes, JsonCreateEdgeOperationHandler, MaybePromise } from '@eclipse-glsp/server';
+
+import { ChangeRoutingPointsOperation, Command, JsonOperationHandler, MaybePromise, Point } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
-import { Transition } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
 
 @injectable()
-export class CreateTransitionHandler extends JsonCreateEdgeOperationHandler {
-    readonly elementTypeIds = [DefaultTypes.EDGE];
+export class TaskListChangeRoutingPointsHandler extends JsonOperationHandler {
+    readonly operationType = ChangeRoutingPointsOperation.KIND;
 
     @inject(TaskListModelState)
     protected override modelState: TaskListModelState;
 
-    override createCommand(operation: CreateEdgeOperation): MaybePromise<Command | undefined> {
+    override createCommand(operation: ChangeRoutingPointsOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
-            const transition: Transition = {
-                id: uuid.v4(),
-                sourceTaskId: operation.sourceElementId,
-                targetTaskId: operation.targetElementId,
-                type: DefaultTypes.EDGE,
-                routingPoints: []
-            };
-            this.modelState.sourceModel.transitions.push(transition);
+            operation.newRoutingPoints.forEach(elementAndPoints => {
+                this.changeElementRoutinPoints(elementAndPoints.elementId, elementAndPoints.newRoutingPoints);
+            });
         });
     }
 
-    get label(): string {
-        return 'Transition';
+    protected changeElementRoutinPoints(elementId: string, newRoutingPoints: Point[] | undefined): void {
+        const index = this.modelState.index;
+        const edge = index.findTransition(elementId);
+
+        if (newRoutingPoints) {
+            if (edge) {
+                edge.routingPoints = newRoutingPoints;
+            }
+        }
     }
 }

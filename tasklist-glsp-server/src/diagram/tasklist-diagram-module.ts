@@ -46,6 +46,7 @@ import { CreatePodHandler } from '../handler/create-pod-node-handler';
 import { CreateServiceHandler } from '../handler/create-service-node-handler';
 import { CreateContainerHandler } from '../handler/create-container-node-handler';
 import { CreatePortHandler } from '../handler/create-port-node-handler';
+import { TaskListChangeRoutingPointsHandler } from '../handler/tasklist-change-routing-points-handler';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
@@ -86,6 +87,7 @@ export class TaskListDiagramModule extends DiagramModule {
         binding.add(CreateServiceHandler);
         binding.add(CreateContainerHandler);
         binding.add(CreatePortHandler);
+        binding.add(TaskListChangeRoutingPointsHandler);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {

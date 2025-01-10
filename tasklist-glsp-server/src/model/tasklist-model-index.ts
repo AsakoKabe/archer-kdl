@@ -16,7 +16,7 @@
  ********************************************************************************/
 import { GModelIndex } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { KDLBaseElement, KDLShapeElement, TaskList } from './tasklist-model';
+import { KDLBaseElement, KDLShapeElement, TaskList, Transition } from './tasklist-model';
 
 @injectable()
 export class TaskListModelIndex extends GModelIndex {
@@ -31,7 +31,8 @@ export class TaskListModelIndex extends GModelIndex {
             ...taskList.pods,
             ...taskList.services,
             ...taskList.containers,
-            ...taskList.ports
+            ...taskList.ports,
+            ...taskList.transitions
         ]) {
             this.idToTaskListElements.set(element.id, element);
         }
@@ -42,10 +43,10 @@ export class TaskListModelIndex extends GModelIndex {
     //     return Task.is(element) ? element : undefined;
     // }
 
-    // findTransition(id: string): Transition | undefined {
-    //     const element = this.findTaskOrTransition(id);
-    //     return Transition.is(element) ? element : undefined;
-    // }
+    findTransition(id: string): Transition | undefined {
+        const element = this.findElement(id);
+        return Transition.is(element) ? element : undefined;
+    }
 
     // findTaskOrTransition(id: string): Task | Transition | undefined {
     //     return this.idToTaskListElements.get(id);

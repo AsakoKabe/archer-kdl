@@ -68,6 +68,7 @@ export class TaskListGModelFactory implements GModelFactory {
             .addCssClass('transition')
             .sourceId(transition.sourceTaskId)
             .targetId(transition.targetTaskId)
+            .addRoutingPoints(transition.routingPoints)
             .build();
     }
 

@@ -3,19 +3,24 @@
   "tasks": [],
   "transitions": [
     {
-      "id": "724aea93-b026-468a-8881-f6d5839d1dd7",
+      "id": "536d2b6a-d430-435f-a466-ac2243d3ad57",
       "sourceTaskId": "fafd0584-047b-43c3-b9a8-51b286e45c08",
-      "targetTaskId": "2f63ec74-7c75-49b7-902b-c8263d4b99a4"
-    },
-    {
-      "id": "3b160e80-bda3-4930-8279-e9196b5ec385",
-      "sourceTaskId": "3f847f59-2db3-418f-b55a-70ed68e94d74",
-      "targetTaskId": "2f63ec74-7c75-49b7-902b-c8263d4b99a4"
-    },
-    {
-      "id": "c72c6084-0829-4ad1-b9fa-891a6dbda99d",
-      "sourceTaskId": "8321b4f7-3680-431c-8eb9-b189b9d5ef92",
-      "targetTaskId": "2f63ec74-7c75-49b7-902b-c8263d4b99a4"
+      "targetTaskId": "2f63ec74-7c75-49b7-902b-c8263d4b99a4",
+      "type": "edge",
+      "routingPoints": [
+        {
+          "kind": "linear",
+          "x": 381.5975819564179,
+          "y": 97.09876646325398,
+          "pointIndex": 0
+        },
+        {
+          "kind": "linear",
+          "x": 249.3377208282327,
+          "y": 140.21322910127154,
+          "pointIndex": 1
+        }
+      ]
     }
   ],
   "ingresses": [
@@ -39,8 +44,8 @@
       "id": "58119f83-500d-462c-9a2e-59389e81682e",
       "name": "gg",
       "position": {
-        "x": 71.47944598621348,
-        "y": 46.320775218750896
+        "x": 29.479445986213477,
+        "y": 68.3207752187509
       },
       "size": {
         "width": 542.1601729991576,
@@ -84,12 +89,12 @@
       "id": "fafd0584-047b-43c3-b9a8-51b286e45c08",
       "name": "Service0",
       "position": {
-        "x": 345.3203261096962,
+        "x": 263.3203261096962,
         "y": 68.6635286064855
       },
       "size": {
-        "width": 132.578125,
-        "height": 44
+        "width": 214.578125,
+        "height": 36
       },
       "nodeType": "service",
       "port_ids": []
@@ -116,8 +121,8 @@
       "name": "Port0",
       "number": "8080",
       "position": {
-        "x": 6.5930173492102995,
-        "y": -61.39716813019447
+        "x": 12.5930173492103,
+        "y": -56.39716813019447
       },
       "size": {
         "width": 38.6484375,

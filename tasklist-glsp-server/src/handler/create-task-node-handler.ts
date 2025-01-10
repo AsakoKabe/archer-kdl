@@ -52,7 +52,7 @@ export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
             name: `NewTaskNode${nodeCounter}`,
             size: { width: 100, height: 100 },
             position: position,
-            nodeType: ModelTypes.TASK
+            type: ModelTypes.TASK
         };
     }
 

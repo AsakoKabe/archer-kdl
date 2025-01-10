@@ -15,14 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 
-import { AnyObject, hasArrayProp, hasObjectProp, hasStringProp } from '@eclipse-glsp/server';
-import { ClusterNode } from './cluster-node';
+import { AnyObject, DefaultTypes, hasArrayProp, hasObjectProp, hasStringProp, Point } from '@eclipse-glsp/server';
 import { ModelTypes } from '../utils/model-types';
+import { ClusterNode } from './cluster-node';
+import { ContainerNode } from './container-node';
 import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
-import { ServiceNode } from './service-node';
-import { ContainerNode } from './container-node';
 import { PortNode } from './port-node';
+import { ServiceNode } from './service-node';
 
 /**
  * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
@@ -57,24 +57,26 @@ export namespace Task {
             KDLShapeElement.is(object) &&
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
-            object.nodeType === ModelTypes.TASK
+            object.type === ModelTypes.TASK
         );
     }
 }
 
-export interface Transition {
-    id: string;
+export interface Transition extends KDLBaseElement {
     sourceTaskId: string;
     targetTaskId: string;
+    routingPoints: Point[];
 }
 
 export namespace Transition {
     export function is(object: any): object is Transition {
         return (
             AnyObject.is(object) &&
-            hasStringProp(object, 'id') &&
+            KDLBaseElement.is(object) &&
             hasStringProp(object, 'sourceTaskId') &&
-            hasStringProp(object, 'targetTaskId')
+            hasStringProp(object, 'targetTaskId') &&
+            hasArrayProp(object, 'routingPoints') &&
+            object.type === DefaultTypes.EDGE
         );
     }
 }
@@ -96,7 +98,7 @@ export namespace Cluster {
             hasArrayProp(object, 'ingress_ids') &&
             hasArrayProp(object, 'pod_ids') &&
             hasArrayProp(object, 'service_ids') &&
-            object.nodeType === ModelTypes.CLUSTER
+            object.type === ModelTypes.CLUSTER
         );
     }
 
@@ -106,22 +108,22 @@ export namespace Cluster {
             name: clusterNode.name,
             position: clusterNode.position,
             size: clusterNode.size,
-            nodeType: clusterNode.nodeType,
+            type: clusterNode.nodeType,
             ingress_ids: [],
             pod_ids: [],
-            service_ids: [],
+            service_ids: []
         };
     }
 }
 
 export interface KDLBaseElement {
     id: string;
-    nodeType: string;
+    type: string;
 }
 
 export namespace KDLBaseElement {
     export function is(object: any): object is KDLBaseElement {
-        return AnyObject.is(object) && hasStringProp(object, 'id') && hasStringProp(object, 'nodeType');
+        return AnyObject.is(object) && hasStringProp(object, 'id') && hasStringProp(object, 'type');
     }
 }
 
@@ -149,7 +151,7 @@ export namespace Ingress {
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
             hasStringProp(object, 'host') &&
-            object.nodeType === ModelTypes.INGRESS
+            object.type === ModelTypes.INGRESS
         );
     }
 
@@ -160,7 +162,7 @@ export namespace Ingress {
             host: ingressNode.host,
             position: ingressNode.position,
             size: ingressNode.size,
-            nodeType: ingressNode.nodeType
+            type: ingressNode.nodeType
         };
     }
 }
@@ -180,7 +182,7 @@ export namespace Pod {
             hasStringProp(object, 'name') &&
             hasArrayProp(object, 'container_ids') &&
             hasArrayProp(object, 'port_ids') &&
-            object.nodeType === ModelTypes.POD
+            object.type === ModelTypes.POD
         );
     }
 
@@ -190,9 +192,9 @@ export namespace Pod {
             name: podNode.name,
             position: podNode.position,
             size: podNode.size,
-            nodeType: podNode.nodeType,
+            type: podNode.nodeType,
             container_ids: [],
-            port_ids: [],
+            port_ids: []
         };
     }
 }
@@ -210,7 +212,7 @@ export namespace Service {
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
             hasArrayProp(object, 'port_ids') &&
-            object.nodeType === ModelTypes.SERVICE
+            object.type === ModelTypes.SERVICE
         );
     }
 
@@ -220,7 +222,7 @@ export namespace Service {
             name: serviceNode.name,
             position: serviceNode.position,
             size: serviceNode.size,
-            nodeType: serviceNode.nodeType,
+            type: serviceNode.nodeType,
             port_ids: []
         };
     }
@@ -237,7 +239,7 @@ export namespace Container {
             KDLShapeElement.is(object) &&
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
-            object.nodeType === ModelTypes.CONTAINER
+            object.type === ModelTypes.CONTAINER
         );
     }
 
@@ -247,7 +249,7 @@ export namespace Container {
             name: containerNode.name,
             position: containerNode.position,
             size: containerNode.size,
-            nodeType: containerNode.nodeType
+            type: containerNode.nodeType
         };
     }
 }
@@ -265,7 +267,7 @@ export namespace Port {
             KDLBaseElement.is(object) &&
             hasStringProp(object, 'name') &&
             hasStringProp(object, 'number') &&
-            object.nodeType === ModelTypes.PORT
+            object.type === ModelTypes.PORT
         );
     }
 
@@ -276,7 +278,7 @@ export namespace Port {
             number: portNode.number,
             position: portNode.position,
             size: portNode.size,
-            nodeType: portNode.nodeType
+            type: portNode.nodeType
         };
     }
 }
