@@ -15,7 +15,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 
-svg {
+
+ svg {
     border-style: solid;
     border-width: 1px;
     border-color: #bbb;
@@ -25,31 +26,48 @@ svg {
     fill: inherit;
 }
 
-.tasklist-node > .sprotty-node {
-    fill: #f1bd6c;
-}
-
 .cluster {
     fill: #feaaa2;
 }
 
-.ingress {
+.ingress{
     fill: #FEE897;
+}
+
+.cluster .ingress > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
 }
 
 .pod {
     fill: #BDE49C;
 }
 
-.service {
+.cluster .pod > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
+}
+
+
+.service{
     fill: #FEE897;
 }
 
-.container {
-    fill: #94D564;
-    border: solid black;
+.cluster .service > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
 }
 
-.port {
+
+
+.container > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
+    fill: #94D564;
+}
+
+.port > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
     fill: #FEE897;
 }

@@ -24,8 +24,8 @@ export class IngressNode extends GNode {
 
     static override builder(): IngressNodeBuilder {
         return new IngressNodeBuilder(IngressNode)
-            .layout('vbox')
-            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
+            .layout('hbox')
+            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('ingress')
             .resizeLocations(GResizeLocation.CORNERS);
     }
@@ -38,9 +38,7 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
     }
 
     children(): this {
-        this.proxy.children.push(this.addHost());
-        this.proxy.children.push(this.addName());
-        // this.proxy.children.push(this.createLabelCompartment());
+        this.proxy.children.push(this.addData());
         return this;
     }
     nodeType(nodeType: string): this {
@@ -52,13 +50,22 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
         return this;
     }
 
-    protected addName(): GCompartment {
-        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
+    protected addData(): GCompartment {
+        const layoutOptions: Args = { hGrab: true, hAlign: 'center' };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
-            .id(this.proxy.id + '_label_name')
-            .layout('hbox')
+            .id(this.proxy.id + '_data')
+            .layout('vbox')
             .addLayoutOptions(layoutOptions);
+        if (this.proxy.host) {
+            builder.add(
+                new GLabelBuilder(GLabel)
+                    .type(ModelTypes.LABEL_HEADING)
+                    .id(this.proxy.id + '_host')
+                    .text(this.proxy.host)
+                    .build()
+            );
+        }
         builder.add(
             new GLabelBuilder(GLabel)
                 .type(ModelTypes.LABEL_HEADING)
@@ -66,25 +73,7 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
                 .text(this.proxy.name)
                 .build()
         );
-        return builder.build();
-    }
 
-    protected addHost(): GCompartment {
-        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
-        const builder = new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.COMP_HEADER)
-            .id(this.proxy.id + '_host')
-            .layout('hbox')
-            .addLayoutOptions(layoutOptions);
-        if (this.proxy.host) {
-            builder.add(
-                new GLabelBuilder(GLabel)
-                    .type(ModelTypes.LABEL_HEADING)
-                    .id(this.proxy.id + '_label_host')
-                    .text(this.proxy.host)
-                    .build()
-            );
-        }
         return builder.build();
     }
 

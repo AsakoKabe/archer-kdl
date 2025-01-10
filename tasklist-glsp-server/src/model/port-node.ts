@@ -25,7 +25,7 @@ export class PortNode extends GNode {
     static override builder(): PortNodeBuilder {
         return new PortNodeBuilder(PortNode)
             .layout('vbox')
-            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
+            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('port')
             .resizeLocations(GResizeLocation.CORNERS);
     }

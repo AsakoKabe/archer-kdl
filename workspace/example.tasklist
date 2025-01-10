@@ -2,10 +2,142 @@
   "id": "d63b4a87-ca5e-41f8-b800-83ff4947a1ce",
   "tasks": [],
   "transitions": [],
-  "ingresses": [],
-  "clusters": [],
-  "pods": [],
-  "services": [],
-  "containers": [],
-  "ports": []
+  "ingresses": [
+    {
+      "id": "26e37517-9264-472e-8993-733fc3809465",
+      "name": "312",
+      "host": "123",
+      "position": {
+        "x": 75.73192662925135,
+        "y": -132.8161869812073
+      },
+      "size": {
+        "width": 150.4296875,
+        "height": 121
+      },
+      "nodeType": "ingress"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "58119f83-500d-462c-9a2e-59389e81682e",
+      "name": "Cluster0",
+      "position": {
+        "x": 77.39061139030377,
+        "y": 119.3364713935145
+      },
+      "size": {
+        "width": 287.32556628408025,
+        "height": 246
+      },
+      "nodeType": "cluster",
+      "ingress_ids": [
+        "26e37517-9264-472e-8993-733fc3809465"
+      ],
+      "pod_ids": [
+        "36400e14-c2fc-4cb6-a543-b587391cc05b"
+      ],
+      "service_ids": [
+        "7f31b9e4-f8aa-4eb9-857d-e9841d8c0368"
+      ]
+    }
+  ],
+  "pods": [
+    {
+      "id": "36400e14-c2fc-4cb6-a543-b587391cc05b",
+      "name": "Pod0",
+      "position": {
+        "x": 67.71832396318916,
+        "y": 85.32123477985832
+      },
+      "size": {
+        "width": 180.85305382749695,
+        "height": 113.5374986788579
+      },
+      "nodeType": "pod",
+      "container_ids": [
+        "eb696851-db4e-4e5c-9e2b-8818dd7aef33",
+        "3f847f59-2db3-418f-b55a-70ed68e94d74"
+      ],
+      "port_ids": [
+        "2f63ec74-7c75-49b7-902b-c8263d4b99a4"
+      ]
+    }
+  ],
+  "services": [
+    {
+      "id": "7f31b9e4-f8aa-4eb9-857d-e9841d8c0368",
+      "name": "Service0",
+      "position": {
+        "x": 108.6216822945506,
+        "y": 10.013147702099246
+      },
+      "size": {
+        "width": 129.37582121015006,
+        "height": 59.42064058293039
+      },
+      "nodeType": "service",
+      "port_ids": [
+        "0e8f2ab1-2e8e-45c8-9c42-b2617d4d18cd"
+      ]
+    }
+  ],
+  "containers": [
+    {
+      "id": "eb696851-db4e-4e5c-9e2b-8818dd7aef33",
+      "name": "df",
+      "position": {
+        "x": 98.6701085760321,
+        "y": 19.303828621476384
+      },
+      "size": {
+        "width": 72.18294525146484,
+        "height": 32.5918550491333
+      },
+      "nodeType": "container"
+    },
+    {
+      "id": "3f847f59-2db3-418f-b55a-70ed68e94d74",
+      "name": "Container1",
+      "position": {
+        "x": 16.041556146364684,
+        "y": 31.174561433684005
+      },
+      "nodeType": "container",
+      "size": {
+        "width": 72.18294525146484,
+        "height": 32.315232276916504
+      }
+    }
+  ],
+  "ports": [
+    {
+      "id": "2f63ec74-7c75-49b7-902b-c8263d4b99a4",
+      "name": "Port0",
+      "number": "8080",
+      "position": {
+        "x": -49.58821948147107,
+        "y": -6.732997291225331
+      },
+      "size": {
+        "width": 45.492828369140625,
+        "height": 55.883121490478516
+      },
+      "nodeType": "port"
+    },
+    {
+      "id": "0e8f2ab1-2e8e-45c8-9c42-b2617d4d18cd",
+      "name": "Port1",
+      "number": "8080",
+      "position": {
+        "x": -48.2219032908026,
+        "y": -38.13933423540064
+      },
+      "size": {
+        "width": 45.49489212036133,
+        "height": 55.574745178222656
+      },
+      "nodeType": "port"
+    }
+  ]
 }
