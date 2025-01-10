@@ -75,7 +75,6 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
             .build();
     }
 
-
     protected createStructCompartment(): GCompartment {
         return new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.STRUCTURE)

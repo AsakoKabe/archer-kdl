@@ -34,6 +34,7 @@
     fill: #FEE897;
 }
 
+
 .cluster .ingress > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
@@ -66,8 +67,45 @@
     fill: #94D564;
 }
 
+/* .sprotty-label {
+    stroke-width: 0;
+    fill: #000;
+    font-weight: inherit;
+    text-align: inherit;
+    font-size: 100%;
+} */
+
+.sprotty-label.heading {
+    font-size: 100%;
+}
+
 .port > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
     fill: #FEE897;
+}
+
+.port .sprotty-label.heading {
+    font-size: 60%;
+}
+
+.sprotty-edge{
+    fill: none;
+    stroke: black;
+    stroke-width: 1px;
+}
+
+.sprotty-edge .arrow {
+    fill: black;;
+}
+
+.label-edit input {
+    margin-top: -3px;
+    margin-left: -3px;
+}
+
+
+.sprotty-comp {
+    stroke: transparent;
+    fill: transparent;
 }

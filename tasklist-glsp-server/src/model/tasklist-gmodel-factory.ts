@@ -37,11 +37,11 @@ export class TaskListGModelFactory implements GModelFactory {
         const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
         const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
         const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster));
-        const newRoot = GGraph.builder() //
+        const newRoot = GGraph.builder()
             .id(taskList.id)
             .addChildren(childNodes)
-            .addChildren(childEdges)
             .addChildren(clusterNodes)
+            .addChildren(childEdges)
             .build();
         this.modelState.updateRoot(newRoot);
     }
@@ -65,7 +65,7 @@ export class TaskListGModelFactory implements GModelFactory {
     protected createTransitionEdge(transition: Transition): GEdge {
         return GEdge.builder()
             .id(transition.id)
-            .addCssClass('tasklist-transition')
+            .addCssClass('transition')
             .sourceId(transition.sourceTaskId)
             .targetId(transition.targetTaskId)
             .build();

@@ -16,7 +16,7 @@
 /** @jsx svg */
 
 import { injectable } from 'inversify';
-import { RenderingContext, Hoverable, Selectable, GNode, svg, GPort, DiamondNodeView } from '@eclipse-glsp/client';
+import { RenderingContext, Hoverable, Selectable, GNode, svg, GPort, DiamondNodeView, PolylineEdgeViewWithGapsOnIntersections, GEdge, Point, toDegrees, angleOfPoint } from '@eclipse-glsp/client';
 import { VNode } from 'snabbdom';
 
 @injectable()
@@ -77,5 +77,24 @@ export class Parallelogram {
         const bottomLeftY = this.y + this.height;
 
         return `${topLeftX},${topLeftY} ${topRightX},${topRightY} ${bottomRightX},${bottomRightY} ${bottomLeftX},${bottomLeftY}`;
+    }
+}
+
+@injectable()
+export class ArrowEdgeView extends PolylineEdgeViewWithGapsOnIntersections {
+    protected override renderAdditionals(edge: GEdge, segments: Point[], context: RenderingContext): VNode[] {
+        const additionals = super.renderAdditionals(edge, segments, context);
+        const p1 = segments[segments.length - 2];
+        const p2 = segments[segments.length - 1];
+        const arrow = (
+            <path
+                class-sprotty-edge={true}
+                class-arrow={true}
+                d='M 1,0 L 10,-4 L 10,4 Z'
+                transform={`rotate(${toDegrees(angleOfPoint(Point.subtract(p1, p2)))} ${p2.x} ${p2.y}) translate(${p2.x} ${p2.y})`}
+            />
+        );
+        additionals.push(arrow);
+        return additionals;
     }
 }

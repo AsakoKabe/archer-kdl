@@ -19,13 +19,16 @@ import {
     configureModelElement,
     ConsoleLogger,
     ContainerConfiguration,
+    DefaultTypes,
     editLabelFeature,
     GCompartment,
     GCompartmentView,
+    GEdge,
     GLabel,
     GLabelView,
     initializeDiagramContainer,
     LogLevel,
+    overrideModelElement,
     RoundedCornerNodeView,
     StructureCompartmentView,
     TYPES
@@ -34,7 +37,7 @@ import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
 import { ClusterNode, ContainerNode, IngressNode, PodNode, PortNode, ServiceNode } from './model';
-import { IngressNodeView } from './view';
+import { ArrowEdgeView, IngressNodeView } from './view';
 
 const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -47,11 +50,12 @@ const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind
     configureModelElement(context, 'cluster', ClusterNode, RoundedCornerNodeView);
     configureModelElement(context, 'struct', GCompartment, StructureCompartmentView);
     configureModelElement(context, 'ingress', IngressNode, IngressNodeView);
-    configureModelElement(context, 'ingress:body', GCompartment, IngressNodeView);
+    // configureModelElement(context, 'ingress:body', GCompartment, IngressNodeView);
     configureModelElement(context, 'pod', PodNode, RoundedCornerNodeView);
     configureModelElement(context, 'service', ServiceNode, RoundedCornerNodeView);
     configureModelElement(context, 'container', ContainerNode, RoundedCornerNodeView);
     configureModelElement(context, 'port', PortNode, RoundedCornerNodeView);
+    overrideModelElement(context, DefaultTypes.EDGE, GEdge, ArrowEdgeView);
 });
 
 export function initializeTasklistDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {

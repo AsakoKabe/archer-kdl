@@ -79,7 +79,7 @@ export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder
 
     protected createStructCompartment(): GCompartment {
         return new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.INGRESS_BODY)
+            .type(ModelTypes.STRUCTURE)
             .id(this.proxy.id + '_struct')
             .layout('freeform')
             .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })

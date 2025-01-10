@@ -97,10 +97,10 @@ export class TaskListDiagramConfiguration implements DiagramConfiguration {
             {
                 elementTypeId: DefaultTypes.EDGE,
                 deletable: true,
-                repositionable: false,
-                routable: false,
-                sourceElementTypeIds: [DefaultTypes.NODE],
-                targetElementTypeIds: [DefaultTypes.NODE]
+                repositionable: true,
+                routable: true,
+                sourceElementTypeIds: [ModelTypes.SERVICE, ModelTypes.INGRESS, ModelTypes.CONTAINER],
+                targetElementTypeIds: [ModelTypes.PORT]
             }
         ];
     }
