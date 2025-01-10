@@ -24,8 +24,8 @@ export class PortNode extends GNode {
 
     static override builder(): PortNodeBuilder {
         return new PortNodeBuilder(PortNode)
-            .layout('vbox')
-            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false})
+            .layout('hbox')
+            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('port')
             .resizeLocations(GResizeLocation.CORNERS);
     }
@@ -38,8 +38,7 @@ export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder
     }
 
     children(): this {
-        this.proxy.children.push(this.addNumber());
-        this.proxy.children.push(this.addName());
+        this.proxy.children.push(this.addData());
         return this;
     }
     nodeType(nodeType: string): this {
@@ -51,30 +50,14 @@ export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder
         return this;
     }
 
-    protected addName(): GCompartment {
-        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
-        const builder = new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.COMP_HEADER)
-            .id(this.proxy.id + '_label_name')
-            .layout('hbox')
-            .addLayoutOptions(layoutOptions);
-        builder.add(
-            new GLabelBuilder(GLabel)
-                .type(ModelTypes.LABEL_HEADING)
-                .id(this.proxy.id + '_name')
-                .text(this.proxy.name)
-                .build()
-        );
-        return builder.build();
-    }
-
-    protected addNumber(): GCompartment {
-        const layoutOptions: Args = { vGrab: true, vAlign: 'center' };
+    protected addData(): GCompartment {
+        const layoutOptions: Args = { hGrab: true, hAlign: 'center', vGap: 2 };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_number')
-            .layout('hbox')
+            .layout('vbox')
             .addLayoutOptions(layoutOptions);
+
         if (this.proxy.number) {
             builder.add(
                 new GLabelBuilder(GLabel)
@@ -84,6 +67,13 @@ export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder
                     .build()
             );
         }
+        builder.add(
+            new GLabelBuilder(GLabel)
+                .type(ModelTypes.LABEL_HEADING)
+                .id(this.proxy.id + '_name')
+                .text(this.proxy.name)
+                .build()
+        );
         return builder.build();
     }
 
