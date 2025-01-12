@@ -54,7 +54,7 @@ export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder
         const layoutOptions: Args = { hGrab: true, hAlign: 'center', vGap: 2 };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
-            .id(this.proxy.id + '_number')
+            .id(this.proxy.id + '_data')
             .layout('vbox')
             .addLayoutOptions(layoutOptions);
 
@@ -62,7 +62,7 @@ export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder
             builder.add(
                 new GLabelBuilder(GLabel)
                     .type(ModelTypes.LABEL_HEADING)
-                    .id(this.proxy.id + '_label_number')
+                    .id(this.proxy.id + '_number')
                     .text(this.proxy.number)
                     .build()
             );
