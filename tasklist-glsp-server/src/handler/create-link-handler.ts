@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2022-2023 EclipseSource and others.
+ * Copyright (c) 2022 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -14,49 +14,33 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import {
-    Command,
-    CreateNodeOperation,
-    DefaultTypes,
-    GNode,
-    JsonCreateNodeOperationHandler,
-    MaybePromise,
-    Point
-} from '@eclipse-glsp/server';
+import { Command, CreateEdgeOperation, DefaultTypes, JsonCreateEdgeOperationHandler, MaybePromise } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { Task } from '../model/tasklist-model';
+import { Link } from '../model/tasklist-model';
 import { TaskListModelState } from '../model/tasklist-model-state';
-import { ModelTypes } from '../utils/model-types';
 
 @injectable()
-export class CreateTaskHandler extends JsonCreateNodeOperationHandler {
-    readonly elementTypeIds = [DefaultTypes.NODE];
+export class CreateLinkHandler extends JsonCreateEdgeOperationHandler {
+    readonly elementTypeIds = [DefaultTypes.EDGE];
 
     @inject(TaskListModelState)
     protected override modelState: TaskListModelState;
 
-    override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
+    override createCommand(operation: CreateEdgeOperation): MaybePromise<Command | undefined> {
         return this.commandOf(() => {
-            const relativeLocation = this.getRelativeLocation(operation) ?? Point.ORIGIN;
-            const task = this.createTask(relativeLocation);
-            const taskList = this.modelState.sourceModel;
-            taskList.tasks.push(task);
+            const link: Link = {
+                id: uuid.v4(),
+                sourceId: operation.sourceElementId,
+                targetId: operation.targetElementId,
+                type: DefaultTypes.EDGE,
+                routingPoints: []
+            };
+            this.modelState.sourceModel.links.push(link);
         });
     }
 
-    protected createTask(position: Point): Task {
-        const nodeCounter = this.modelState.index.getAllByClass(GNode).length;
-        return {
-            id: uuid.v4(),
-            name: `NewTaskNode${nodeCounter}`,
-            size: { width: 100, height: 100 },
-            position: position,
-            type: ModelTypes.TASK
-        };
-    }
-
     get label(): string {
-        return 'Task';
+        return 'Link';
     }
 }

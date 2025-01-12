@@ -14,17 +14,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
-import { ArgsUtil, GCompartment, GEdge, GGraph, GLabel, GModelFactory, GNode } from '@eclipse-glsp/server';
+import { ArgsUtil, GCompartment, GEdge, GGraph, GModelFactory } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { Cluster, Container, Ingress, Pod, Port, Service, Task, Transition } from './tasklist-model';
-import { TaskListModelState } from './tasklist-model-state';
 import { ModelTypes } from '../utils/model-types';
 import { ClusterNode } from './cluster-node';
+import { ContainerNode } from './container-node';
 import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
-import { ServiceNode } from './service-node';
-import { ContainerNode } from './container-node';
 import { PortNode } from './port-node';
+import { ServiceNode } from './service-node';
+import { Cluster, Container, Ingress, Link, Pod, Port, Service } from './tasklist-model';
+import { TaskListModelState } from './tasklist-model-state';
 
 @injectable()
 export class TaskListGModelFactory implements GModelFactory {
@@ -34,41 +34,19 @@ export class TaskListGModelFactory implements GModelFactory {
     createModel(): void {
         const taskList = this.modelState.sourceModel;
         this.modelState.index.indexTaskList(taskList);
-        const childNodes = taskList.tasks.map(task => this.createTaskNode(task));
-        const childEdges = taskList.transitions.map(transition => this.createTransitionEdge(transition));
+        const childEdges = taskList.links.map(transition => this.createLinkEdge(transition));
         const clusterNodes = taskList.clusters.map(cluster => this.createClusterNode(cluster));
-        const newRoot = GGraph.builder()
-            .id(taskList.id)
-            .addChildren(childNodes)
-            .addChildren(clusterNodes)
-            .addChildren(childEdges)
-            .build();
+        const newRoot = GGraph.builder().id(taskList.id).addChildren(clusterNodes).addChildren(childEdges).build();
         this.modelState.updateRoot(newRoot);
     }
 
-    protected createTaskNode(task: Task): GNode {
-        const builder = GNode.builder()
-            .id(task.id)
-            .addCssClass('tasklist-node')
-            .add(GLabel.builder().text(task.name).id(`${task.id}_label`).build())
-            .layout('hbox')
-            .addLayoutOption('paddingLeft', 5)
-            .position(task.position);
-
-        if (task.size) {
-            builder.addLayoutOptions({ prefWidth: task.size.width, prefHeight: task.size.height });
-        }
-
-        return builder.build();
-    }
-
-    protected createTransitionEdge(transition: Transition): GEdge {
+    protected createLinkEdge(link: Link): GEdge {
         return GEdge.builder()
-            .id(transition.id)
-            .addCssClass('transition')
-            .sourceId(transition.sourceTaskId)
-            .targetId(transition.targetTaskId)
-            .addRoutingPoints(transition.routingPoints)
+            .id(link.id)
+            .addCssClass('link')
+            .sourceId(link.sourceId)
+            .targetId(link.targetId)
+            .addRoutingPoints(link.routingPoints)
             .build();
     }
 
@@ -107,16 +85,12 @@ export class TaskListGModelFactory implements GModelFactory {
     }
 
     protected createIngressNode(ingress: Ingress): GCompartment {
-        const builder = IngressNode.builder()
-            .type(ModelTypes.INGRESS)
-            .position(ingress.position)
-            .name(ingress.name)
-            .id(ingress.id);
+        const builder = IngressNode.builder().type(ModelTypes.INGRESS).position(ingress.position).name(ingress.name).id(ingress.id);
 
         if (ingress.size) {
             builder.addLayoutOptions({ prefWidth: ingress.size.width, prefHeight: ingress.size.height });
         }
-        if (ingress.host){
+        if (ingress.host) {
             builder.host(ingress.host);
         }
         builder.children();

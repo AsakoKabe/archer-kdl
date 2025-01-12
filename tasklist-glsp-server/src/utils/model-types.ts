@@ -14,7 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 export namespace ModelTypes {
-    export const TASK = 'task';
     export const CLUSTER = 'cluster';
     export const INGRESS = 'ingress';
     export const LABEL_HEADING = 'label:heading';
@@ -31,8 +30,6 @@ export namespace ModelTypes {
         switch (type) {
             case CLUSTER:
                 return 'cluster';
-            case TASK:
-                return 'task';
             case INGRESS:
                 return 'ingress';
             case POD:

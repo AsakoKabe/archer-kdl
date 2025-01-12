@@ -29,24 +29,23 @@ import {
     SourceModelStorage
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { CreateTaskHandler } from '../handler/create-task-node-handler';
-import { CreateTransitionHandler } from '../handler/create-transition-handler';
+import { CreateClusterHandler } from '../handler/create-cluster-node-handler';
+import { CreateContainerHandler } from '../handler/create-container-node-handler';
+import { CreateIngressHandler } from '../handler/create-ingress-node-handler';
+import { CreateLinkHandler } from '../handler/create-link-handler';
+import { CreatePodHandler } from '../handler/create-pod-node-handler';
+import { CreatePortHandler } from '../handler/create-port-node-handler';
+import { CreateServiceHandler } from '../handler/create-service-node-handler';
 import { DeleteElementHandler } from '../handler/delete-element-handler';
+import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-edit-handler';
 import { TaskListChangeBoundsHandler } from '../handler/tasklist-change-bounds-handler';
+import { TaskListChangeRoutingPointsHandler } from '../handler/tasklist-change-routing-points-handler';
 import { TaskListLabelEditValidator } from '../handler/tasklist-label-edit-validator';
 import { TaskListGModelFactory } from '../model/tasklist-gmodel-factory';
 import { TaskListModelIndex } from '../model/tasklist-model-index';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { TaskListStorage } from '../model/tasklist-storage';
 import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
-import { CreateClusterHandler } from '../handler/create-cluster-node-handler';
-import { CreateIngressHandler } from '../handler/create-ingress-node-handler';
-import { TaskListApplyLabelEditHandler } from '../handler/tasklist-apply-label-edit-handler';
-import { CreatePodHandler } from '../handler/create-pod-node-handler';
-import { CreateServiceHandler } from '../handler/create-service-node-handler';
-import { CreateContainerHandler } from '../handler/create-container-node-handler';
-import { CreatePortHandler } from '../handler/create-port-node-handler';
-import { TaskListChangeRoutingPointsHandler } from '../handler/tasklist-change-routing-points-handler';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
@@ -75,8 +74,7 @@ export class TaskListDiagramModule extends DiagramModule {
 
     protected override configureOperationHandlers(binding: InstanceMultiBinding<OperationHandlerConstructor>): void {
         super.configureOperationHandlers(binding);
-        binding.add(CreateTaskHandler);
-        binding.add(CreateTransitionHandler);
+        binding.add(CreateLinkHandler);
         binding.add(TaskListChangeBoundsHandler);
         binding.add(TaskListApplyLabelEditHandler);
         binding.add(DeleteElementHandler);

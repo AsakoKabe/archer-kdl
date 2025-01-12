@@ -24,14 +24,10 @@ import { PodNode } from './pod-node';
 import { PortNode } from './port-node';
 import { ServiceNode } from './service-node';
 
-/**
- * The source model for `tasklist` GLSP diagrams. A `TaskList` is a
- * plain JSON objects that contains a set of {@link Task tasks} and {@link Transition transitions}.
- */
+
 export interface TaskList {
     id: string;
-    tasks: Task[];
-    transitions: Transition[];
+    links: Link[];
     clusters: Cluster[];
     ingresses: Ingress[];
     pods: Pod[];
@@ -42,39 +38,33 @@ export interface TaskList {
 
 export namespace TaskList {
     export function is(object: any): object is TaskList {
-        return AnyObject.is(object) && hasStringProp(object, 'id') && hasArrayProp(object, 'tasks');
-    }
-}
-
-export interface Task extends KDLBaseElement, KDLShapeElement {
-    name: string;
-}
-
-export namespace Task {
-    export function is(object: any): object is Task {
         return (
             AnyObject.is(object) &&
-            KDLShapeElement.is(object) &&
-            KDLBaseElement.is(object) &&
-            hasStringProp(object, 'name') &&
-            object.type === ModelTypes.TASK
+            hasStringProp(object, 'id') &&
+            hasArrayProp(object, 'links') &&
+            hasArrayProp(object, 'clusters') &&
+            hasArrayProp(object, 'ingresses') &&
+            hasArrayProp(object, 'pods') &&
+            hasArrayProp(object, 'services') &&
+            hasArrayProp(object, 'containers') &&
+            hasArrayProp(object, 'ports')
         );
     }
 }
 
-export interface Transition extends KDLBaseElement {
-    sourceTaskId: string;
-    targetTaskId: string;
+export interface Link extends KDLBaseElement {
+    sourceId: string;
+    targetId: string;
     routingPoints: Point[];
 }
 
-export namespace Transition {
-    export function is(object: any): object is Transition {
+export namespace Link {
+    export function is(object: any): object is Link {
         return (
             AnyObject.is(object) &&
             KDLBaseElement.is(object) &&
-            hasStringProp(object, 'sourceTaskId') &&
-            hasStringProp(object, 'targetTaskId') &&
+            hasStringProp(object, 'sourceId') &&
+            hasStringProp(object, 'targetId') &&
             hasArrayProp(object, 'routingPoints') &&
             object.type === DefaultTypes.EDGE
         );
