@@ -25,6 +25,7 @@ import {
     InstanceMultiBinding,
     LabelEditValidator,
     ModelState,
+    ModelValidator,
     OperationHandlerConstructor,
     SourceModelStorage
 } from '@eclipse-glsp/server';
@@ -46,6 +47,8 @@ import { TaskListModelIndex } from '../model/tasklist-model-index';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { TaskListStorage } from '../model/tasklist-storage';
 import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
+import { KDLModelValidator } from '../handler/kdl-model-validator';
+import { KuberClient } from '../kuber/client';
 
 @injectable()
 export class TaskListDiagramModule extends DiagramModule {
@@ -95,5 +98,10 @@ export class TaskListDiagramModule extends DiagramModule {
 
     protected override bindLabelEditValidator(): BindingTarget<LabelEditValidator> | undefined {
         return TaskListLabelEditValidator;
+    }
+
+    protected override bindModelValidator(): BindingTarget<ModelValidator> | undefined {
+        this.context.bind(KuberClient).toSelf().inSingletonScope();
+        return KDLModelValidator;
     }
 }
