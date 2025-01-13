@@ -3,9 +3,39 @@
   "tasks": [],
   "links": [],
   "ingresses": [],
-  "clusters": [],
+  "clusters": [
+    {
+      "id": "35254264-938c-4ac9-865a-5cf63a1d7f6c",
+      "name": "Cluster0",
+      "position": {
+        "x": 195.79296875,
+        "y": 83
+      },
+      "size": {
+        "width": 100.49609375,
+        "height": 115
+      },
+      "type": "cluster",
+      "ingress_ids": [],
+      "pod_ids": [],
+      "service_ids": [
+        "091aace3-552f-496e-8787-67926bd8f706"
+      ]
+    }
+  ],
   "pods": [],
-  "services": [],
+  "services": [
+    {
+      "id": "091aace3-552f-496e-8787-67926bd8f706",
+      "name": "Service0",
+      "position": {
+        "x": 19.91796875,
+        "y": 43
+      },
+      "type": "service",
+      "port_ids": []
+    }
+  ],
   "containers": [],
   "ports": []
 }

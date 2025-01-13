@@ -25,9 +25,9 @@ import {
     InstanceMultiBinding,
     LabelEditValidator,
     ModelState,
-    ModelValidator,
     OperationHandlerConstructor,
-    SourceModelStorage
+    SourceModelStorage,
+    ToolPaletteItemProvider
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
 import { CreateClusterHandler } from '../handler/create-cluster-node-handler';
@@ -47,7 +47,8 @@ import { TaskListModelIndex } from '../model/tasklist-model-index';
 import { TaskListModelState } from '../model/tasklist-model-state';
 import { TaskListStorage } from '../model/tasklist-storage';
 import { TaskListDiagramConfiguration } from './tasklist-diagram-configuration';
-import { KDLModelValidator } from '../handler/kdl-model-validator';
+import { KuberToolPaletteItemProvider } from '../palette/kuber-palette';
+import { KuberRecoverActionHandler } from '../handler/kuber-recover-action';
 import { KuberClient } from '../kuber/client';
 
 @injectable()
@@ -73,6 +74,8 @@ export class TaskListDiagramModule extends DiagramModule {
     protected override configureActionHandlers(binding: InstanceMultiBinding<ActionHandlerConstructor>): void {
         super.configureActionHandlers(binding);
         binding.add(ComputedBoundsActionHandler);
+        binding.add(KuberRecoverActionHandler);
+        this.context.bind(KuberClient).toSelf().inSingletonScope();
     }
 
     protected override configureOperationHandlers(binding: InstanceMultiBinding<OperationHandlerConstructor>): void {
@@ -100,8 +103,7 @@ export class TaskListDiagramModule extends DiagramModule {
         return TaskListLabelEditValidator;
     }
 
-    protected override bindModelValidator(): BindingTarget<ModelValidator> | undefined {
-        this.context.bind(KuberClient).toSelf().inSingletonScope();
-        return KDLModelValidator;
+    protected override bindToolPaletteItemProvider(): BindingTarget<ToolPaletteItemProvider> | undefined {
+        return { service: KuberToolPaletteItemProvider };
     }
 }

@@ -15,6 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 import {
+    configureActionHandler,
     configureDefaultModelElements,
     configureModelElement,
     ConsoleLogger,
@@ -38,6 +39,7 @@ import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
 import { ClusterNode, ContainerNode, IngressNode, PodNode, PortNode, ServiceNode } from './model';
 import { ArrowEdgeView, IngressNodeView } from './view';
+import { MyCustomResponseAction, MyCustomResponseActionHandler } from './kuber-action-hundler';
 
 const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -56,6 +58,8 @@ const taskListDiagramModule = new ContainerModule((bind, unbind, isBound, rebind
     configureModelElement(context, 'container', ContainerNode, RoundedCornerNodeView);
     configureModelElement(context, 'port', PortNode, RoundedCornerNodeView);
     overrideModelElement(context, DefaultTypes.EDGE, GEdge, ArrowEdgeView);
+    configureActionHandler(context, MyCustomResponseAction.KIND, MyCustomResponseActionHandler);
+
 });
 
 export function initializeTasklistDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {
