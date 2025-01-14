@@ -26,7 +26,7 @@ import {
 import { inject, injectable } from 'inversify';
 import { KuberClient } from '../kuber/client';
 import { TaskListModelState } from '../model/tasklist-model-state';
-import { Cluster, Pod, Port, Container } from '../model/tasklist-model';
+import { Cluster, Pod, Port, Container, Service, Ingress } from '../model/tasklist-model';
 import * as k8s from '@kubernetes/client-node';
 
 export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverResponseAction> {
@@ -102,7 +102,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
                 }
             });
         } catch (error) {
-            throw new GLSPServerError('Error to send k8s request to get namespaces');
+            throw new GLSPServerError('Error to send k8s request to get pods');
         }
     }
 
@@ -112,12 +112,12 @@ export class KuberRecoverActionHandler implements ActionHandler {
             this.modelState.sourceModel.containers.push(container);
             pod.container_ids.push(container.id);
             if (kuberContainer.ports) {
-                this.recoverPorts(pod, kuberContainer.ports);
+                this.recoverPodPorts(pod, kuberContainer.ports);
             }
         });
     }
 
-    private recoverPorts(pod: Pod, kuberPorts: k8s.V1ContainerPort[]): void {
+    private recoverPodPorts(pod: Pod, kuberPorts: k8s.V1ContainerPort[]): void {
         kuberPorts?.forEach(kuberPort => {
             const port = Port.create(kuberPort.containerPort.toString(), kuberPort.name);
             this.modelState.sourceModel.ports.push(port);
@@ -125,10 +125,56 @@ export class KuberRecoverActionHandler implements ActionHandler {
         });
     }
 
+    private recoverServicePorts(service: Service, kuberPorts: k8s.V1ServicePort[]): void {
+      kuberPorts?.forEach(kuberPort => {
+          const port = Port.create(kuberPort.port.toString(), kuberPort.name);
+          this.modelState.sourceModel.ports.push(port);
+          service.port_ids.push(port.id);
+      });
+  }
+
+    private async recoverServices(cluster: Cluster): Promise<void> {
+      try {
+          const serviceList = await this.kuberClient.getServices(cluster.name);
+          serviceList.items.forEach(kuberService => {
+              const service = Service.create(kuberService.metadata?.name);
+              cluster.service_ids.push(service.id);
+              this.modelState.sourceModel.services.push(service);
+              if (kuberService.spec?.ports) {
+                  this.recoverServicePorts(service, kuberService.spec.ports);
+              }
+          });
+      } catch (error) {
+          throw new GLSPServerError('Error to send k8s request to get services');
+      }
+  }
+
+  private async recoverIngresses(cluster: Cluster): Promise<void> {
+    try {
+        const ingressList = await this.kuberClient.getIngresses(cluster.name);
+        ingressList.items.forEach(kuberIngress => {
+            const ingressName = kuberIngress.metadata?.name;
+            kuberIngress.spec?.rules?.forEach(rule => {
+                if (rule.host){
+                    const ingress = Ingress.create(rule.host, ingressName);
+                    cluster.ingress_ids.push(ingress.id);
+                    this.modelState.sourceModel.ingresses.push(ingress);
+                }
+            });
+        });
+    } catch (error) {
+        throw new GLSPServerError('Error to send k8s request to get services');
+    }
+}
+
+
+
     private async recoverCluster(namespaces: string[]): Promise<void> {
         const clusters = namespaces.filter(namespace => !namespace.startsWith('kube')).map(namespace => Cluster.create(namespace));
 
         await Promise.all(clusters.map(cluster => this.recoverPods(cluster)));
+        await Promise.all(clusters.map(cluster => this.recoverServices(cluster)));
+        await Promise.all(clusters.map(cluster => this.recoverIngresses(cluster)));
 
         this.modelState.sourceModel.clusters.push(...clusters);
     }

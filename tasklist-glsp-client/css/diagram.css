@@ -30,6 +30,11 @@
     fill: #feaaa2;
 }
 
+.cluster .cluster > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
+}
+
 .ingress{
     fill: #FEE897;
 }

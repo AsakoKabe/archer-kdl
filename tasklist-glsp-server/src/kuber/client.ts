@@ -22,11 +22,13 @@ import { GLSPServerError } from '@eclipse-glsp/server';
 export class KuberClient {
     protected kc: k8s.KubeConfig;
     protected k8sApi: k8s.CoreV1Api;
+    protected k8sNerwokingApi: k8s.NetworkingV1Api;
 
     constructor() {
         this.kc = new k8s.KubeConfig();
         this.kc.loadFromDefault();
         this.k8sApi = this.kc.makeApiClient(k8s.CoreV1Api);
+        this.k8sNerwokingApi = this.kc.makeApiClient(k8s.NetworkingV1Api);
     }
 
     public async ping(): Promise<void> {
@@ -68,12 +70,12 @@ export class KuberClient {
         }
     }
 
-    // public async getIngresses(namespace: string): Promise<k8s.V1IngressList> {
-    //     try {
-    //         const ingresses = await this.k8sApi.list({ namespace: namespace });
-    //         return ingresses;
-    //     } catch (err) {
-    //         throw new GLSPServerError('Error to send k8s request to get ingresses');
-    //     }
-    // }
+    public async getIngresses(namespace: string): Promise<k8s.V1IngressList> {
+        try {
+            const ingresses = await this.k8sNerwokingApi.listNamespacedIngress({ namespace: namespace });
+            return ingresses;
+        } catch (err) {
+            throw new GLSPServerError('Error to send k8s request to get ingresses');
+        }
+    }
 }

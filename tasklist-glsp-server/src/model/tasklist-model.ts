@@ -168,6 +168,18 @@ export namespace Ingress {
             type: ingressNode.nodeType
         };
     }
+
+    export function create(host: string, name?: string): Ingress {
+        const ingressName = name ? name : 'ingressName';
+        return {
+            id: uuid.v4(),
+            name: ingressName,
+            host: host,
+            position: { x: 0, y: 0 },
+            // size: { width: 100, height: 100 },
+            type: ModelTypes.INGRESS
+        };
+    }
 }
 
 export interface Pod extends KDLBaseElement, KDLShapeElement {
@@ -239,6 +251,18 @@ export namespace Service {
             position: serviceNode.position,
             size: serviceNode.size,
             type: serviceNode.nodeType,
+            port_ids: []
+        };
+    }
+
+    export function create(name?: string): Service {
+        const serviceName = name ? name : 'serviceName';
+        return {
+            id: uuid.v4(),
+            name: serviceName,
+            position: { x: 0, y: 0 },
+            // size: { width: 100, height: 100 },
+            type: ModelTypes.SERVICE,
             port_ids: []
         };
     }
