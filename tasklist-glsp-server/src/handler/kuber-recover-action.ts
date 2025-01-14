@@ -14,10 +14,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { Action, ActionHandler, MaybePromise, RequestAction, ResponseAction } from '@eclipse-glsp/server';
+import {
+    Action,
+    ActionHandler,
+    GLSPServerError,
+    MaybePromise,
+    ModelSubmissionHandler,
+    RequestAction,
+    ResponseAction
+} from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { KuberClient } from '../kuber/client';
- 
+import { TaskListModelState } from '../model/tasklist-model-state';
+import { Cluster, Pod, Port, Container } from '../model/tasklist-model';
+import * as k8s from '@kubernetes/client-node';
+
 export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverResponseAction> {
     kind: typeof KuberRecoverRequestAction.KIND;
 }
@@ -25,14 +36,14 @@ export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverRes
 export namespace KuberRecoverRequestAction {
     export const KIND = 'kuberRecoverKind';
     export function is(object: any): object is KuberRecoverRequestAction {
-      return (RequestAction.hasKind(object, KIND));
+        return RequestAction.hasKind(object, KIND);
     }
-    export function create(options: {requestId?: string }): KuberRecoverRequestAction {
-      return {
-          kind: KIND,
-          requestId: '',
-          ...options
-      };
+    export function create(options: { requestId?: string }): KuberRecoverRequestAction {
+        return {
+            kind: KIND,
+            requestId: '',
+            ...options
+        };
     }
 }
 
@@ -58,18 +69,67 @@ export namespace KuberRecoverResponseAction {
 
 @injectable()
 export class KuberRecoverActionHandler implements ActionHandler {
-  actionKinds = [KuberRecoverRequestAction.KIND];
+    actionKinds = [KuberRecoverRequestAction.KIND];
 
-  @inject(KuberClient)
-  protected kuberClient: KuberClient;
+    @inject(KuberClient)
+    protected kuberClient: KuberClient;
 
-  execute(action: KuberRecoverRequestAction): MaybePromise<Action[]> {
-    // implement your custom logic to handle the action
+    @inject(TaskListModelState)
+    protected modelState: TaskListModelState;
 
-    // Finally issue response actions
-    // If no response actions should be issued '[]' can be used;
-    // console.error('MyCustomActionHandler');
-    this.kuberClient.ping();
-    return [];
-  }
+    @inject(ModelSubmissionHandler)
+    protected modelSubmissionHandler: ModelSubmissionHandler;
+
+    execute(action: KuberRecoverRequestAction): MaybePromise<Action[]> {
+        return this.kuberClient
+            .getNamespaces()
+            .then(namespaces => this.recoverCluster(namespaces))
+            .then(() => {
+                const result = this.modelSubmissionHandler.submitModel('external');
+                return result;
+            });
+    }
+
+    private async recoverPods(cluster: Cluster): Promise<void> {
+        try {
+            const podsList = await this.kuberClient.getPods(cluster.name);
+            podsList.items.forEach(kuberPod => {
+                const pod = Pod.create(kuberPod.metadata?.name);
+                cluster.pod_ids.push(pod.id);
+                this.modelState.sourceModel.pods.push(pod);
+                if (kuberPod.spec?.containers) {
+                    this.recoverContainers(pod, kuberPod.spec.containers);
+                }
+            });
+        } catch (error) {
+            throw new GLSPServerError('Error to send k8s request to get namespaces');
+        }
+    }
+
+    private recoverContainers(pod: Pod, kuberContainers: k8s.V1Container[]): void {
+        kuberContainers?.forEach(kuberContainer => {
+            const container = Container.create(kuberContainer.name);
+            this.modelState.sourceModel.containers.push(container);
+            pod.container_ids.push(container.id);
+            if (kuberContainer.ports) {
+                this.recoverPorts(pod, kuberContainer.ports);
+            }
+        });
+    }
+
+    private recoverPorts(pod: Pod, kuberPorts: k8s.V1ContainerPort[]): void {
+        kuberPorts?.forEach(kuberPort => {
+            const port = Port.create(kuberPort.containerPort.toString(), kuberPort.name);
+            this.modelState.sourceModel.ports.push(port);
+            pod.port_ids.push(port.id);
+        });
+    }
+
+    private async recoverCluster(namespaces: string[]): Promise<void> {
+        const clusters = namespaces.filter(namespace => !namespace.startsWith('kube')).map(namespace => Cluster.create(namespace));
+
+        await Promise.all(clusters.map(cluster => this.recoverPods(cluster)));
+
+        this.modelState.sourceModel.clusters.push(...clusters);
+    }
 }

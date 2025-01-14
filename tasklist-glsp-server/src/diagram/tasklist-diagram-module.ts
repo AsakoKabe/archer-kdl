@@ -76,6 +76,7 @@ export class TaskListDiagramModule extends DiagramModule {
         binding.add(ComputedBoundsActionHandler);
         binding.add(KuberRecoverActionHandler);
         this.context.bind(KuberClient).toSelf().inSingletonScope();
+        this.context.bind(TaskListGModelFactory).toSelf();
     }
 
     protected override configureOperationHandlers(binding: InstanceMultiBinding<OperationHandlerConstructor>): void {

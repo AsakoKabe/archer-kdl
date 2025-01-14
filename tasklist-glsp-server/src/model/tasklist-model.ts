@@ -23,7 +23,7 @@ import { IngressNode } from './ingress-node';
 import { PodNode } from './pod-node';
 import { PortNode } from './port-node';
 import { ServiceNode } from './service-node';
-
+import * as uuid from 'uuid';
 
 export interface TaskList {
     id: string;
@@ -99,6 +99,19 @@ export namespace Cluster {
             position: clusterNode.position,
             size: clusterNode.size,
             type: clusterNode.nodeType,
+            ingress_ids: [],
+            pod_ids: [],
+            service_ids: []
+        };
+    }
+
+    export function create(name: string): Cluster {
+        return {
+            id: uuid.v4(),
+            name: name,
+            position: { x: 0, y: 0 },
+            // size: {width: 100, height: 100},
+            type: ModelTypes.CLUSTER,
             ingress_ids: [],
             pod_ids: [],
             service_ids: []
@@ -187,6 +200,19 @@ export namespace Pod {
             port_ids: []
         };
     }
+
+    export function create(name?: string): Pod {
+        const podName = name ? name : 'podName';
+        return {
+            id: uuid.v4(),
+            name: podName,
+            position: { x: 0, y: 0 },
+            // size: { width: 100, height: 100 },
+            type: ModelTypes.POD,
+            container_ids: [],
+            port_ids: []
+        };
+    }
 }
 
 export interface Service extends KDLBaseElement, KDLShapeElement {
@@ -242,6 +268,16 @@ export namespace Container {
             type: containerNode.nodeType
         };
     }
+
+    export function create(name: string): Container {
+        return {
+            id: uuid.v4(),
+            name: name,
+            position: { x: 0, y: 0 },
+            // size: { width: 100, height: 100 },
+            type: ModelTypes.CONTAINER
+        };
+    }
 }
 
 export interface Port extends KDLBaseElement, KDLShapeElement {
@@ -269,6 +305,18 @@ export namespace Port {
             position: portNode.position,
             size: portNode.size,
             type: portNode.nodeType
+        };
+    }
+
+    export function create(number: string, name?: string): Port {
+        const portName = name ? name : 'portName';
+        return {
+            id: uuid.v4(),
+            name: portName,
+            number: number,
+            position: { x: 0, y: 0 },
+            // size: { width: 100, height: 100 },
+            type: ModelTypes.PORT
         };
     }
 }

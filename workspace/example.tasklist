@@ -5,37 +5,138 @@
   "ingresses": [],
   "clusters": [
     {
-      "id": "35254264-938c-4ac9-865a-5cf63a1d7f6c",
-      "name": "Cluster0",
+      "id": "8409a900-2050-45da-816b-94af733cb810",
+      "name": "default",
       "position": {
-        "x": 195.79296875,
-        "y": 83
-      },
-      "size": {
-        "width": 100.49609375,
-        "height": 115
+        "x": 0,
+        "y": 0
       },
       "type": "cluster",
       "ingress_ids": [],
-      "pod_ids": [],
-      "service_ids": [
-        "091aace3-552f-496e-8787-67926bd8f706"
-      ]
+      "pod_ids": [
+        "72af4303-75f1-467c-a771-5a7a134b6950"
+      ],
+      "service_ids": []
+    },
+    {
+      "id": "170d82f6-dcec-4a16-9f9f-89c6b1ac665a",
+      "name": "rags",
+      "position": {
+        "x": 268,
+        "y": 237
+      },
+      "type": "cluster",
+      "ingress_ids": [],
+      "pod_ids": [
+        "093dfb17-0f18-482c-8922-a3635d55230f",
+        "33f2e593-405b-40b8-9d31-4068f05e66a1"
+      ],
+      "service_ids": [],
+      "size": {
+        "width": 376.703125,
+        "height": 211
+      }
     }
   ],
-  "pods": [],
-  "services": [
+  "pods": [
     {
-      "id": "091aace3-552f-496e-8787-67926bd8f706",
-      "name": "Service0",
+      "id": "093dfb17-0f18-482c-8922-a3635d55230f",
+      "name": "ronin-6dbdd7fbfc-bzf56",
       "position": {
-        "x": 19.91796875,
-        "y": 43
+        "x": 0,
+        "y": 0
       },
-      "type": "service",
+      "type": "pod",
+      "container_ids": [
+        "a0b21ff8-57fc-445a-a110-cf1514890776"
+      ],
+      "port_ids": [
+        "90e7b2db-ea8a-4edf-9edf-0e2c23e0ab03"
+      ]
+    },
+    {
+      "id": "33f2e593-405b-40b8-9d31-4068f05e66a1",
+      "name": "ui-86df54f46d-l7hkc",
+      "position": {
+        "x": 209,
+        "y": 69
+      },
+      "type": "pod",
+      "container_ids": [
+        "bb5f3589-b2fb-4aaf-b8d4-c593e2eea2bc"
+      ],
+      "port_ids": [
+        "67fcf423-9755-4dcd-a426-ae31bd84369a"
+      ],
+      "size": {
+        "width": 134.1953125,
+        "height": 76
+      }
+    },
+    {
+      "id": "72af4303-75f1-467c-a771-5a7a134b6950",
+      "name": "nginx-676b6c5bbc-kbtq6",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "pod",
+      "container_ids": [
+        "0857ceb1-078d-4840-b4af-4fe161b4bf79"
+      ],
       "port_ids": []
     }
   ],
-  "containers": [],
-  "ports": []
+  "services": [],
+  "containers": [
+    {
+      "id": "a0b21ff8-57fc-445a-a110-cf1514890776",
+      "name": "ronin",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "container"
+    },
+    {
+      "id": "bb5f3589-b2fb-4aaf-b8d4-c593e2eea2bc",
+      "name": "ui",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "container"
+    },
+    {
+      "id": "0857ceb1-078d-4840-b4af-4fe161b4bf79",
+      "name": "nginx",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "container"
+    }
+  ],
+  "ports": [
+    {
+      "id": "90e7b2db-ea8a-4edf-9edf-0e2c23e0ab03",
+      "name": "http-port",
+      "number": "8080",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "port"
+    },
+    {
+      "id": "67fcf423-9755-4dcd-a426-ae31bd84369a",
+      "name": "http-port",
+      "number": "3000",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "port"
+    }
+  ]
 }
