@@ -69,6 +69,16 @@ export namespace Link {
             object.type === DefaultTypes.EDGE
         );
     }
+
+    export function create(sourceId: string, targetId: string): Link {
+        return {
+            id: uuid.v4(),
+            type: DefaultTypes.EDGE,
+            sourceId: sourceId,
+            targetId: targetId,
+            routingPoints: []
+        };
+    }
 }
 
 export interface Cluster extends KDLBaseElement, KDLShapeElement {

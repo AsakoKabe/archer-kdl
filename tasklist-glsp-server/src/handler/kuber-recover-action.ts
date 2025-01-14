@@ -126,48 +126,64 @@ export class KuberRecoverActionHandler implements ActionHandler {
     }
 
     private recoverServicePorts(service: Service, kuberPorts: k8s.V1ServicePort[]): void {
-      kuberPorts?.forEach(kuberPort => {
-          const port = Port.create(kuberPort.port.toString(), kuberPort.name);
-          this.modelState.sourceModel.ports.push(port);
-          service.port_ids.push(port.id);
-      });
-  }
+        kuberPorts?.forEach(kuberPort => {
+            const port = Port.create(kuberPort.port.toString(), kuberPort.name);
+            this.modelState.sourceModel.ports.push(port);
+            service.port_ids.push(port.id);
+        });
+    }
 
     private async recoverServices(cluster: Cluster): Promise<void> {
-      try {
-          const serviceList = await this.kuberClient.getServices(cluster.name);
-          serviceList.items.forEach(kuberService => {
-              const service = Service.create(kuberService.metadata?.name);
-              cluster.service_ids.push(service.id);
-              this.modelState.sourceModel.services.push(service);
-              if (kuberService.spec?.ports) {
-                  this.recoverServicePorts(service, kuberService.spec.ports);
-              }
-          });
-      } catch (error) {
-          throw new GLSPServerError('Error to send k8s request to get services');
-      }
-  }
-
-  private async recoverIngresses(cluster: Cluster): Promise<void> {
-    try {
-        const ingressList = await this.kuberClient.getIngresses(cluster.name);
-        ingressList.items.forEach(kuberIngress => {
-            const ingressName = kuberIngress.metadata?.name;
-            kuberIngress.spec?.rules?.forEach(rule => {
-                if (rule.host){
-                    const ingress = Ingress.create(rule.host, ingressName);
-                    cluster.ingress_ids.push(ingress.id);
-                    this.modelState.sourceModel.ingresses.push(ingress);
+        try {
+            const serviceList = await this.kuberClient.getServices(cluster.name);
+            serviceList.items.forEach(kuberService => {
+                const service = Service.create(kuberService.metadata?.name);
+                cluster.service_ids.push(service.id);
+                this.modelState.sourceModel.services.push(service);
+                if (kuberService.spec?.ports) {
+                    this.recoverServicePorts(service, kuberService.spec.ports);
                 }
             });
-        });
-    } catch (error) {
-        throw new GLSPServerError('Error to send k8s request to get services');
+        } catch (error) {
+            throw new GLSPServerError('Error to send k8s request to get services');
+        }
     }
-}
 
+    private async recoverIngresses(cluster: Cluster): Promise<void> {
+        try {
+            const ingressList = await this.kuberClient.getIngresses(cluster.name);
+            ingressList.items.forEach(kuberIngress => {
+                const ingressName = kuberIngress.metadata?.name;
+                kuberIngress.spec?.rules?.forEach(rule => {
+                    if (rule.host) {
+                        const ingress = Ingress.create(rule.host, ingressName);
+                        cluster.ingress_ids.push(ingress.id);
+                        this.modelState.sourceModel.ingresses.push(ingress);
 
+                        // rule.http?.paths.forEach(path => {
+                        //     const serviceName = path.backend.service?.name;
+                        //     const servicePort = path.backend.service?.port?.number;
+                        //     const targerService = this.modelState.sourceModel.services
+                        //         .filter(service => service.name === serviceName)
+                        //         .at(0);
+                        //     console.error(serviceName, servicePort, targerService);
+                        //     if (targerService) {
+                        //         const targetPort = targerService.port_ids
+                        //             .map(portID => this.modelState.index.findPort(portID))
+                        //             .filter(port => port?.number === servicePort)
+                        //             .at(0);
+                        //         if (targetPort) {
+                        //             this.modelState.sourceModel.links.push(Link.create(ingress.id, targetPort.id));
+                        //         }
+                        //     }
+                        // });
+                    }
+                });
+            });
+        } catch (error) {
+            throw new GLSPServerError('Error to send k8s request to get services');
+        }
+    }
 
     private async recoverCluster(namespaces: string[]): Promise<void> {
         const clusters = namespaces.filter(namespace => !namespace.startsWith('kube')).map(namespace => Cluster.create(namespace));
