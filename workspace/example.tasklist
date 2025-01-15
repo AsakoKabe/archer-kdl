@@ -1,22 +1,41 @@
 {
   "id": "d63b4a87-ca5e-41f8-b800-83ff4947a1ce",
   "tasks": [],
-  "links": [],
+  "links": [
+    {
+      "id": "1cbcbab5-1984-4663-b1b8-ee6cad17397e",
+      "type": "edge",
+      "sourceId": "6860756f-4aaa-4097-9e6e-a4a1703c2b94",
+      "targetId": "a7bb8073-3853-4f6c-9970-2aa1ddd5ba17",
+      "routingPoints": []
+    },
+    {
+      "id": "c6056035-b21f-4372-94df-4d24b8cdb379",
+      "type": "edge",
+      "sourceId": "a518145d-7aec-4f4a-aed1-0ec16106912d",
+      "targetId": "f0093405-1001-43c0-a3da-8e891bb19d3e",
+      "routingPoints": []
+    }
+  ],
   "ingresses": [
     {
-      "id": "8ba1b8ed-7684-46cc-ade0-146b37bb685e",
+      "id": "13ebd487-ff96-439f-8e9e-e585544df522",
       "name": "ingress",
       "host": "rags.corernd.space",
       "position": {
-        "x": 0,
-        "y": 0
+        "x": 280,
+        "y": -66
       },
-      "type": "ingress"
+      "type": "ingress",
+      "size": {
+        "width": 131.28125,
+        "height": 51
+      }
     }
   ],
   "clusters": [
     {
-      "id": "33bd8f02-3a5c-4996-97de-e212cab4476a",
+      "id": "b1a7e22a-d160-4f32-9d8c-473752c01359",
       "name": "default",
       "position": {
         "x": 0,
@@ -25,40 +44,40 @@
       "type": "cluster",
       "ingress_ids": [],
       "pod_ids": [
-        "6f7c8fa3-bce3-43ce-9581-2d9456e96378"
+        "cd801e04-3f60-43e5-a8ea-a706c9b28881"
       ],
       "service_ids": [
-        "90c61617-4b4a-4eec-9485-a79e2cbe1167"
+        "630071d9-ec92-4578-b2f8-5d0a58a03b17"
       ]
     },
     {
-      "id": "beb6cc2d-526c-4d26-b71d-207e7e4a3192",
+      "id": "52d799cf-20d1-4ea5-ba26-90fe677a0089",
       "name": "rags",
       "position": {
-        "x": 164,
-        "y": 151
+        "x": 76,
+        "y": 224
       },
       "type": "cluster",
       "ingress_ids": [
-        "8ba1b8ed-7684-46cc-ade0-146b37bb685e"
+        "13ebd487-ff96-439f-8e9e-e585544df522"
       ],
       "pod_ids": [
-        "29c37cf1-cc82-46b6-a987-45666056d0ef",
-        "94f8ff5e-2793-4fd0-8e56-7e038f5db0c9"
+        "cb635f68-3f4e-48cb-a9de-2c3e9a1dd678",
+        "0bdc4ba8-91f1-4cae-98fc-46442f8bc26e"
       ],
       "service_ids": [
-        "51fde6ac-3fff-4a4e-9b44-f0a6a93a6b07",
-        "af70fa66-8b25-40a0-ac12-733769bb0360"
+        "6860756f-4aaa-4097-9e6e-a4a1703c2b94",
+        "a518145d-7aec-4f4a-aed1-0ec16106912d"
       ],
       "size": {
-        "width": 413.703125,
-        "height": 304
+        "width": 424.703125,
+        "height": 255
       }
     }
   ],
   "pods": [
     {
-      "id": "6f7c8fa3-bce3-43ce-9581-2d9456e96378",
+      "id": "cd801e04-3f60-43e5-a8ea-a706c9b28881",
       "name": "nginx-676b6c5bbc-kbtq6",
       "position": {
         "x": 0,
@@ -66,23 +85,23 @@
       },
       "type": "pod",
       "container_ids": [
-        "9c810143-f17c-4542-8ec0-1f693034fd3d"
+        "cb4e735c-75ff-4e2f-859c-cde8952f8741"
       ],
       "port_ids": []
     },
     {
-      "id": "29c37cf1-cc82-46b6-a987-45666056d0ef",
+      "id": "cb635f68-3f4e-48cb-a9de-2c3e9a1dd678",
       "name": "ronin-6dbdd7fbfc-bzf56",
       "position": {
-        "x": 10,
-        "y": 163
+        "x": -4,
+        "y": 131
       },
       "type": "pod",
       "container_ids": [
-        "8e54665d-9d5c-4a3f-b7bf-214c9253a7db"
+        "72a6dfe6-ad34-4564-92f1-7f9f1c35647f"
       ],
       "port_ids": [
-        "a5f7a8a5-407b-4542-b844-b85c335e8bc9"
+        "a7bb8073-3853-4f6c-9970-2aa1ddd5ba17"
       ],
       "size": {
         "width": 153.703125,
@@ -90,18 +109,18 @@
       }
     },
     {
-      "id": "94f8ff5e-2793-4fd0-8e56-7e038f5db0c9",
+      "id": "0bdc4ba8-91f1-4cae-98fc-46442f8bc26e",
       "name": "ui-86df54f46d-l7hkc",
       "position": {
-        "x": 276,
-        "y": 97
+        "x": 252,
+        "y": 117
       },
       "type": "pod",
       "container_ids": [
-        "e2fd9f11-de15-468b-98cd-8170fbb3f4fe"
+        "fcac6ec1-ea2a-4ba7-94fa-86fdb06fb4e8"
       ],
       "port_ids": [
-        "2c6de8fa-3f7d-469d-af6f-8de04b600b30"
+        "f0093405-1001-43c0-a3da-8e891bb19d3e"
       ],
       "size": {
         "width": 134.1953125,
@@ -111,53 +130,57 @@
   ],
   "services": [
     {
-      "id": "90c61617-4b4a-4eec-9485-a79e2cbe1167",
+      "id": "6860756f-4aaa-4097-9e6e-a4a1703c2b94",
+      "name": "ronin",
+      "position": {
+        "x": 0.8352702114112844,
+        "y": 37.9767574630647
+      },
+      "size": {
+        "width": 122,
+        "height": 36.03486442565918
+      },
+      "type": "service",
+      "port_ids": [
+        "f467fafc-33bd-439a-a88a-65852490ce36"
+      ]
+    },
+    {
+      "id": "a518145d-7aec-4f4a-aed1-0ec16106912d",
+      "name": "ui",
+      "position": {
+        "x": 246,
+        "y": 14.248110697903826
+      },
+      "size": {
+        "width": 120,
+        "height": 40
+      },
+      "type": "service",
+      "port_ids": [
+        "4bf51d05-4e8a-4b45-bf53-2597c53ba6fc"
+      ]
+    },
+    {
+      "id": "630071d9-ec92-4578-b2f8-5d0a58a03b17",
       "name": "kubernetes",
       "position": {
         "x": 0,
         "y": 0
       },
+      "size": {
+        "width": 120,
+        "height": 40
+      },
       "type": "service",
       "port_ids": [
-        "672a3f30-b9ef-4a3e-8b47-8fe685e775cf"
+        "ca045f46-305f-4a10-97cd-df06d2d5eee2"
       ]
-    },
-    {
-      "id": "51fde6ac-3fff-4a4e-9b44-f0a6a93a6b07",
-      "name": "ronin",
-      "position": {
-        "x": 293,
-        "y": -1
-      },
-      "type": "service",
-      "port_ids": [
-        "fc9e2332-b707-4162-acbd-55baae8741b5"
-      ],
-      "size": {
-        "width": 74.6484375,
-        "height": 76
-      }
-    },
-    {
-      "id": "af70fa66-8b25-40a0-ac12-733769bb0360",
-      "name": "ui",
-      "position": {
-        "x": 57,
-        "y": 77
-      },
-      "type": "service",
-      "port_ids": [
-        "674b34e0-3f62-4280-b635-8dec527f966c"
-      ],
-      "size": {
-        "width": 63.375,
-        "height": 76
-      }
     }
   ],
   "containers": [
     {
-      "id": "9c810143-f17c-4542-8ec0-1f693034fd3d",
+      "id": "cb4e735c-75ff-4e2f-859c-cde8952f8741",
       "name": "nginx",
       "position": {
         "x": 0,
@@ -166,62 +189,68 @@
       "type": "container"
     },
     {
-      "id": "8e54665d-9d5c-4a3f-b7bf-214c9253a7db",
+      "id": "72a6dfe6-ad34-4564-92f1-7f9f1c35647f",
       "name": "ronin",
       "position": {
-        "x": 0,
+        "x": 47.6104020504427,
         "y": 0
       },
-      "type": "container"
+      "type": "container",
+      "size": {
+        "width": 48.901655197143555,
+        "height": 35.03486442565918
+      }
     },
     {
-      "id": "e2fd9f11-de15-468b-98cd-8170fbb3f4fe",
+      "id": "fcac6ec1-ea2a-4ba7-94fa-86fdb06fb4e8",
       "name": "ui",
       "position": {
         "x": 0,
         "y": 0
       },
-      "type": "container"
+      "type": "container",
+      "size": {
+        "width": 78.56679843678074,
+        "height": 35.03486442565918
+      }
     }
   ],
   "ports": [
     {
-      "id": "a5f7a8a5-407b-4542-b844-b85c335e8bc9",
+      "id": "a7bb8073-3853-4f6c-9970-2aa1ddd5ba17",
       "name": "http-port",
       "number": "8080",
       "position": {
-        "x": 0,
-        "y": 0
+        "x": 27.563916976572102,
+        "y": -60.139455221611854
       },
-      "type": "port"
+      "type": "port",
+      "size": {
+        "width": 49.0386905670166,
+        "height": 39.54067420959473
+      }
     },
     {
-      "id": "2c6de8fa-3f7d-469d-af6f-8de04b600b30",
+      "id": "f0093405-1001-43c0-a3da-8e891bb19d3e",
       "name": "http-port",
       "number": "3000",
       "position": {
-        "x": 0,
-        "y": 0
+        "x": 32.57553824503975,
+        "y": -60.97472543302314
       },
-      "type": "port"
+      "type": "port",
+      "size": {
+        "width": 49.0386905670166,
+        "height": 39.54067420959473
+      }
     },
     {
-      "id": "672a3f30-b9ef-4a3e-8b47-8fe685e775cf",
-      "name": "https",
-      "number": "443",
-      "position": {
-        "x": 0,
-        "y": 0
-      },
-      "type": "port"
-    },
-    {
-      "id": "fc9e2332-b707-4162-acbd-55baae8741b5",
+      "id": "f467fafc-33bd-439a-a88a-65852490ce36",
       "name": "ronin-service",
       "number": "8080",
       "position": {
-        "x": 8,
-        "y": -62
+        "x": 25,
+        "y": -64
       },
       "type": "port",
       "size": {
@@ -230,18 +259,28 @@
       }
     },
     {
-      "id": "674b34e0-3f62-4280-b635-8dec527f966c",
+      "id": "4bf51d05-4e8a-4b45-bf53-2597c53ba6fc",
       "name": "ui-service",
       "number": "3000",
       "position": {
-        "x": 4,
-        "y": -67
+        "x": 21,
+        "y": -65
       },
       "type": "port",
       "size": {
         "width": 53.375,
         "height": 40
       }
+    },
+    {
+      "id": "ca045f46-305f-4a10-97cd-df06d2d5eee2",
+      "name": "https",
+      "number": "443",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "type": "port"
     }
   ]
 }

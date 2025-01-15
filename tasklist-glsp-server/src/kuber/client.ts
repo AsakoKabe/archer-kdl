@@ -52,9 +52,9 @@ export class KuberClient {
         }
     }
 
-    public async getPods(namespace: string): Promise<k8s.V1PodList> {
+    public async getPods(namespace: string, selector?: string): Promise<k8s.V1PodList> {
         try {
-            const pods = await this.k8sApi.listNamespacedPod({ namespace: namespace });
+            const pods = await this.k8sApi.listNamespacedPod({ namespace: namespace, labelSelector: selector });
             return pods;
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get pods');

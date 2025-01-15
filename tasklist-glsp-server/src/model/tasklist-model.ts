@@ -271,7 +271,7 @@ export namespace Service {
             id: uuid.v4(),
             name: serviceName,
             position: { x: 0, y: 0 },
-            // size: { width: 100, height: 100 },
+            size: { width: 120, height: 40 },
             type: ModelTypes.SERVICE,
             port_ids: []
         };
