@@ -16,7 +16,7 @@
  ********************************************************************************/
 import { GModelIndex } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { KDLBaseElement, KDLShapeElement, Link, Port, TaskList } from './tasklist-model';
+import { KDLBaseElement, KDLShapeElement, Link, Port, Service, TaskList } from './tasklist-model';
 
 @injectable()
 export class TaskListModelIndex extends GModelIndex {
@@ -58,6 +58,11 @@ export class TaskListModelIndex extends GModelIndex {
     findPort(id: string): Port | undefined {
         const element = this.findElement(id);
         return Port.is(element) ? element : undefined;
+    }
+
+    findService(id: string): Service | undefined {
+        const element = this.findElement(id);
+        return Service.is(element) ? element : undefined;
     }
 
     findBoxes(id: string): KDLShapeElement | undefined {

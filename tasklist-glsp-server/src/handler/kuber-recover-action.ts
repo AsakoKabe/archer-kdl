@@ -152,7 +152,6 @@ export class KuberRecoverActionHandler implements ActionHandler {
         );
         const targetPorts = targetPods
             .flatMap(pod => pod.port_ids.map(portId => this.modelState.index.findPort(portId)))
-            // .forEach(port => console.error(port));
             .filter(
                 (port): port is Port =>
                     port !== undefined &&
@@ -182,6 +181,38 @@ export class KuberRecoverActionHandler implements ActionHandler {
         }
     }
 
+    private async recoverIngressToServiceLink(
+        paths: k8s.V1HTTPIngressPath[] | undefined,
+        cluster: Cluster,
+        ingress: Ingress
+    ): Promise<void> {
+        if (!paths) {
+            return;
+        }
+        for (const path of paths) {
+            const serviceName = path.backend?.service?.name;
+            const servicePortNumber = path.backend?.service?.port?.number;
+            const servicePortName = path.backend?.service?.port?.name;
+
+            const targetService = cluster.service_ids
+                .flatMap(serviceID => this.modelState.index.findService(serviceID))
+                .filter((service): service is Service => service !== undefined && service.name === serviceName)
+                .at(0);
+            if (!targetService) {
+                console.error(`Service ${serviceName} not found while recovering ingress ${ingress.name} to the service link`);
+                continue;
+            }
+
+            const targetPorts = targetService.port_ids
+                .flatMap(portId => this.modelState.index.findPort(portId))
+                .filter(
+                    (port): port is Port =>
+                        port !== undefined && (port.name === servicePortName || port.number === servicePortNumber?.toString())
+                );
+            targetPorts.forEach(port => this.modelState.sourceModel.links.push(Link.create(ingress.id, port.id)));
+        }
+    }
+
     private async recoverIngresses(cluster: Cluster): Promise<void> {
         try {
             const ingressList = await this.kuberClient.getIngresses(cluster.name);
@@ -192,24 +223,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
                         const ingress = Ingress.create(rule.host, ingressName);
                         cluster.ingress_ids.push(ingress.id);
                         this.modelState.sourceModel.ingresses.push(ingress);
-
-                        // rule.http?.paths.forEach(path => {
-                        //     const serviceName = path.backend.service?.name;
-                        //     const servicePort = path.backend.service?.port?.number;
-                        //     const targerService = this.modelState.sourceModel.services
-                        //         .filter(service => service.name === serviceName)
-                        //         .at(0);
-                        //     console.error(serviceName, servicePort, targerService);
-                        //     if (targerService) {
-                        //         const targetPort = targerService.port_ids
-                        //             .map(portID => this.modelState.index.findPort(portID))
-                        //             .filter(port => port?.number === servicePort)
-                        //             .at(0);
-                        //         if (targetPort) {
-                        //             this.modelState.sourceModel.links.push(Link.create(ingress.id, targetPort.id));
-                        //         }
-                        //     }
-                        // });
+                        this.recoverIngressToServiceLink(rule.http?.paths, cluster, ingress);
                     }
                 });
             });
