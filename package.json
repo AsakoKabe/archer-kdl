@@ -55,6 +55,7 @@
     "yarn": ">=1.7.0 <2.x.x"
   },
   "dependencies": {
-    "@kubernetes/client-node": "^1.0.0"
+    "@kubernetes/client-node": "^1.0.0",
+    "yaml": "^2.7.0"
   }
 }

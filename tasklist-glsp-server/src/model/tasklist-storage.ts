@@ -15,14 +15,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 OR MIT
  ********************************************************************************/
 
-import { AbstractJsonModelStorage, MaybePromise, RequestModelAction, SaveModelAction } from '@eclipse-glsp/server/node';
+import { MaybePromise, RequestModelAction, SaveModelAction } from '@eclipse-glsp/server/node';
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
 import { TaskList } from './tasklist-model';
 import { TaskListModelState } from './tasklist-model-state';
+import { AbstractYamlModelStorage } from './abstract-yaml-model-storage';
 
 @injectable()
-export class TaskListStorage extends AbstractJsonModelStorage {
+export class TaskListStorage extends AbstractYamlModelStorage {
     @inject(TaskListModelState)
     protected override modelState: TaskListModelState;
 

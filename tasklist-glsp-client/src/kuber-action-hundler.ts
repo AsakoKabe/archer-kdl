@@ -17,7 +17,6 @@
 import { Action, IActionHandler, ResponseAction } from '@eclipse-glsp/client';
 import { injectable } from 'inversify';
 
-
 @injectable()
 export class MyCustomResponseActionHandler implements IActionHandler {
   handle(action: MyCustomResponseAction): void | Action {

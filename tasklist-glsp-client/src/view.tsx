@@ -16,7 +16,20 @@
 /** @jsx svg */
 
 import { injectable } from 'inversify';
-import { RenderingContext, Hoverable, Selectable, GNode, svg, GPort, DiamondNodeView, PolylineEdgeViewWithGapsOnIntersections, GEdge, Point, toDegrees, angleOfPoint } from '@eclipse-glsp/client';
+import {
+    RenderingContext,
+    Hoverable,
+    Selectable,
+    GNode,
+    svg,
+    GPort,
+    DiamondNodeView,
+    PolylineEdgeViewWithGapsOnIntersections,
+    GEdge,
+    Point,
+    toDegrees,
+    angleOfPoint
+} from '@eclipse-glsp/client';
 import { VNode } from 'snabbdom';
 
 @injectable()
@@ -25,12 +38,7 @@ export class IngressNodeView extends DiamondNodeView {
         if (!this.isVisible(node, context)) {
             return undefined;
         }
-        const parallelogram = new Parallelogram(
-            0,
-            0,
-            Math.max(node.size.width, 0),
-            Math.max(node.size.height, 0)
-        );
+        const parallelogram = new Parallelogram(0, 0, Math.max(node.size.width, 0), Math.max(node.size.height, 0));
 
         return (
             <g>
@@ -46,7 +54,6 @@ export class IngressNodeView extends DiamondNodeView {
         );
     }
 }
-
 
 export class Parallelogram {
     x: number;
