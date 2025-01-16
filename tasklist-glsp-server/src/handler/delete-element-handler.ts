@@ -70,60 +70,49 @@ export class DeleteElementHandler extends JsonOperationHandler {
         return [];
     }
 
-    private deleteLinks(element: KDLBaseElement): void{
-        this.modelState.sourceModel.links.forEach(link => {
-            if (link.sourceId === element.id || link.targetId === element.id) {
-                remove(this.modelState.sourceModel.links, link);
-            }
-        });
+    private deleteLinks(element: KDLBaseElement): void {
+        this.modelState.sourceModel.links = this.modelState.sourceModel.links.filter(
+            link => (link.sourceId !== element.id) && (link.targetId !== element.id)
+        );
     }
 
     private deleteIngress(ingress: Ingress): void {
-        remove(this.modelState.sourceModel.ingresses, ingress);
         this.modelState.sourceModel.clusters.forEach(cluster => {
             cluster.ingress_ids = cluster.ingress_ids.filter(id => id !== ingress.id);
         });
         this.deleteLinks(ingress);
+        remove(this.modelState.sourceModel.ingresses, ingress);
     }
 
     private deletePod(pod: Pod): void {
-        pod.container_ids.forEach(id => {
-            const element = this.modelState.index.findElement(id);
-            remove(this.modelState.sourceModel.containers, element);
+        pod.container_ids.concat(pod.port_ids).forEach(id => {
+            this.deleteModelElement(this.modelState.index.findElement(id));
         });
-        pod.port_ids.forEach(id => {
-            const element = this.modelState.index.findElement(id);
-            remove(this.modelState.sourceModel.ports, element);
-        });
-        remove(this.modelState.sourceModel.pods, pod);
         this.modelState.sourceModel.clusters.forEach(cluster => {
             cluster.pod_ids = cluster.pod_ids.filter(id => id !== pod.id);
         });
-        this.deleteLinks(pod);
+        remove(this.modelState.sourceModel.pods, pod);
     }
 
     private deleteService(service: Service): void {
         service.port_ids.forEach(id => {
-            const element = this.modelState.index.findElement(id);
-            remove(this.modelState.sourceModel.ports, element);
+            this.deleteModelElement(this.modelState.index.findElement(id));
         });
-        remove(this.modelState.sourceModel.services, service);
         this.modelState.sourceModel.clusters.forEach(cluster => {
             cluster.service_ids = cluster.service_ids.filter(id => id !== service.id);
         });
         this.deleteLinks(service);
+        remove(this.modelState.sourceModel.services, service);
     }
 
     private deleteContainer(container: Container): void {
-        remove(this.modelState.sourceModel.containers, container);
         this.modelState.sourceModel.pods.forEach(pod => {
             pod.container_ids = pod.container_ids.filter(id => id !== container.id);
         });
-        this.deleteLinks(container);
+        remove(this.modelState.sourceModel.containers, container);
     }
 
     private deletePort(port: Port): void {
-        remove(this.modelState.sourceModel.ports, port);
         this.modelState.sourceModel.pods.forEach(pod => {
             pod.port_ids = pod.port_ids.filter(id => id !== port.id);
         });
@@ -131,6 +120,7 @@ export class DeleteElementHandler extends JsonOperationHandler {
             service.port_ids = service.port_ids.filter(id => id !== port.id);
         });
         this.deleteLinks(port);
+        remove(this.modelState.sourceModel.ports, port);
     }
 
     private deleteCluster(cluster: Cluster): void {
@@ -138,11 +128,10 @@ export class DeleteElementHandler extends JsonOperationHandler {
             this.deleteModelElement(this.modelState.index.findElement(id));
         });
         remove(this.modelState.sourceModel.clusters, cluster);
-        this.deleteLinks(cluster);
     }
 
     private deleteModelElement(modelElement: KDLBaseElement | undefined): void {
-       if (Cluster.is(modelElement)) {
+        if (Cluster.is(modelElement)) {
             this.deleteCluster(modelElement);
         } else if (Ingress.is(modelElement)) {
             this.deleteIngress(modelElement);
