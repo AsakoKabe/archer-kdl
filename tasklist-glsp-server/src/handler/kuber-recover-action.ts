@@ -93,8 +93,8 @@ export class KuberRecoverActionHandler implements ActionHandler {
     private async recoverPods(cluster: Cluster): Promise<void> {
         try {
             const podsList = await this.kuberClient.getPods(cluster.name);
-            podsList.items.forEach(kuberPod => {
-                const pod = Pod.create(kuberPod.metadata?.name);
+            podsList.items.forEach((kuberPod, idx) => {
+                const pod = Pod.create(idx, kuberPod.metadata?.name);
                 cluster.pod_ids.push(pod.id);
                 this.modelState.sourceModel.pods.push(pod);
                 if (kuberPod.spec?.containers) {
@@ -108,27 +108,27 @@ export class KuberRecoverActionHandler implements ActionHandler {
     }
 
     private recoverContainers(pod: Pod, kuberContainers: k8s.V1Container[]): void {
-        kuberContainers?.forEach(kuberContainer => {
-            const container = Container.create(kuberContainer.name);
+        kuberContainers?.forEach((kuberContainer, idx) => {
+            const container = Container.create(kuberContainer.name, idx);
             this.modelState.sourceModel.containers.push(container);
             pod.container_ids.push(container.id);
             if (kuberContainer.ports) {
-                this.recoverPodPorts(pod, kuberContainer.ports);
+                this.recoverPodPorts(pod, kuberContainer.ports, kuberContainers.length);
             }
         });
     }
 
-    private recoverPodPorts(pod: Pod, kuberPorts: k8s.V1ContainerPort[]): void {
-        kuberPorts?.forEach(kuberPort => {
-            const port = Port.create(kuberPort.containerPort.toString(), kuberPort.name);
+    private recoverPodPorts(pod: Pod, kuberPorts: k8s.V1ContainerPort[], numContainers: number): void {
+        kuberPorts?.forEach((kuberPort, idx) => {
+            const port = Port.create(kuberPort.containerPort.toString(), numContainers + idx, kuberPort.name);
             this.modelState.sourceModel.ports.push(port);
             pod.port_ids.push(port.id);
         });
     }
 
     private recoverServicePorts(service: Service, kuberPorts: k8s.V1ServicePort[]): void {
-        kuberPorts?.forEach(kuberPort => {
-            const port = Port.create(kuberPort.port.toString(), kuberPort.name);
+        kuberPorts?.forEach((kuberPort, idx) => {
+            const port = Port.create(kuberPort.port.toString(), idx, kuberPort.name);
             this.modelState.sourceModel.ports.push(port);
             service.port_ids.push(port.id);
         });
@@ -166,8 +166,8 @@ export class KuberRecoverActionHandler implements ActionHandler {
     private async recoverServices(cluster: Cluster): Promise<void> {
         try {
             const serviceList = await this.kuberClient.getServices(cluster.name);
-            serviceList.items.forEach(kuberService => {
-                const service = Service.create(kuberService.metadata?.name);
+            serviceList.items.forEach((kuberService, idx) => {
+                const service = Service.create(idx + cluster.pod_ids.length, kuberService.metadata?.name);
                 cluster.service_ids.push(service.id);
                 this.modelState.sourceModel.services.push(service);
                 if (kuberService.spec?.ports) {
@@ -216,11 +216,11 @@ export class KuberRecoverActionHandler implements ActionHandler {
     private async recoverIngresses(cluster: Cluster): Promise<void> {
         try {
             const ingressList = await this.kuberClient.getIngresses(cluster.name);
-            ingressList.items.forEach(kuberIngress => {
+            ingressList.items.forEach((kuberIngress, idx) => {
                 const ingressName = kuberIngress.metadata?.name;
                 kuberIngress.spec?.rules?.forEach(rule => {
                     if (rule.host) {
-                        const ingress = Ingress.create(rule.host, ingressName);
+                        const ingress = Ingress.create(rule.host, idx + cluster.service_ids.length + cluster.pod_ids.length, ingressName);
                         cluster.ingress_ids.push(ingress.id);
                         this.modelState.sourceModel.ingresses.push(ingress);
                         this.recoverIngressToServiceLink(rule.http?.paths, cluster, ingress);
@@ -234,7 +234,9 @@ export class KuberRecoverActionHandler implements ActionHandler {
     }
 
     private async recoverCluster(namespaces: string[]): Promise<void> {
-        const clusters = namespaces.filter(namespace => !namespace.startsWith('kube')).map(namespace => Cluster.create(namespace));
+        const clusters = namespaces
+            .filter(namespace => !namespace.startsWith('kube'))
+            .map((namespace, idx) => Cluster.create(namespace, idx));
 
         await Promise.all(clusters.map(cluster => this.recoverPods(cluster)));
         await Promise.all(clusters.map(cluster => this.recoverServices(cluster)));

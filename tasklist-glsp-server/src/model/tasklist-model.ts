@@ -115,11 +115,11 @@ export namespace Cluster {
         };
     }
 
-    export function create(name: string): Cluster {
+    export function create(name: string, idx: number): Cluster {
         return {
             id: uuid.v4(),
             name: name,
-            position: { x: 0, y: 0 },
+            position: { x: idx * 100, y: 0 },
             // size: {width: 100, height: 100},
             type: ModelTypes.CLUSTER,
             ingress_ids: [],
@@ -179,13 +179,13 @@ export namespace Ingress {
         };
     }
 
-    export function create(host: string, name?: string): Ingress {
+    export function create(host: string, idxInCluster: number, name?: string): Ingress {
         const ingressName = name ? name : 'ingressName';
         return {
             id: uuid.v4(),
             name: ingressName,
             host: host,
-            position: { x: 0, y: 0 },
+            position: { x: idxInCluster * 100, y: 0 },
             // size: { width: 100, height: 100 },
             type: ModelTypes.INGRESS
         };
@@ -223,12 +223,12 @@ export namespace Pod {
         };
     }
 
-    export function create(name?: string): Pod {
+    export function create(indexInCluster: number, name?: string): Pod {
         const podName = name ? name : 'podName';
         return {
             id: uuid.v4(),
             name: podName,
-            position: { x: 0, y: 0 },
+            position: { x: indexInCluster * 100, y: 0 },
             // size: { width: 100, height: 100 },
             type: ModelTypes.POD,
             container_ids: [],
@@ -265,12 +265,12 @@ export namespace Service {
         };
     }
 
-    export function create(name?: string): Service {
+    export function create(indexInCluster: number, name?: string): Service {
         const serviceName = name ? name : 'serviceName';
         return {
             id: uuid.v4(),
             name: serviceName,
-            position: { x: 0, y: 0 },
+            position: { x: indexInCluster * 120, y: 0 },
             size: { width: 120, height: 40 },
             type: ModelTypes.SERVICE,
             port_ids: []
@@ -303,11 +303,11 @@ export namespace Container {
         };
     }
 
-    export function create(name: string): Container {
+    export function create(name: string, indexInPod: number): Container {
         return {
             id: uuid.v4(),
             name: name,
-            position: { x: 0, y: 0 },
+            position: { x: indexInPod * 100, y: 0 },
             // size: { width: 100, height: 100 },
             type: ModelTypes.CONTAINER
         };
@@ -342,13 +342,13 @@ export namespace Port {
         };
     }
 
-    export function create(number: string, name?: string): Port {
+    export function create(number: string,  indexInPod: number, name?: string): Port {
         const portName = name ? name : 'portName';
         return {
             id: uuid.v4(),
             name: portName,
             number: number,
-            position: { x: 0, y: 0 },
+            position: { x: indexInPod * 100, y: 0 },
             // size: { width: 100, height: 100 },
             type: ModelTypes.PORT
         };
