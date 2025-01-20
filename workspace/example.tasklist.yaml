@@ -1,0 +1,135 @@
+id: d63b4a87-ca5e-41f8-b800-83ff4947a1ce
+tasks: []
+links:
+  - id: a5bac2fb-9bb0-49e1-87a2-7184de06b483
+    type: edge
+    sourceId: 5d2ff56c-2746-404a-a879-4f15be468989
+    targetId: fd45c007-4c7b-440a-9c68-df62ea0b979d
+    routingPoints: []
+  - id: 95c7b4c1-5b3c-4560-8a8f-d81442d9cb78
+    type: edge
+    sourceId: fbffd020-ffd7-4e03-b7e6-44e0d3f7ca08
+    targetId: 07e98df8-ba31-4500-9f16-c33b393990ea
+    routingPoints: []
+  - id: 57f1b07c-b677-4380-8995-0988742ec14f
+    type: edge
+    sourceId: b662cd18-e1e7-4209-a617-e9eef34c16d8
+    targetId: d4ecedc6-aefb-4de7-95c3-df31f78158bb
+    routingPoints: []
+  - id: 589cefef-d00b-40d1-ad57-b70929e4d194
+    type: edge
+    sourceId: b662cd18-e1e7-4209-a617-e9eef34c16d8
+    targetId: 09daf913-ba70-45f1-81b7-8b5841f822d5
+    routingPoints: []
+ingresses:
+  - id: b662cd18-e1e7-4209-a617-e9eef34c16d8
+    name: ingress
+    host: rags.corernd.space
+    position:
+      x: 0
+      y: 0
+    type: ingress
+clusters:
+  - id: 173d534e-cc21-4815-a7a1-055fee52c05c
+    name: rags
+    position:
+      x: 298
+      y: 71
+    type: cluster
+    ingress_ids:
+      - b662cd18-e1e7-4209-a617-e9eef34c16d8
+    pod_ids:
+      - b0ef95cd-e44c-46aa-83c8-d03d3683de9d
+      - f9b70de7-f688-45f6-a074-38e401472b36
+    service_ids:
+      - 5d2ff56c-2746-404a-a879-4f15be468989
+      - fbffd020-ffd7-4e03-b7e6-44e0d3f7ca08
+    size:
+      width: 163.703125
+      height: 112
+pods:
+  - id: b0ef95cd-e44c-46aa-83c8-d03d3683de9d
+    name: ronin-6dbdd7fbfc-bzf56
+    position:
+      x: 0
+      y: 0
+    type: pod
+    container_ids:
+      - d9ae147c-1519-42a2-b198-ff8b44c188df
+    port_ids:
+      - fd45c007-4c7b-440a-9c68-df62ea0b979d
+  - id: f9b70de7-f688-45f6-a074-38e401472b36
+    name: ui-86df54f46d-l7hkc
+    position:
+      x: 0
+      y: 0
+    type: pod
+    container_ids:
+      - 736f43d9-581a-4dc7-9262-75ed8def3457
+    port_ids:
+      - 07e98df8-ba31-4500-9f16-c33b393990ea
+services:
+  - id: 5d2ff56c-2746-404a-a879-4f15be468989
+    name: ronin
+    position:
+      x: 0
+      y: 0
+    size:
+      width: 120
+      height: 40
+    type: service
+    port_ids:
+      - d4ecedc6-aefb-4de7-95c3-df31f78158bb
+  - id: fbffd020-ffd7-4e03-b7e6-44e0d3f7ca08
+    name: ui
+    position:
+      x: 0
+      y: 0
+    size:
+      width: 120
+      height: 40
+    type: service
+    port_ids:
+      - 09daf913-ba70-45f1-81b7-8b5841f822d5
+containers:
+  - id: d9ae147c-1519-42a2-b198-ff8b44c188df
+    name: ronin
+    position:
+      x: 0
+      y: 0
+    type: container
+  - id: 736f43d9-581a-4dc7-9262-75ed8def3457
+    name: ui
+    position:
+      x: 0
+      y: 0
+    type: container
+ports:
+  - id: fd45c007-4c7b-440a-9c68-df62ea0b979d
+    name: http-port
+    number: "8080"
+    position:
+      x: 0
+      y: 0
+    type: port
+  - id: 07e98df8-ba31-4500-9f16-c33b393990ea
+    name: http-port
+    number: "3000"
+    position:
+      x: 0
+      y: 0
+    type: port
+  - id: d4ecedc6-aefb-4de7-95c3-df31f78158bb
+    name: ronin-service
+    number: "8080"
+    position:
+      x: 0
+      y: 0
+    type: port
+  - id: 09daf913-ba70-45f1-81b7-8b5841f822d5
+    name: ui-service
+    number: "3000"
+    position:
+      x: 0
+      y: 0
+    type: port

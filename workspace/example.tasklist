@@ -1,143 +1,52 @@
 id: d63b4a87-ca5e-41f8-b800-83ff4947a1ce
 tasks: []
-links:
-  - id: 916c5a52-10f0-4d5a-a719-607321d81328
-    type: edge
-    sourceId: f12778fc-6c36-4c96-bb8e-07c32beb6970
-    targetId: 71ec7dd5-d18c-49ce-bb84-59271bd4e65c
-    routingPoints: []
-  - id: 5591244b-87ff-4a84-90bc-7e7b8b36704e
-    type: edge
-    sourceId: 5ed9b330-faed-484b-9000-4d05615e2695
-    targetId: 9ce8c0c9-8e66-4d1c-999b-c6f74b84f682
-    routingPoints: []
-  - id: ee4ce5a1-4d90-42d7-816a-6b7fae98af03
-    type: edge
-    sourceId: 0e5f0bef-b98b-472d-9e9f-b9b55c45e107
-    targetId: b44399e2-4a77-4b9d-97b7-49259da6453d
-    routingPoints: []
-  - id: fbb44f08-faf9-46b0-a52b-ac1a8969f0a1
-    type: edge
-    sourceId: 0e5f0bef-b98b-472d-9e9f-b9b55c45e107
-    targetId: 8e79c1c6-31c8-4ffb-9fb2-b74b99d6875f
-    routingPoints: []
-ingresses:
-  - id: 0e5f0bef-b98b-472d-9e9f-b9b55c45e107
-    name: ingress
-    host: rags.corernd.space
-    position:
-      x: 1
-      y: -85
-    type: ingress
-    size:
-      width: 131.28125
-      height: 51
+links: []
+ingresses: []
 clusters:
-  - id: 8c10b498-9297-442e-832c-55683308fd44
-    name: rags
-    position:
-      x: 32
-      y: 142
-    type: cluster
-    ingress_ids:
-      - 0e5f0bef-b98b-472d-9e9f-b9b55c45e107
-    pod_ids:
-      - ceb46c48-93ab-4da4-8081-b4e041675e73
-      - 782ff952-93e4-4480-b675-d4e8b76fbfb9
-    service_ids:
-      - f12778fc-6c36-4c96-bb8e-07c32beb6970
-      - 5ed9b330-faed-484b-9000-4d05615e2695
-    size:
-      width: 447.703125
-      height: 289
-pods:
-  - id: ceb46c48-93ab-4da4-8081-b4e041675e73
-    name: ronin-6dbdd7fbfc-bzf56
-    position:
-      x: 6
-      y: 187
-    type: pod
-    container_ids:
-      - 6c6ae13f-60d8-4fdf-88fb-ccd14ede64aa
-    port_ids:
-      - 71ec7dd5-d18c-49ce-bb84-59271bd4e65c
-    size:
-      width: 153.703125
-      height: 76
-  - id: 782ff952-93e4-4480-b675-d4e8b76fbfb9
-    name: ui-86df54f46d-l7hkc
-    position:
-      x: 267
-      y: 169
-    type: pod
-    container_ids:
-      - 00b36891-007a-4c2a-ad5e-c32f8200496a
-    port_ids:
-      - 9ce8c0c9-8e66-4d1c-999b-c6f74b84f682
-    size:
-      width: 269.1953125
-      height: 95
-services:
-  - id: f12778fc-6c36-4c96-bb8e-07c32beb6970
-    name: ronin
-    position:
-      x: -1
-      y: 75
-    size:
-      width: 120
-      height: 76
-    type: service
-    port_ids:
-      - b44399e2-4a77-4b9d-97b7-49259da6453d
-  - id: 5ed9b330-faed-484b-9000-4d05615e2695
-    name: ui
-    position:
-      x: 253
-      y: 87
-    size:
-      width: 120
-      height: 76
-    type: service
-    port_ids:
-      - 8e79c1c6-31c8-4ffb-9fb2-b74b99d6875f
-containers:
-  - id: 6c6ae13f-60d8-4fdf-88fb-ccd14ede64aa
-    name: ronin
+  - id: f0841ba8-d73f-455e-871f-0df51d41bff1
+    name: default
     position:
       x: 0
       y: 0
-    type: container
-  - id: 00b36891-007a-4c2a-ad5e-c32f8200496a
-    name: ui
+    type: cluster
+    ingress_ids: []
+    pod_ids:
+      - fe5b45cd-76f5-4526-a364-dd2034a09000
+    service_ids:
+      - f3a608f0-e65c-4dc3-8e18-67de943e718d
+pods:
+  - id: fe5b45cd-76f5-4526-a364-dd2034a09000
+    name: nginx-676b6c5bbc-kbtq6
+    position:
+      x: 0
+      y: 0
+    type: pod
+    container_ids:
+      - 34e2cd7d-d6ea-4bf8-8bac-fcf83d85e799
+    port_ids: []
+services:
+  - id: f3a608f0-e65c-4dc3-8e18-67de943e718d
+    name: kubernetes
+    position:
+      x: 0
+      y: 0
+    size:
+      width: 120
+      height: 40
+    type: service
+    port_ids:
+      - 64766364-a378-4e03-a9fb-1c3e9841d092
+containers:
+  - id: 34e2cd7d-d6ea-4bf8-8bac-fcf83d85e799
+    name: nginx
     position:
       x: 0
       y: 0
     type: container
 ports:
-  - id: 71ec7dd5-d18c-49ce-bb84-59271bd4e65c
-    name: http-port
-    number: "8080"
-    position:
-      x: 0
-      y: 0
-    type: port
-  - id: 9ce8c0c9-8e66-4d1c-999b-c6f74b84f682
-    name: http-port
-    number: "3000"
-    position:
-      x: 0
-      y: 0
-    type: port
-  - id: b44399e2-4a77-4b9d-97b7-49259da6453d
-    name: ronin-service
-    number: "8080"
-    position:
-      x: 0
-      y: 0
-    type: port
-  - id: 8e79c1c6-31c8-4ffb-9fb2-b74b99d6875f
-    name: ui-service
-    number: "3000"
+  - id: 64766364-a378-4e03-a9fb-1c3e9841d092
+    name: https
+    number: "443"
     position:
       x: 0
       y: 0
