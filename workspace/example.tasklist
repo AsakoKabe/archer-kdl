@@ -1,0 +1,181 @@
+id: 19ef24a7-a36c-4e2a-9504-9f8a7453fb6f
+links:
+  - id: 5efd3fef-fa3e-45bb-8e3a-feb2416411fd
+    type: edge
+    sourceId: 8c8580cb-4f56-4b26-aa39-4ee2fba00ca1
+    targetId: 81fc556c-ca8f-4bd2-9708-8a57bf806f1f
+    routingPoints: []
+  - id: 2ba6203a-da6f-462b-855b-4959a51956b9
+    type: edge
+    sourceId: 543d267c-b734-4af3-a7a8-5ed0731a6df8
+    targetId: df858331-741e-48c4-8cdb-3c3ae864b2af
+    routingPoints: []
+  - id: f2cecc63-5ae1-4d76-8c7c-4e6475901bc8
+    type: edge
+    sourceId: ebed0e69-00d5-4ccf-a730-3660763bde1b
+    targetId: bc2941e1-a04c-47ab-a4fa-067cabe63c3c
+    routingPoints: []
+  - id: b78e84ce-33e7-4975-9126-b46f1a99e260
+    type: edge
+    sourceId: ebed0e69-00d5-4ccf-a730-3660763bde1b
+    targetId: e15ca827-975d-4dae-807f-176aec5dffa3
+    routingPoints: []
+clusters:
+  - id: 4af3ce5f-152e-422b-8568-df8c03f73f88
+    name: default
+    position:
+      x: 0
+      y: 0
+    type: cluster
+    ingress_ids: []
+    pod_ids:
+      - d16d3411-e4b2-47f3-8ccd-e8033693a678
+    service_ids:
+      - 98bd0309-933f-4d3c-a157-ea02f4d24412
+  - id: 97c2bff5-1011-4e47-97ef-bdf75f4706e6
+    name: rags
+    position:
+      x: 47
+      y: 202
+    type: cluster
+    ingress_ids:
+      - ebed0e69-00d5-4ccf-a730-3660763bde1b
+    pod_ids:
+      - 9c392818-becc-4397-83db-8dd8b8bd636f
+      - 92ab7d95-0cdc-4110-b505-b0fe22f08c5d
+    service_ids:
+      - 8c8580cb-4f56-4b26-aa39-4ee2fba00ca1
+      - 543d267c-b734-4af3-a7a8-5ed0731a6df8
+    size:
+      width: 541.28125
+      height: 272
+ingresses:
+  - id: ebed0e69-00d5-4ccf-a730-3660763bde1b
+    name: ingress
+    host: rags.corernd.space
+    position:
+      x: 400
+      y: 0
+    type: ingress
+pods:
+  - id: d16d3411-e4b2-47f3-8ccd-e8033693a678
+    name: nginx-676b6c5bbc-kbtq6
+    position:
+      x: 0
+      y: 0
+    type: pod
+    container_ids:
+      - 719689d6-78b3-4c57-b038-e52b12559664
+    port_ids: []
+  - id: 9c392818-becc-4397-83db-8dd8b8bd636f
+    name: ronin-6dbdd7fbfc-bzf56
+    position:
+      x: 0
+      y: 0
+    type: pod
+    container_ids:
+      - e576b1ea-777a-45f3-89ae-ac33d08ea053
+    port_ids:
+      - 81fc556c-ca8f-4bd2-9708-8a57bf806f1f
+  - id: 92ab7d95-0cdc-4110-b505-b0fe22f08c5d
+    name: ui-86df54f46d-l7hkc
+    position:
+      x: 142
+      y: 53
+    type: pod
+    container_ids:
+      - 545cab9e-997c-4bb3-965c-9aa246718be3
+    port_ids:
+      - df858331-741e-48c4-8cdb-3c3ae864b2af
+    size:
+      width: 159.0546875
+      height: 76
+services:
+  - id: 98bd0309-933f-4d3c-a157-ea02f4d24412
+    name: kubernetes
+    position:
+      x: 120
+      y: 0
+    size:
+      width: 120
+      height: 40
+    type: service
+    port_ids:
+      - 7383502a-71c0-426d-afa8-967fd7cfc254
+  - id: 8c8580cb-4f56-4b26-aa39-4ee2fba00ca1
+    name: ronin
+    position:
+      x: 240
+      y: 0
+    size:
+      width: 120
+      height: 40
+    type: service
+    port_ids:
+      - bc2941e1-a04c-47ab-a4fa-067cabe63c3c
+  - id: 543d267c-b734-4af3-a7a8-5ed0731a6df8
+    name: ui
+    position:
+      x: 360
+      y: 0
+    size:
+      width: 120
+      height: 40
+    type: service
+    port_ids:
+      - e15ca827-975d-4dae-807f-176aec5dffa3
+containers:
+  - id: 719689d6-78b3-4c57-b038-e52b12559664
+    name: nginx
+    position:
+      x: 0
+      y: 0
+    type: container
+  - id: e576b1ea-777a-45f3-89ae-ac33d08ea053
+    name: ronin
+    position:
+      x: 0
+      y: 0
+    type: container
+  - id: 545cab9e-997c-4bb3-965c-9aa246718be3
+    name: ui
+    position:
+      x: 0
+      y: 0
+    type: container
+ports:
+  - id: 81fc556c-ca8f-4bd2-9708-8a57bf806f1f
+    name: http-port
+    number: "8080"
+    position:
+      x: 100
+      y: 0
+    type: port
+  - id: df858331-741e-48c4-8cdb-3c3ae864b2af
+    name: http-port
+    number: "3000"
+    position:
+      x: 100
+      y: 0
+    type: port
+  - id: 7383502a-71c0-426d-afa8-967fd7cfc254
+    name: https
+    number: "443"
+    position:
+      x: 0
+      y: 0
+    type: port
+  - id: bc2941e1-a04c-47ab-a4fa-067cabe63c3c
+    name: ronin-service
+    number: "8080"
+    position:
+      x: 0
+      y: 0
+    type: port
+  - id: e15ca827-975d-4dae-807f-176aec5dffa3
+    name: ui-service
+    number: "3000"
+    position:
+      x: 0
+      y: 0
+    type: port

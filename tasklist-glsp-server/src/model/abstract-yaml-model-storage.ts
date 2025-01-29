@@ -90,7 +90,7 @@ export abstract class AbstractYamlModelStorage implements SourceModelStorage {
         if (os.platform() === 'win32') {
             path = path.replace(/^\//, '');
         }
-        return path  + '.yaml';
+        return path;
     }
 
     protected getFileUri(action: SaveModelAction): string {
