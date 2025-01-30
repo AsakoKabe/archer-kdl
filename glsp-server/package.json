@@ -1,0 +1,38 @@
+{
+  "name": "glsp-server",
+  "version": "0.0.1",
+  "description": "GLSP node server for KDL GSLP diagrams",
+  "keywords": [
+    "eclipse",
+    "graphics",
+    "diagram",
+    "modeling",
+    "visualization",
+    "glsp",
+    "diagram editor"
+  ],
+  "homepage": "",
+  "bugs": "",
+  "author": {
+    "name": "SBT R&D"
+  },
+  "main": "./dist/kdl-glsp-server.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b && yarn bundle",
+    "bundle": "webpack",
+    "clean": "rimraf lib dist tsconfig.tsbuildinfo",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "start": "node --enable-source-maps lib/index.js",
+    "watch": "tsc -w",
+    "watch:bundle": "webpack --watch"
+  },
+  "devDependencies": {
+    "@eclipse-glsp/server": "2.3.0",
+    "source-map-loader": "^4.0.1",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}

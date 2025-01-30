@@ -1,0 +1,167 @@
+{
+  "name": "kdl-extension",
+  "displayName": "KDL GLSP Diagram Editor",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "Extension for KDL GLSP diagrams",
+  "categories": [
+    "Programming Languages"
+  ],
+  "homepage": "",
+  "bugs": "",
+  "author": {
+    "name": "SBT R&D"
+  },
+  "main": "dist/kdl-extension.js",
+  "files": [
+    "lib",
+    "server",
+    "kdl-webview",
+    "webview"
+  ],
+  "workspaces": {
+    "nohoist": [
+      "**/@vscode/codicons",
+      "**/@vscode/codicons/**"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -b && yarn bundle",
+    "bundle": "webpack",
+    "bundle:prod": "webpack --config ./webpack.prod.js",
+    "clean": "rimraf lib tsconfig.tsbuildinfo dist",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "package": "vsce package --yarn",
+    "watch": "tsc -w",
+    "watch:bundle": "webpack --watch"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "kdl.fit",
+        "title": "Fit to Screen",
+        "category": "KDL Diagram",
+        "enablement": "activeCustomEditorId == 'kdl.glspDiagram'"
+      },
+      {
+        "command": "kdl.center",
+        "title": "Center selection",
+        "category": "KDL Diagram",
+        "enablement": "activeCustomEditorId == 'kdl.glspDiagram'"
+      },
+      {
+        "command": "kdl.layout",
+        "title": "Layout diagram",
+        "category": "KDL Diagram",
+        "enablement": "activeCustomEditorId == 'kdl.glspDiagram'"
+      },
+      {
+        "command": "kdl.exportAsSVG",
+        "title": "Export as SVG",
+        "category": "KDL Diagram",
+        "enablement": "activeCustomEditorId == 'kdl.glspDiagram'"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "kdl.glspDiagram",
+        "displayName": "KDL Diagram Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.kdl"
+          }
+        ]
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "alt+f",
+        "mac": "alt+f",
+        "command": "kdl.fit",
+        "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+      },
+      {
+        "key": "alt+c",
+        "mac": "alt+c",
+        "command": "kdl.center",
+        "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+      },
+      {
+        "key": "alt+l",
+        "mac": "alt+l",
+        "command": "kdl.layout",
+        "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+      },
+      {
+        "key": "ctrl+a",
+        "mac": "ctrl+a",
+        "command": "kdl.selectAll",
+        "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+      },
+      {
+        "key": "alt+e",
+        "mac": "alt+e",
+        "command": "kdl.exportAsSVG",
+        "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "submenu": "kdl.editor.title",
+          "group": "bookmarks"
+        }
+      ],
+      "kdl.editor.title": [
+        {
+          "command": "kdl.fit",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+        },
+        {
+          "command": "kdl.center",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+        },
+        {
+          "command": "kdl.layout",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+        },
+        {
+          "command": "kdl.exportAsSVG",
+          "when": "activeCustomEditorId == 'kdl.glspDiagram'"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "kdl.editor.title",
+        "label": "Diagram"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "dependencies": {
+    "@vscode/codicons": "^0.0.25"
+  },
+  "devDependencies": {
+    "@eclipse-glsp/vscode-integration": "2.3.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.54.0",
+    "@vscode/vsce": "^2.24.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^2.6.3",
+    "kdl-webview": "0.0.1",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^9.1.1",
+    "webpack-merge": "^5.9.0"
+  },
+  "engines": {
+    "vscode": "^1.54.0"
+  }
+}

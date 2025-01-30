@@ -7,5 +7,8 @@ module.exports = {
     parserOptions: {
         tsconfigRootDir: __dirname,
         project: 'tsconfig.eslint.json'
-    }
+    },
+    rules: {
+        "header/header": "off"
+      }
 };

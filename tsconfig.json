@@ -8,16 +8,16 @@
   },
   "references": [
     {
-      "path": "./tasklist-glsp-client"
+      "path": "./glsp-client"
     },
     {
-      "path": "./tasklist-glsp-server"
+      "path": "./glsp-server"
     },
     {
-      "path": "./tasklist-vscode/extension"
+      "path": "./vscode/kdl-extension"
     },
     {
-      "path": "./tasklist-vscode/webview"
+      "path": "./vscode/kdl-webview"
     }
   ]
 }
