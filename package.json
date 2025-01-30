@@ -11,23 +11,25 @@
     "glsp-server",
     "glsp-client",
     "vscode/kdl-webview",
-    "vscode/kdl-extension"
+    "vscode/kdl-extension",
+    "lsp-server"
   ],
   "scripts": {
     "all": "yarn clean && yarn install && yarn lint",
     "build": "yarn compile && yarn bundle",
-    "bundle": "yarn server build bundle && yarn webview build bundle && yarn extension build bundle",
+    "bundle": "yarn glsp-server build && yarn webview build && yarn extension build && yarn lsp-server build",
     "clean": "lerna run clean",
     "compile": "tsc -b",
     "lint": "eslint --ext .ts,.tsx .",
     "lint:ci": "yarn lint --output-file eslint_report.json --format json",
     "package": "yarn extension package",
     "prepare": "yarn build",
-    "server": "yarn --cwd glsp-server",
-    "watch": "concurrently --kill-others -n tsc,ext,server -c red,yellow,green \"tsc -b -w --preserveWatchOutput\" \"yarn -s extension watch:bundle\" \"yarn -s server watch:bundle\"",
+    "watch": "concurrently --kill-others -n tsc,ext,gslp-server -c red,yellow,green \"tsc -b -w --preserveWatchOutput\" \"yarn -s extension watch:bundle\" \"yarn -s glsp-server watch:bundle\"",
     "webview": "yarn --cwd vscode/kdl-webview",
     "extension": "yarn --cwd vscode/kdl-extension",
-    "glsp-client": "yarn --cwd glsp-client"
+    "glsp-client": "yarn --cwd glsp-client",
+    "glsp-server": "yarn --cwd glsp-server",
+    "lsp-server": "yarn --cwd lsp-server"
   },
   "resolutions": {
     "string-width": "4.2.3",

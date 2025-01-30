@@ -5,25 +5,66 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Diagram Extension",
+      "name": "Run KDL Extension",
       "type": "extensionHost",
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
       "args": [
-        "${workspaceFolder}/workspace",
+        "${workspaceFolder}/example",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode/kdl-extension"
       ],
+      "sourceMaps": true,
       "outFiles": [
         "${workspaceFolder}/vscode/kdl-extension/dist/*.js",
         "${workspaceFolder}/node_modules/@eclipse-glsp/**/*.js"
+      ]
+    },
+    // {
+    //   "name": "Launch GLSP Diagram Extension",
+    //   "type": "extensionHost",
+    //   "request": "launch",
+    //   "runtimeExecutable": "${execPath}",
+    //   "args": [
+    //     "${workspaceFolder}/workspace",
+    //     "--extensionDevelopmentPath=${workspaceFolder}/vscode/kdl-extension"
+    //   ],
+    //   "outFiles": [
+    //     "${workspaceFolder}/vscode/kdl-extension/dist/*.js",
+    //     "${workspaceFolder}/node_modules/@eclipse-glsp/**/*.js"
+    //   ],
+    //   "sourceMaps": true,
+    //   "sourceMapPathOverrides": {
+    //     "webpack://vscode/(.+)": "${workspaceFolder}/vscode/kdl-extension/$1"
+    //   },
+    //   "env": {
+    //     "KDL_GLSP_SERVER_PORT": "5801"
+    //   }
+    // },
+    {
+      "name": "Run LSP Server Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "${workspaceFolder}/example",
+        "--extensionDevelopmentPath=${workspaceFolder}/lsp-server"
       ],
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack://vscode/(.+)": "${workspaceFolder}/vscode/kdl-extension/$1"
-      },
-      "env": {
-        "KDL_GLSP_SERVER_PORT": "5801"
-      }
+      "outFiles": [
+        "${workspaceFolder}/lsp-server/out/**/*.js"
+      ]
+    },
+    {
+      "name": "Attach to Language Server",
+      "type": "node",
+      "port": 6009,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/vscode/kdl-extension/dist/**/*.js",
+        "${workspaceFolder}/vscode/kdl-node_modules/langium/**/*.js"
+      ]
     }
   ],
 }

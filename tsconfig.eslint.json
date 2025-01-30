@@ -5,5 +5,5 @@
     "noEmit": true
   },
   "exclude": ["**/node_modules", "**/.eslintrc.js"],
-  "include": ["glsp-client/src", "glsp-server/src", "vscode/*/src"]
+  "include": ["glsp-client/src", "glsp-server/src", "vscode/*/src", "lsp-server/src"]
 }

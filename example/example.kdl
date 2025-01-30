@@ -24,19 +24,22 @@ clusters:
   - id: 4af3ce5f-152e-422b-8568-df8c03f73f88
     name: default
     position:
-      x: 0
-      y: 0
+      x: 18
+      y: 156
     type: cluster
     ingress_ids: []
     pod_ids:
       - d16d3411-e4b2-47f3-8ccd-e8033693a678
     service_ids:
       - 98bd0309-933f-4d3c-a157-ea02f4d24412
+    size:
+      width: 250
+      height: 112
   - id: 97c2bff5-1011-4e47-97ef-bdf75f4706e6
     name: rags
     position:
-      x: -357.88376005508263
-      y: 439.71357496646857
+      x: 207.20876076504607
+      y: 438.57725610036124
     type: cluster
     ingress_ids:
       - ebed0e69-00d5-4ccf-a730-3660763bde1b
@@ -47,19 +50,8 @@ clusters:
       - 8c8580cb-4f56-4b26-aa39-4ee2fba00ca1
       - 543d267c-b734-4af3-a7a8-5ed0731a6df8
     size:
-      width: 541.28125
+      width: 559.0885533665971
       height: 272
-  - id: be14b8ef-6215-4029-b1a1-837d6a6ff108
-    name: default
-    position:
-      x: 0
-      y: 0
-    type: cluster
-    ingress_ids: []
-    pod_ids:
-      - 3da5043c-082a-4e8f-bede-7ae4e909a1d5
-    service_ids:
-      - 179410f8-0349-4af9-93bf-6a1d9a022645
 ingresses:
   - id: ebed0e69-00d5-4ccf-a730-3660763bde1b
     name: ingress
@@ -101,15 +93,6 @@ pods:
     size:
       width: 159.0546875
       height: 76
-  - id: 3da5043c-082a-4e8f-bede-7ae4e909a1d5
-    name: nginx-676b6c5bbc-kbtq6
-    position:
-      x: 0
-      y: 0
-    type: pod
-    container_ids:
-      - 282ef9dd-72b1-474f-a51c-c0c331f9cb1b
-    port_ids: []
 services:
   - id: 98bd0309-933f-4d3c-a157-ea02f4d24412
     name: kubernetes
@@ -125,8 +108,8 @@ services:
   - id: 8c8580cb-4f56-4b26-aa39-4ee2fba00ca1
     name: ronin
     position:
-      x: 79
-      y: -96
+      x: 253
+      y: -50
     size:
       width: 120
       height: 76
@@ -144,17 +127,6 @@ services:
     type: service
     port_ids:
       - e15ca827-975d-4dae-807f-176aec5dffa3
-  - id: 179410f8-0349-4af9-93bf-6a1d9a022645
-    name: kubernetes
-    position:
-      x: 120
-      y: 0
-    size:
-      width: 120
-      height: 40
-    type: service
-    port_ids:
-      - ef563d43-c5dd-44be-ad47-b76248ca2231
 containers:
   - id: 719689d6-78b3-4c57-b038-e52b12559664
     name: nginx
@@ -170,12 +142,6 @@ containers:
     type: container
   - id: 545cab9e-997c-4bb3-965c-9aa246718be3
     name: ui
-    position:
-      x: 0
-      y: 0
-    type: container
-  - id: 282ef9dd-72b1-474f-a51c-c0c331f9cb1b
-    name: nginx
     position:
       x: 0
       y: 0
@@ -212,13 +178,6 @@ ports:
   - id: e15ca827-975d-4dae-807f-176aec5dffa3
     name: ui-service
     number: "3000"
-    position:
-      x: 0
-      y: 0
-    type: port
-  - id: ef563d43-c5dd-44be-ad47-b76248ca2231
-    name: https
-    number: "443"
     position:
       x: 0
       y: 0
