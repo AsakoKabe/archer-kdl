@@ -42,6 +42,9 @@ const config = {
                 },
                 {
                     from: path.resolve(__dirname, '..', '..', 'glsp-server', 'dist')
+                },
+                {
+                    from: path.resolve(__dirname, '..', '..', 'lsp-server', 'out')
                 }
             ]
         })
