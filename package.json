@@ -12,12 +12,14 @@
     "glsp-client",
     "vscode/kdl-webview",
     "vscode/kdl-extension",
-    "lsp-server"
+    "lsp-server",
+    "packages/*"
   ],
   "scripts": {
     "all": "yarn clean && yarn install && yarn lint",
-    "build": "yarn langium-generate && yarn compile && yarn bundle",
+    "build": "yarn build:packages && yarn langium-generate && yarn compile && yarn bundle",
     "bundle": "yarn glsp-server build && yarn webview build && yarn extension build && yarn lsp-server build",
+    "build:packages": "lerna run --scope=\"@kdl/*\" build",
     "clean": "lerna run clean",
     "compile": "tsc -b",
     "lint": "eslint --ext .ts,.tsx .",

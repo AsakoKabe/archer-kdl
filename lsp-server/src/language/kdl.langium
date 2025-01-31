@@ -1,18 +1,12 @@
-grammar Kdl
+grammar KDL
 
-entry Model:
-    (persons+=Person | greetings+=Greeting)*;
+import 'entity'
+import 'relationship'
+import 'system-diagram'
+import 'mapping'
 
-Person:
-    'person' name=ID;
-
-Greeting:
-    'Hello' person=[Person:ID] '!';
-
-hidden terminal WS: /\s+/;
-terminal ID: /[_a-zA-Z][\w_]*/;
-terminal INT returns number: /[0-9]+/;
-terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
-
-hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
-hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
+entry KDLRoot:
+    (entity=Entity | 
+    relationship=Relationship | 
+    systemDiagram=SystemDiagram |
+    mapping=Mapping)?;

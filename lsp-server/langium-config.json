@@ -1,5 +1,5 @@
 {
-    "projectName": "Kdl",
+    "projectName": "KDL",
     "languages": [{
         "id": "kdl",
         "grammar": "src/language/kdl.langium",
