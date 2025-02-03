@@ -150,14 +150,14 @@
         "extensions": [
           ".kdl"
         ],
-        "configuration": "lsp-server/language-configuration.json"
+        "configuration": "kdl-language/language-configuration.json"
       }
     ],
     "grammars": [
       {
         "language": "kdl",
         "scopeName": "source.kdl",
-        "path": "lsp-server/syntaxes/kdl.tmLanguage.json"
+        "path": "kdl-language/syntaxes/kdl.tmLanguage.json"
       }
     ]
   },

@@ -16,7 +16,13 @@
       "outFiles": [
         "${workspaceFolder}/vscode/kdl-extension/dist/*.js",
         "${workspaceFolder}/node_modules/@eclipse-glsp/**/*.js"
-      ]
+      ],
+      "sourceMapPathOverrides": {
+        "webpack://vscode/(.+)": "${workspaceFolder}/vscode/kdl-extension/$1"
+      },
+      "env": {
+        "KDL_GLSP_SERVER_PORT": "55801"
+      }
     },
     // {
     //   "name": "Launch GLSP Diagram Extension",
@@ -39,19 +45,19 @@
     //     "KDL_GLSP_SERVER_PORT": "5801"
     //   }
     // },
-    {
-      "name": "Run LSP Server Extension",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "${workspaceFolder}/example",
-        "--extensionDevelopmentPath=${workspaceFolder}/lsp-server"
-      ],
-      "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/lsp-server/out/**/*.js"
-      ]
-    },
+    // {
+    //   "name": "Run LSP Server Extension",
+    //   "type": "extensionHost",
+    //   "request": "launch",
+    //   "args": [
+    //     "${workspaceFolder}/example",
+    //     "--extensionDevelopmentPath=${workspaceFolder}/lsp-server"
+    //   ],
+    //   "sourceMaps": true,
+    //   "outFiles": [
+    //     "${workspaceFolder}/lsp-server/out/**/*.js"
+    //   ]
+    // },
     {
       "name": "Attach to Language Server",
       "type": "node",

@@ -41,10 +41,7 @@ const config = {
                     from: path.resolve(__dirname, '..', 'kdl-webview', 'dist')
                 },
                 {
-                    from: path.resolve(__dirname, '..', '..', 'glsp-server', 'dist')
-                },
-                {
-                    from: path.resolve(__dirname, '..', '..', 'lsp-server', 'out')
+                    from: path.resolve(__dirname, '..', '..', 'kdl-language', 'out')
                 }
             ]
         })

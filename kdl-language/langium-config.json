@@ -1,0 +1,12 @@
+{
+    "projectName": "KDL",
+    "languages": [{
+        "id": "kdl",
+        "grammar": "src/language-server/kdl.langium",
+        "fileExtensions": [".kdl"],
+        "textMate": {
+            "out": "syntaxes/kdl.tmLanguage.json"
+        }
+    }],
+    "out": "src/language-server/generated"
+}

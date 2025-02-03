@@ -1,17 +1,13 @@
 {
-  "extends": "@eclipse-glsp/ts-config",
+  "extends": "./configs/base.tsconfig.json",
   "include": [],
   "compilerOptions": {
     "composite": true,
-    "jsx":"react",
-    "reactNamespace":"JSX"
+    "allowJs": true
   },
   "references": [
     {
-      "path": "./glsp-client"
-    },
-    {
-      "path": "./glsp-server"
+      "path": "./kdl-language"
     },
     {
       "path": "./vscode/kdl-extension"
@@ -20,10 +16,10 @@
       "path": "./vscode/kdl-webview"
     },
     {
-      "path": "./lsp-server"
+      "path": "packages/protocol"
     },
     {
-      "path": "packages/protocol"
+      "path": "packages/glsp-client"
     },
   ]
 }

@@ -8,17 +8,15 @@
     "name": "SBT R&D"
   },
   "workspaces": [
-    "glsp-server",
-    "glsp-client",
     "vscode/kdl-webview",
     "vscode/kdl-extension",
-    "lsp-server",
+    "kdl-language",
     "packages/*"
   ],
   "scripts": {
     "all": "yarn clean && yarn install && yarn lint",
     "build": "yarn build:packages && yarn langium-generate && yarn compile && yarn bundle",
-    "bundle": "yarn glsp-server build && yarn webview build && yarn extension build && yarn lsp-server build",
+    "bundle": "yarn kdl-language build && yarn webview build && yarn extension build",
     "build:packages": "lerna run --scope=\"@kdl/*\" build",
     "clean": "lerna run clean",
     "compile": "tsc -b",
@@ -29,10 +27,8 @@
     "watch": "concurrently --kill-others -n tsc,ext,gslp-server -c red,yellow,green \"tsc -b -w --preserveWatchOutput\" \"yarn -s extension watch:bundle\" \"yarn -s glsp-server watch:bundle\"",
     "webview": "yarn --cwd vscode/kdl-webview",
     "extension": "yarn --cwd vscode/kdl-extension",
-    "glsp-client": "yarn --cwd glsp-client",
-    "glsp-server": "yarn --cwd glsp-server",
-    "lsp-server": "yarn --cwd lsp-server",
-    "langium-generate": "npm run langium:generate --prefix ./lsp-server"
+    "kdl-language": "yarn --cwd kdl-language",
+    "langium-generate": "npm run langium:generate --prefix ./kdl-language"
   },
   "resolutions": {
     "string-width": "4.2.3",
