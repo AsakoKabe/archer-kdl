@@ -17,7 +17,7 @@ const currentConnections: rpc.MessageConnection[] = [];
  * @param services language services
  * @returns a promise that is resolved as soon as the server is shut down or rejects if an error occurs
  */
-export function startModelServer(services: KDLLSPServices, workspaceFolder: URI): Promise<void> {
+export async function startModelServer(services: KDLLSPServices, workspaceFolder: URI): Promise<void> {
     console.error('startModelServer');
 
     const netServer = net.createServer(socket => createClientConnection(socket, services));

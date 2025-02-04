@@ -24,8 +24,8 @@ clusters:
   - id: 97c2bff5-1011-4e47-97ef-bdf75f4706e6
     name: rags
     position:
-      x: 207.20876076504607
-      y: 438.57725610036124
+      x: 73.20876076504607
+      y: 157.57725610036124
     type: cluster
     ingress_ids:
       - ebed0e69-00d5-4ccf-a730-3660763bde1b
@@ -38,17 +38,6 @@ clusters:
     size:
       width: 559.0885533665971
       height: 272
-  - id: 88d45ae3-3a52-49b4-883e-ace2ee28a356
-    name: default
-    position:
-      x: 0
-      y: 0
-    type: cluster
-    ingress_ids: []
-    pod_ids:
-      - 057eaa6b-874b-4767-ab76-f0107814dc48
-    service_ids:
-      - 98a17053-f87e-4dd8-a08a-42bb9195904e
 ingresses:
   - id: ebed0e69-00d5-4ccf-a730-3660763bde1b
     name: ingress
@@ -81,15 +70,6 @@ pods:
     size:
       width: 159.0546875
       height: 76
-  - id: 057eaa6b-874b-4767-ab76-f0107814dc48
-    name: nginx-676b6c5bbc-kbtq6
-    position:
-      x: 0
-      y: 0
-    type: pod
-    container_ids:
-      - cabd40b9-f050-4776-bffd-625cde5632b5
-    port_ids: []
 services:
   - id: 8c8580cb-4f56-4b26-aa39-4ee2fba00ca1
     name: ronin
@@ -113,17 +93,6 @@ services:
     type: service
     port_ids:
       - e15ca827-975d-4dae-807f-176aec5dffa3
-  - id: 98a17053-f87e-4dd8-a08a-42bb9195904e
-    name: kubernetes
-    position:
-      x: 120
-      y: 0
-    size:
-      width: 120
-      height: 40
-    type: service
-    port_ids:
-      - c1cfc57a-9c87-4933-80b1-2897678f645e
 containers:
   - id: e576b1ea-777a-45f3-89ae-ac33d08ea053
     name: ronin
@@ -133,12 +102,6 @@ containers:
     type: container
   - id: 545cab9e-997c-4bb3-965c-9aa246718be3
     name: ui
-    position:
-      x: 0
-      y: 0
-    type: container
-  - id: cabd40b9-f050-4776-bffd-625cde5632b5
-    name: nginx
     position:
       x: 0
       y: 0
@@ -168,13 +131,6 @@ ports:
   - id: e15ca827-975d-4dae-807f-176aec5dffa3
     name: ui-service
     number: "3000"
-    position:
-      x: 0
-      y: 0
-    type: port
-  - id: c1cfc57a-9c87-4933-80b1-2897678f645e
-    name: https
-    number: "443"
     position:
       x: 0
       y: 0

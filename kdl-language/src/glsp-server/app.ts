@@ -31,7 +31,7 @@ export async function launch(argv?: string[]): Promise<void> {
     launcher.start({ port: options.port, host: options.host });
 }
 
-launch(process.argv).catch(error => console.error('Error in kdl server launcher:', error));
+// launch(process.argv).catch(error => console.error('Error in kdl server launcher:', error));
 
 /**
  * Launches a GLSP server with access to the given language services on the default port.
@@ -39,7 +39,7 @@ launch(process.argv).catch(error => console.error('Error in kdl server launcher:
  * @param services language services
  * @returns a promise that is resolved as soon as the server is shut down or rejects if an error occurs
  */
-export function startGLSPServer(services: KDLLSPServices, workspaceFolder: URI): MaybePromise<void> {
+export async function startGLSPServer(services: KDLLSPServices, workspaceFolder: URI): Promise<MaybePromise<void>> {
     const launchOptions: SocketLaunchOptions = {
         ...defaultSocketLaunchOptions,
         host: '127.0.0.1',

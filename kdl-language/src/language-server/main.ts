@@ -8,6 +8,7 @@ import { NodeFileSystem } from 'langium/node';
 import { createConnection, ProposedFeatures } from 'vscode-languageserver/node.js';
 import { createKDLServices } from './kdl-module.js';
 import { startModelServer } from '../model-server/launch.js';
+import { startGLSPServer } from '../glsp-server/app.js';
 
 /**
  * This module will be spawned as a separate language server process by the 'extension.ts'.
@@ -29,9 +30,9 @@ const { shared, KDL } = createKDLServices({ connection, ...NodeFileSystem });
 // Start the language server with the shared services
 startLanguageServer(shared);
 
-shared.workspace.WorkspaceManager.onWorkspaceInitialized(workspaceFolders => {
-   // Start the graphical language server with the shared services
-   // startGLSPServer({ shared, language: KDL }, workspaceFolders[0]);
+shared.workspace.WorkspaceManager.onWorkspaceInitialized(async workspaceFolders => {
    // Start the JSON server with the shared services
    startModelServer({ shared, language: KDL }, workspaceFolders[0]);
+   // Start the graphical language server with the shared services
+   startGLSPServer({ shared, language: KDL }, workspaceFolders[0]);
 });
