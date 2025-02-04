@@ -38,6 +38,17 @@ clusters:
     size:
       width: 559.0885533665971
       height: 272
+  - id: 2000a50a-f93f-466f-ad5e-0822edf99674
+    name: default
+    position:
+      x: 0
+      y: 0
+    type: cluster
+    ingress_ids: []
+    pod_ids:
+      - ddc449c2-24c0-4ea5-818c-7b286ef22f58
+    service_ids:
+      - 901ebbd6-2aad-4c5c-9bd8-0ff046dc3062
 ingresses:
   - id: ebed0e69-00d5-4ccf-a730-3660763bde1b
     name: ingress
@@ -70,6 +81,15 @@ pods:
     size:
       width: 159.0546875
       height: 76
+  - id: ddc449c2-24c0-4ea5-818c-7b286ef22f58
+    name: nginx-676b6c5bbc-kbtq6
+    position:
+      x: 0
+      y: 0
+    type: pod
+    container_ids:
+      - 22028542-86b5-43cf-ae1e-bc82e772aaae
+    port_ids: []
 services:
   - id: 8c8580cb-4f56-4b26-aa39-4ee2fba00ca1
     name: ronin
@@ -93,6 +113,17 @@ services:
     type: service
     port_ids:
       - e15ca827-975d-4dae-807f-176aec5dffa3
+  - id: 901ebbd6-2aad-4c5c-9bd8-0ff046dc3062
+    name: kubernetes
+    position:
+      x: 120
+      y: 0
+    size:
+      width: 120
+      height: 40
+    type: service
+    port_ids:
+      - 3a382fc3-bbbb-42f6-af98-3768acff0fd5
 containers:
   - id: e576b1ea-777a-45f3-89ae-ac33d08ea053
     name: ronin
@@ -102,6 +133,12 @@ containers:
     type: container
   - id: 545cab9e-997c-4bb3-965c-9aa246718be3
     name: ui
+    position:
+      x: 0
+      y: 0
+    type: container
+  - id: 22028542-86b5-43cf-ae1e-bc82e772aaae
+    name: nginx
     position:
       x: 0
       y: 0
@@ -131,6 +168,13 @@ ports:
   - id: e15ca827-975d-4dae-807f-176aec5dffa3
     name: ui-service
     number: "3000"
+    position:
+      x: 0
+      y: 0
+    type: port
+  - id: 3a382fc3-bbbb-42f6-af98-3768acff0fd5
+    name: https
+    number: "443"
     position:
       x: 0
       y: 0

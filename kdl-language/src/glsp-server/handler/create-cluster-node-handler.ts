@@ -9,7 +9,7 @@ import {
     Point
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { ClusterNode, ClusterNodeBuilder } from '../model/cluster-node.js';
+import { ClusterNode, ClusterNodeBuilder } from '../graph/cluster-node.js';
 import { KDLModelState } from '../model/kdl-model-state.js';
 import { Cluster } from '../model/kdl-model.js';
 import { ModelTypes } from '../utils/model-types.js';

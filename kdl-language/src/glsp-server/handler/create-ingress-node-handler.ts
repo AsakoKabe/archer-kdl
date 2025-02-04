@@ -9,7 +9,7 @@ import {
     Point
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { IngressNode, IngressNodeBuilder } from '../model/ingress-node.js';
+import { IngressNode, IngressNodeBuilder } from '../graph/ingress-node.js';
 import { KDLModelState } from '../model/kdl-model-state.js';
 import { Cluster, Ingress } from '../model/kdl-model.js';
 import { ModelTypes } from '../utils/model-types.js';

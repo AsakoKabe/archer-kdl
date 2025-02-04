@@ -10,9 +10,9 @@ import {
     Point
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import { ServiceNode, ServiceNodeBuilder } from '../graph/service-node.js';
 import { KDLModelState } from '../model/kdl-model-state.js';
 import { Cluster, Service } from '../model/kdl-model.js';
-import { ServiceNode, ServiceNodeBuilder } from '../model/service-node.js';
 import { ModelTypes } from '../utils/model-types.js';
 
 @injectable()

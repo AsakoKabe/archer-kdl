@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import * as uuid from 'uuid';
-import { AbstractYamlModelStorage } from './abstract-yaml-model-storage.js';
+import { AbstractYamlModelStorage } from '../common/abstract-yaml-model-storage.js';
 import { KDLModelState } from './kdl-model-state.js';
 import { KDL } from './kdl-model.js';
 import { MaybePromise, RequestModelAction, SaveModelAction } from '@eclipse-glsp/server';

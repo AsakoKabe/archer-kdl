@@ -11,12 +11,12 @@ import {
     ShapeTypeHint
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { ClusterNode } from '../model/cluster-node.js';
-import { ContainerNode } from '../model/container-node.js';
-import { IngressNode } from '../model/ingress-node.js';
-import { PodNode } from '../model/pod-node.js';
-import { PortNode } from '../model/port-node.js';
-import { ServiceNode } from '../model/service-node.js';
+import { ClusterNode } from '../graph/cluster-node.js';
+import { ContainerNode } from '../graph/container-node.js';
+import { IngressNode } from '../graph/ingress-node.js';
+import { PodNode } from '../graph/pod-node.js';
+import { PortNode } from '../graph/port-node.js';
+import { ServiceNode } from '../graph/service-node.js';
 import { ModelTypes } from '../utils/model-types.js';
 
 @injectable()

@@ -1,14 +1,14 @@
 import { ArgsUtil, GCompartment, GEdge, GGraph, GModelFactory } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import { ClusterNode } from '../graph/cluster-node.js';
+import { ContainerNode } from '../graph/container-node.js';
+import { IngressNode } from '../graph/ingress-node.js';
+import { PodNode } from '../graph/pod-node.js';
+import { PortNode } from '../graph/port-node.js';
+import { ServiceNode } from '../graph/service-node.js';
 import { ModelTypes } from '../utils/model-types.js';
-import { ClusterNode } from './cluster-node.js';
-import { ContainerNode } from './container-node.js';
-import { IngressNode } from './ingress-node.js';
 import { KDLModelState } from './kdl-model-state.js';
 import { Cluster, Container, Ingress, Link, Pod, Port, Service } from './kdl-model.js';
-import { PodNode } from './pod-node.js';
-import { PortNode } from './port-node.js';
-import { ServiceNode } from './service-node.js';
 
 @injectable()
 export class KDLGModelFactory implements GModelFactory {

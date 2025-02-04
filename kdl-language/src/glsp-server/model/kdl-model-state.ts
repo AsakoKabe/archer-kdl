@@ -18,7 +18,7 @@ import { DefaultModelState, JsonModelState } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { KDLModelIndex } from './kdl-model-index.js';
 import { KDL } from './kdl-model.js';
-
+ 
 @injectable()
 export class KDLModelState extends DefaultModelState implements JsonModelState<KDL> {
     @inject(KDLModelIndex)
