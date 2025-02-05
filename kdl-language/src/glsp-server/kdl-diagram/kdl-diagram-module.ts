@@ -22,7 +22,6 @@ import { CrossModelIndex } from '../common/cross-model-index.js';
 import { CrossModelState } from '../common/cross-model-state.js';
 import { CrossModelStorage } from '../common/cross-model-storage.js';
 import { CrossModelSubmissionHandler } from '../common/cross-model-submission-handler.js';
-import { SystemDiagramAddEntityActionProvider } from './command-palette/add-entity-action-provider.js';
 import { KDLDiagramApplyLabelEditOperationHandler } from './handler/apply-edit-operation-handler.js';
 import { KDLDiagramChangeBoundsOperationHandler } from './handler/change-bounds-operation-handler.js';
 import { KDLDiagramCreateEntityOperationHandler } from './handler/create-entity-operation-handler.js';
@@ -62,7 +61,6 @@ export class KDLDiagramModule extends DiagramModule {
 
     protected override configureContextActionProviders(binding: MultiBinding<ContextActionsProvider>): void {
         super.configureContextActionProviders(binding);
-        binding.add(SystemDiagramAddEntityActionProvider);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {

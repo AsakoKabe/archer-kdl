@@ -22,13 +22,6 @@ import {
     StreamScope,
     URI
 } from 'langium';
-import {
-    isAttributeMapping,
-    isRelationshipAttribute,
-    isSourceObject,
-    isSourceObjectAttributeReference,
-    isSourceObjectDependency
-} from './generated/ast.js';
 import { KDLServices } from './kdl-module.js';
 import { QUALIFIED_ID_SEPARATOR } from './kdl-naming.js';
 import { GlobalAstNodeDescription, isGlobalDescriptionForLocalPackage, PackageAstNodeDescription } from './kdl-scope.js';
@@ -60,11 +53,6 @@ export class PackageScopeProvider extends DefaultScopeProvider {
     }
 
     protected override getGlobalScope(referenceType: string, context: ReferenceInfo): Scope {
-        if (isAttributeMapping(context.container)) {
-            // target attribute mappings should only access the local scope
-            return EMPTY_SCOPE;
-        }
-
         // the global scope contains all elements known to the language server
         const globalScope = super.getGlobalScope(referenceType, context);
 
@@ -189,37 +177,6 @@ export class KDLScopeProvider extends PackageScopeProvider {
         container?: AstNode,
         property?: string
     ): boolean {
-        if (isRelationshipAttribute(container)) {
-            // only show relevant attributes depending on the parent or child context
-            if (property === 'child') {
-                return description.name.startsWith(container.$container.child?.$refText + '.');
-            }
-            if (property === 'parent') {
-                return description.name.startsWith(container.$container.parent?.$refText + '.');
-            }
-        }
-        if (isSourceObject(container) && property === 'entity' && container.$container.target.entity.ref) {
-            const targetEntity = container.$container.target.entity.ref;
-            if (description instanceof GlobalAstNodeDescription) {
-                return description.name !== this.idProvider.getGlobalId(targetEntity);
-            }
-            return description.name !== this.idProvider.getLocalId(targetEntity);
-        }
-        if (isSourceObjectDependency(container) || (isSourceObject(container) && property === 'dependencies')) {
-            const sourceObject = isSourceObjectDependency(container) ? container.$container : container;
-            return (
-                !(description instanceof GlobalAstNodeDescription) &&
-                !(description instanceof PackageAstNodeDescription) &&
-                !(description.name === sourceObject.id) &&
-                description.documentUri.toString() === document.uri.toString()
-            );
-        }
-        if (isSourceObjectAttributeReference(container)) {
-            // we are in a join condition of a source object, only show our own and our dependent source object references
-            const sourceObject = container.$container.$container.$container;
-            const allowedOwners = [sourceObject.id, ...sourceObject.dependencies.map(dependency => dependency.source.$refText)];
-            return !!allowedOwners.find(allowedOwner => description.name.startsWith(allowedOwner + '.'));
-        }
         return !isGlobalDescriptionForLocalPackage(description, packageId);
     }
 }

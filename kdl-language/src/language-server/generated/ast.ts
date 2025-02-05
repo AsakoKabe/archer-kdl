@@ -4,7 +4,7 @@
  ******************************************************************************/
 
 /* eslint-disable */
-import type { AstNode, Reference, ReferenceInfo, TypeMetaData } from 'langium';
+import type { AstNode, ReferenceInfo, TypeMetaData } from 'langium';
 import { AbstractAstReflection } from 'langium';
 
 export const KDLTerminals = {
@@ -22,52 +22,14 @@ export const KDLTerminals = {
 export type KDLTerminalNames = keyof typeof KDLTerminals;
 
 export type KDLKeywordNames = 
-    | "!="
-    | "."
     | ":"
-    | "<"
-    | "<="
-    | "="
-    | ">"
-    | ">="
-    | "TRUE"
-    | "apply"
-    | "attribute"
-    | "attributes"
-    | "child"
     | "clusters"
-    | "conditions"
-    | "cross-join"
     | "customProperties"
-    | "datatype"
-    | "dependencies"
-    | "description"
     | "diagram"
-    | "edges"
-    | "entity"
-    | "expression"
-    | "from"
     | "height"
     | "id"
-    | "identifier"
-    | "inherits"
-    | "inner-join"
-    | "join"
     | "kdlDiagram"
-    | "left-join"
-    | "mapping"
-    | "mappings"
     | "name"
-    | "nodes"
-    | "parent"
-    | "relationship"
-    | "sourceNode"
-    | "sources"
-    | "systemDiagram"
-    | "target"
-    | "targetNode"
-    | "true"
-    | "type"
     | "value"
     | "width"
     | "x"
@@ -75,99 +37,10 @@ export type KDLKeywordNames =
 
 export type KDLTokenNames = KDLTerminalNames | KDLKeywordNames;
 
-export type BooleanExpression = NumberLiteral | SourceObjectAttributeReference | StringLiteral;
-
-export const BooleanExpression = 'BooleanExpression';
-
-export function isBooleanExpression(item: unknown): item is BooleanExpression {
-    return reflection.isInstance(item, BooleanExpression);
-}
-
 export type IDReference = string;
 
 export function isIDReference(item: unknown): item is IDReference {
     return typeof item === 'string';
-}
-
-export type JoinType = 'apply' | 'cross-join' | 'from' | 'inner-join' | 'left-join';
-
-export function isJoinType(item: unknown): item is JoinType {
-    return item === 'from' || item === 'inner-join' || item === 'cross-join' || item === 'left-join' || item === 'apply';
-}
-
-export type SourceObjectCondition = JoinCondition;
-
-export const SourceObjectCondition = 'SourceObjectCondition';
-
-export function isSourceObjectCondition(item: unknown): item is SourceObjectCondition {
-    return reflection.isInstance(item, SourceObjectCondition);
-}
-
-export interface Attribute extends AstNode {
-    readonly $type: 'Attribute' | 'EntityAttribute' | 'EntityNodeAttribute' | 'SourceObjectAttribute' | 'TargetObjectAttribute';
-    datatype: string;
-    description?: string;
-    id: string;
-    name: string;
-}
-
-export const Attribute = 'Attribute';
-
-export function isAttribute(item: unknown): item is Attribute {
-    return reflection.isInstance(item, Attribute);
-}
-
-export interface AttributeMapping extends AstNode {
-    readonly $container: TargetObject;
-    readonly $type: 'AttributeMapping';
-    attribute: AttributeMappingTarget;
-    customProperties: Array<CustomProperty>;
-    expression?: string;
-    sources: Array<AttributeMappingSource>;
-}
-
-export const AttributeMapping = 'AttributeMapping';
-
-export function isAttributeMapping(item: unknown): item is AttributeMapping {
-    return reflection.isInstance(item, AttributeMapping);
-}
-
-export interface AttributeMappingSource extends AstNode {
-    readonly $container: AttributeMapping;
-    readonly $type: 'AttributeMappingSource';
-    value: Reference<SourceObjectAttribute>;
-}
-
-export const AttributeMappingSource = 'AttributeMappingSource';
-
-export function isAttributeMappingSource(item: unknown): item is AttributeMappingSource {
-    return reflection.isInstance(item, AttributeMappingSource);
-}
-
-export interface AttributeMappingTarget extends AstNode {
-    readonly $container: AttributeMapping;
-    readonly $type: 'AttributeMappingTarget';
-    value: Reference<TargetObjectAttribute>;
-}
-
-export const AttributeMappingTarget = 'AttributeMappingTarget';
-
-export function isAttributeMappingTarget(item: unknown): item is AttributeMappingTarget {
-    return reflection.isInstance(item, AttributeMappingTarget);
-}
-
-export interface BinaryExpression extends AstNode {
-    readonly $container: JoinCondition;
-    readonly $type: 'BinaryExpression';
-    left: BooleanExpression;
-    op: '!=' | '<' | '<=' | '=' | '>' | '>=';
-    right: BooleanExpression;
-}
-
-export const BinaryExpression = 'BinaryExpression';
-
-export function isBinaryExpression(item: unknown): item is BinaryExpression {
-    return reflection.isInstance(item, BinaryExpression);
 }
 
 export interface ClusterNode extends AstNode {
@@ -189,7 +62,7 @@ export function isClusterNode(item: unknown): item is ClusterNode {
 }
 
 export interface CustomProperty extends AstNode {
-    readonly $container: AttributeMapping | ClusterNode | Entity | EntityNode | KDLDiagram | Mapping | Relationship | RelationshipAttribute | RelationshipEdge | SourceObject | SystemDiagram | TargetObject | WithCustomProperties;
+    readonly $container: ClusterNode | KDLDiagram | WithCustomProperties;
     readonly $type: 'CustomProperty';
     name: string;
     value?: string;
@@ -199,55 +72,6 @@ export const CustomProperty = 'CustomProperty';
 
 export function isCustomProperty(item: unknown): item is CustomProperty {
     return reflection.isInstance(item, CustomProperty);
-}
-
-export interface Entity extends AstNode {
-    readonly $container: KDLRoot;
-    readonly $type: 'Entity';
-    attributes: Array<EntityAttribute>;
-    customProperties: Array<CustomProperty>;
-    description?: string;
-    id: string;
-    name?: string;
-    superEntities: Array<Reference<Entity>>;
-}
-
-export const Entity = 'Entity';
-
-export function isEntity(item: unknown): item is Entity {
-    return reflection.isInstance(item, Entity);
-}
-
-export interface EntityNode extends AstNode {
-    readonly $container: SystemDiagram;
-    readonly $type: 'EntityNode';
-    customProperties: Array<CustomProperty>;
-    description?: string;
-    entity: Reference<Entity>;
-    height: number;
-    id: string;
-    name?: string;
-    width: number;
-    x: number;
-    y: number;
-}
-
-export const EntityNode = 'EntityNode';
-
-export function isEntityNode(item: unknown): item is EntityNode {
-    return reflection.isInstance(item, EntityNode);
-}
-
-export interface JoinCondition extends AstNode {
-    readonly $container: SourceObject;
-    readonly $type: 'JoinCondition';
-    expression: BinaryExpression;
-}
-
-export const JoinCondition = 'JoinCondition';
-
-export function isJoinCondition(item: unknown): item is JoinCondition {
-    return reflection.isInstance(item, JoinCondition);
 }
 
 export interface KDLDiagram extends AstNode {
@@ -267,11 +91,7 @@ export function isKDLDiagram(item: unknown): item is KDLDiagram {
 
 export interface KDLRoot extends AstNode {
     readonly $type: 'KDLRoot';
-    entity?: Entity;
     kdlDiagram?: KDLDiagram;
-    mapping?: Mapping;
-    relationship?: Relationship;
-    systemDiagram?: SystemDiagram;
 }
 
 export const KDLRoot = 'KDLRoot';
@@ -280,168 +100,8 @@ export function isKDLRoot(item: unknown): item is KDLRoot {
     return reflection.isInstance(item, KDLRoot);
 }
 
-export interface Mapping extends AstNode {
-    readonly $container: KDLRoot;
-    readonly $type: 'Mapping';
-    customProperties: Array<CustomProperty>;
-    id: string;
-    sources: Array<SourceObject>;
-    target: TargetObject;
-}
-
-export const Mapping = 'Mapping';
-
-export function isMapping(item: unknown): item is Mapping {
-    return reflection.isInstance(item, Mapping);
-}
-
-export interface NumberLiteral extends AstNode {
-    readonly $container: BinaryExpression;
-    readonly $type: 'NumberLiteral';
-    value: number;
-}
-
-export const NumberLiteral = 'NumberLiteral';
-
-export function isNumberLiteral(item: unknown): item is NumberLiteral {
-    return reflection.isInstance(item, NumberLiteral);
-}
-
-export interface Relationship extends AstNode {
-    readonly $container: KDLRoot;
-    readonly $type: 'Relationship';
-    attributes: Array<RelationshipAttribute>;
-    child: Reference<Entity>;
-    customProperties: Array<CustomProperty>;
-    description?: string;
-    id: string;
-    name?: string;
-    parent: Reference<Entity>;
-    type: string;
-}
-
-export const Relationship = 'Relationship';
-
-export function isRelationship(item: unknown): item is Relationship {
-    return reflection.isInstance(item, Relationship);
-}
-
-export interface RelationshipAttribute extends AstNode {
-    readonly $container: Relationship;
-    readonly $type: 'RelationshipAttribute';
-    child: Reference<Attribute>;
-    customProperties: Array<CustomProperty>;
-    parent: Reference<Attribute>;
-}
-
-export const RelationshipAttribute = 'RelationshipAttribute';
-
-export function isRelationshipAttribute(item: unknown): item is RelationshipAttribute {
-    return reflection.isInstance(item, RelationshipAttribute);
-}
-
-export interface RelationshipEdge extends AstNode {
-    readonly $container: SystemDiagram;
-    readonly $type: 'RelationshipEdge';
-    customProperties: Array<CustomProperty>;
-    id: string;
-    relationship: Reference<Relationship>;
-    sourceNode: Reference<EntityNode>;
-    targetNode: Reference<EntityNode>;
-}
-
-export const RelationshipEdge = 'RelationshipEdge';
-
-export function isRelationshipEdge(item: unknown): item is RelationshipEdge {
-    return reflection.isInstance(item, RelationshipEdge);
-}
-
-export interface SourceObject extends AstNode {
-    readonly $container: Mapping;
-    readonly $type: 'SourceObject';
-    conditions: Array<SourceObjectCondition>;
-    customProperties: Array<CustomProperty>;
-    dependencies: Array<SourceObjectDependency>;
-    entity: Reference<Entity>;
-    id: string;
-    join: JoinType;
-}
-
-export const SourceObject = 'SourceObject';
-
-export function isSourceObject(item: unknown): item is SourceObject {
-    return reflection.isInstance(item, SourceObject);
-}
-
-export interface SourceObjectAttributeReference extends AstNode {
-    readonly $container: BinaryExpression;
-    readonly $type: 'SourceObjectAttributeReference';
-    value: Reference<SourceObjectAttribute>;
-}
-
-export const SourceObjectAttributeReference = 'SourceObjectAttributeReference';
-
-export function isSourceObjectAttributeReference(item: unknown): item is SourceObjectAttributeReference {
-    return reflection.isInstance(item, SourceObjectAttributeReference);
-}
-
-export interface SourceObjectDependency extends AstNode {
-    readonly $container: SourceObject;
-    readonly $type: 'SourceObjectDependency';
-    source: Reference<SourceObject>;
-}
-
-export const SourceObjectDependency = 'SourceObjectDependency';
-
-export function isSourceObjectDependency(item: unknown): item is SourceObjectDependency {
-    return reflection.isInstance(item, SourceObjectDependency);
-}
-
-export interface StringLiteral extends AstNode {
-    readonly $container: BinaryExpression;
-    readonly $type: 'StringLiteral';
-    value: string;
-}
-
-export const StringLiteral = 'StringLiteral';
-
-export function isStringLiteral(item: unknown): item is StringLiteral {
-    return reflection.isInstance(item, StringLiteral);
-}
-
-export interface SystemDiagram extends AstNode {
-    readonly $container: KDLRoot;
-    readonly $type: 'SystemDiagram';
-    customProperties: Array<CustomProperty>;
-    description?: string;
-    edges: Array<RelationshipEdge>;
-    id: string;
-    name?: string;
-    nodes: Array<EntityNode>;
-}
-
-export const SystemDiagram = 'SystemDiagram';
-
-export function isSystemDiagram(item: unknown): item is SystemDiagram {
-    return reflection.isInstance(item, SystemDiagram);
-}
-
-export interface TargetObject extends AstNode {
-    readonly $container: Mapping;
-    readonly $type: 'TargetObject';
-    customProperties: Array<CustomProperty>;
-    entity: Reference<Entity>;
-    mappings: Array<AttributeMapping>;
-}
-
-export const TargetObject = 'TargetObject';
-
-export function isTargetObject(item: unknown): item is TargetObject {
-    return reflection.isInstance(item, TargetObject);
-}
-
 export interface WithCustomProperties extends AstNode {
-    readonly $type: 'EntityAttribute' | 'EntityNodeAttribute' | 'SourceObjectAttribute' | 'TargetObjectAttribute' | 'WithCustomProperties';
+    readonly $type: 'WithCustomProperties';
     customProperties: Array<CustomProperty>;
 }
 
@@ -451,104 +111,22 @@ export function isWithCustomProperties(item: unknown): item is WithCustomPropert
     return reflection.isInstance(item, WithCustomProperties);
 }
 
-export interface EntityAttribute extends Attribute, WithCustomProperties {
-    readonly $type: 'EntityAttribute' | 'EntityNodeAttribute';
-    identifier: boolean;
-}
-
-export const EntityAttribute = 'EntityAttribute';
-
-export function isEntityAttribute(item: unknown): item is EntityAttribute {
-    return reflection.isInstance(item, EntityAttribute);
-}
-
-export interface SourceObjectAttribute extends Attribute, WithCustomProperties {
-    readonly $type: 'SourceObjectAttribute';
-}
-
-export const SourceObjectAttribute = 'SourceObjectAttribute';
-
-export function isSourceObjectAttribute(item: unknown): item is SourceObjectAttribute {
-    return reflection.isInstance(item, SourceObjectAttribute);
-}
-
-export interface TargetObjectAttribute extends Attribute, WithCustomProperties {
-    readonly $type: 'TargetObjectAttribute';
-}
-
-export const TargetObjectAttribute = 'TargetObjectAttribute';
-
-export function isTargetObjectAttribute(item: unknown): item is TargetObjectAttribute {
-    return reflection.isInstance(item, TargetObjectAttribute);
-}
-
-export interface EntityNodeAttribute extends EntityAttribute, WithCustomProperties {
-    readonly $type: 'EntityNodeAttribute';
-}
-
-export const EntityNodeAttribute = 'EntityNodeAttribute';
-
-export function isEntityNodeAttribute(item: unknown): item is EntityNodeAttribute {
-    return reflection.isInstance(item, EntityNodeAttribute);
-}
-
 export type KDLAstType = {
-    Attribute: Attribute
-    AttributeMapping: AttributeMapping
-    AttributeMappingSource: AttributeMappingSource
-    AttributeMappingTarget: AttributeMappingTarget
-    BinaryExpression: BinaryExpression
-    BooleanExpression: BooleanExpression
     ClusterNode: ClusterNode
     CustomProperty: CustomProperty
-    Entity: Entity
-    EntityAttribute: EntityAttribute
-    EntityNode: EntityNode
-    EntityNodeAttribute: EntityNodeAttribute
-    JoinCondition: JoinCondition
     KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
-    Mapping: Mapping
-    NumberLiteral: NumberLiteral
-    Relationship: Relationship
-    RelationshipAttribute: RelationshipAttribute
-    RelationshipEdge: RelationshipEdge
-    SourceObject: SourceObject
-    SourceObjectAttribute: SourceObjectAttribute
-    SourceObjectAttributeReference: SourceObjectAttributeReference
-    SourceObjectCondition: SourceObjectCondition
-    SourceObjectDependency: SourceObjectDependency
-    StringLiteral: StringLiteral
-    SystemDiagram: SystemDiagram
-    TargetObject: TargetObject
-    TargetObjectAttribute: TargetObjectAttribute
     WithCustomProperties: WithCustomProperties
 }
 
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [Attribute, AttributeMapping, AttributeMappingSource, AttributeMappingTarget, BinaryExpression, BooleanExpression, ClusterNode, CustomProperty, Entity, EntityAttribute, EntityNode, EntityNodeAttribute, JoinCondition, KDLDiagram, KDLRoot, Mapping, NumberLiteral, Relationship, RelationshipAttribute, RelationshipEdge, SourceObject, SourceObjectAttribute, SourceObjectAttributeReference, SourceObjectCondition, SourceObjectDependency, StringLiteral, SystemDiagram, TargetObject, TargetObjectAttribute, WithCustomProperties];
+        return [ClusterNode, CustomProperty, KDLDiagram, KDLRoot, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
-            case EntityAttribute:
-            case SourceObjectAttribute:
-            case TargetObjectAttribute: {
-                return this.isSubtype(Attribute, supertype) || this.isSubtype(WithCustomProperties, supertype);
-            }
-            case EntityNodeAttribute: {
-                return this.isSubtype(EntityAttribute, supertype) || this.isSubtype(WithCustomProperties, supertype);
-            }
-            case JoinCondition: {
-                return this.isSubtype(SourceObjectCondition, supertype);
-            }
-            case NumberLiteral:
-            case SourceObjectAttributeReference:
-            case StringLiteral: {
-                return this.isSubtype(BooleanExpression, supertype);
-            }
             default: {
                 return false;
             }
@@ -558,35 +136,6 @@ export class KDLAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
-            case 'AttributeMappingSource:value':
-            case 'SourceObjectAttributeReference:value': {
-                return SourceObjectAttribute;
-            }
-            case 'AttributeMappingTarget:value': {
-                return TargetObjectAttribute;
-            }
-            case 'Entity:superEntities':
-            case 'EntityNode:entity':
-            case 'Relationship:child':
-            case 'Relationship:parent':
-            case 'SourceObject:entity':
-            case 'TargetObject:entity': {
-                return Entity;
-            }
-            case 'RelationshipAttribute:child':
-            case 'RelationshipAttribute:parent': {
-                return Attribute;
-            }
-            case 'RelationshipEdge:relationship': {
-                return Relationship;
-            }
-            case 'RelationshipEdge:sourceNode':
-            case 'RelationshipEdge:targetNode': {
-                return EntityNode;
-            }
-            case 'SourceObjectDependency:source': {
-                return SourceObject;
-            }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
             }
@@ -595,54 +144,6 @@ export class KDLAstReflection extends AbstractAstReflection {
 
     getTypeMetaData(type: string): TypeMetaData {
         switch (type) {
-            case Attribute: {
-                return {
-                    name: Attribute,
-                    properties: [
-                        { name: 'datatype' },
-                        { name: 'description' },
-                        { name: 'id' },
-                        { name: 'name' }
-                    ]
-                };
-            }
-            case AttributeMapping: {
-                return {
-                    name: AttributeMapping,
-                    properties: [
-                        { name: 'attribute' },
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'expression' },
-                        { name: 'sources', defaultValue: [] }
-                    ]
-                };
-            }
-            case AttributeMappingSource: {
-                return {
-                    name: AttributeMappingSource,
-                    properties: [
-                        { name: 'value' }
-                    ]
-                };
-            }
-            case AttributeMappingTarget: {
-                return {
-                    name: AttributeMappingTarget,
-                    properties: [
-                        { name: 'value' }
-                    ]
-                };
-            }
-            case BinaryExpression: {
-                return {
-                    name: BinaryExpression,
-                    properties: [
-                        { name: 'left' },
-                        { name: 'op' },
-                        { name: 'right' }
-                    ]
-                };
-            }
             case ClusterNode: {
                 return {
                     name: ClusterNode,
@@ -666,43 +167,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
-            case Entity: {
-                return {
-                    name: Entity,
-                    properties: [
-                        { name: 'attributes', defaultValue: [] },
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'description' },
-                        { name: 'id' },
-                        { name: 'name' },
-                        { name: 'superEntities', defaultValue: [] }
-                    ]
-                };
-            }
-            case EntityNode: {
-                return {
-                    name: EntityNode,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'description' },
-                        { name: 'entity' },
-                        { name: 'height' },
-                        { name: 'id' },
-                        { name: 'name' },
-                        { name: 'width' },
-                        { name: 'x' },
-                        { name: 'y' }
-                    ]
-                };
-            }
-            case JoinCondition: {
-                return {
-                    name: JoinCondition,
-                    properties: [
-                        { name: 'expression' }
-                    ]
-                };
-            }
             case KDLDiagram: {
                 return {
                     name: KDLDiagram,
@@ -718,127 +182,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: KDLRoot,
                     properties: [
-                        { name: 'entity' },
-                        { name: 'kdlDiagram' },
-                        { name: 'mapping' },
-                        { name: 'relationship' },
-                        { name: 'systemDiagram' }
-                    ]
-                };
-            }
-            case Mapping: {
-                return {
-                    name: Mapping,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'id' },
-                        { name: 'sources', defaultValue: [] },
-                        { name: 'target' }
-                    ]
-                };
-            }
-            case NumberLiteral: {
-                return {
-                    name: NumberLiteral,
-                    properties: [
-                        { name: 'value' }
-                    ]
-                };
-            }
-            case Relationship: {
-                return {
-                    name: Relationship,
-                    properties: [
-                        { name: 'attributes', defaultValue: [] },
-                        { name: 'child' },
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'description' },
-                        { name: 'id' },
-                        { name: 'name' },
-                        { name: 'parent' },
-                        { name: 'type' }
-                    ]
-                };
-            }
-            case RelationshipAttribute: {
-                return {
-                    name: RelationshipAttribute,
-                    properties: [
-                        { name: 'child' },
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'parent' }
-                    ]
-                };
-            }
-            case RelationshipEdge: {
-                return {
-                    name: RelationshipEdge,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'id' },
-                        { name: 'relationship' },
-                        { name: 'sourceNode' },
-                        { name: 'targetNode' }
-                    ]
-                };
-            }
-            case SourceObject: {
-                return {
-                    name: SourceObject,
-                    properties: [
-                        { name: 'conditions', defaultValue: [] },
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'dependencies', defaultValue: [] },
-                        { name: 'entity' },
-                        { name: 'id' },
-                        { name: 'join' }
-                    ]
-                };
-            }
-            case SourceObjectAttributeReference: {
-                return {
-                    name: SourceObjectAttributeReference,
-                    properties: [
-                        { name: 'value' }
-                    ]
-                };
-            }
-            case SourceObjectDependency: {
-                return {
-                    name: SourceObjectDependency,
-                    properties: [
-                        { name: 'source' }
-                    ]
-                };
-            }
-            case StringLiteral: {
-                return {
-                    name: StringLiteral,
-                    properties: [
-                        { name: 'value' }
-                    ]
-                };
-            }
-            case SystemDiagram: {
-                return {
-                    name: SystemDiagram,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'description' },
-                        { name: 'edges', defaultValue: [] },
-                        { name: 'id' },
-                        { name: 'name' },
-                        { name: 'nodes', defaultValue: [] }
-                    ]
-                };
-            }
-            case TargetObject: {
-                return {
-                    name: TargetObject,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'entity' },
-                        { name: 'mappings', defaultValue: [] }
+                        { name: 'kdlDiagram' }
                     ]
                 };
             }
@@ -847,56 +191,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                     name: WithCustomProperties,
                     properties: [
                         { name: 'customProperties', defaultValue: [] }
-                    ]
-                };
-            }
-            case EntityAttribute: {
-                return {
-                    name: EntityAttribute,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'datatype' },
-                        { name: 'description' },
-                        { name: 'id' },
-                        { name: 'identifier', defaultValue: false },
-                        { name: 'name' }
-                    ]
-                };
-            }
-            case SourceObjectAttribute: {
-                return {
-                    name: SourceObjectAttribute,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'datatype' },
-                        { name: 'description' },
-                        { name: 'id' },
-                        { name: 'name' }
-                    ]
-                };
-            }
-            case TargetObjectAttribute: {
-                return {
-                    name: TargetObjectAttribute,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'datatype' },
-                        { name: 'description' },
-                        { name: 'id' },
-                        { name: 'name' }
-                    ]
-                };
-            }
-            case EntityNodeAttribute: {
-                return {
-                    name: EntityNodeAttribute,
-                    properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'datatype' },
-                        { name: 'description' },
-                        { name: 'id' },
-                        { name: 'identifier', defaultValue: false },
-                        { name: 'name' }
                     ]
                 };
             }

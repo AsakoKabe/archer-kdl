@@ -2,15 +2,15 @@ kdlDiagram:
     id: D1
     name: "123"
     clusters:
-      - id: C1
-        name: "asd"
-        x: 49.8200009216
-        y: 345.7799806464
-        width: 303
-        height: 179
-      - id: ebf0917-0768-41f8-a7af-b53ff728a1e9
+      - id: dc62b444-55d5-4e5d-b08e-fea513cc3675
         name: "CLusterNode"
-        x: 75
-        y: 48
-        width: 198.6015625
-        height: 149
+        x: 71
+        y: 232
+        width: 247.6015625
+        height: 146
+      - id: abacf7c0-1327-4923-ba99-42e7b0dbb40d
+        name: "CLusterNode"
+        x: 90
+        y: 70
+        width: 96.6015625
+        height: 36

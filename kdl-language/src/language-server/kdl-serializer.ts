@@ -2,23 +2,13 @@
  * Copyright (c) 2023 CrossBreeze.
  ********************************************************************************/
 
-import { quote } from '@kdl/protocol';
 import { AstNode, GenericAstNode, Grammar, isAstNode, isReference } from 'langium';
 import { collectAst } from 'langium/grammar';
 import { Serializer } from '../model-server/serializer.js';
 import {
    KDLRoot,
-   EntityAttribute,
-   isAttributeMappingSource,
-   isAttributeMappingTarget,
    isCustomProperty,
-   isEntityAttribute,
-   isJoinCondition,
-   isSourceObject,
-   isSourceObjectDependency,
-   JoinCondition,
    reflection,
-   StringLiteral
 } from './generated/ast.js';
 import { isImplicitProperty } from './util/ast-util.js';
 
@@ -59,20 +49,10 @@ export class CrossModelSerializer implements Serializer<KDLRoot> {
          key === 'id' ||
          (key === 'superEntities' && Array.isArray(parent)) ||
          propertyOf(parent, key, isCustomProperty, 'name') ||
-         propertyOf(parent, key, isSourceObject, 'join') ||
          (!Array.isArray(value) && this.isValidReference(parent, key, value))
       ) {
          // values that we do not want to quote because they are ids or references
          return value;
-      }
-      if (isAttributeMappingSource(value) || isAttributeMappingTarget(value)) {
-         return value.value?.$refText ?? value.value;
-      }
-      if (isSourceObjectDependency(value)) {
-         return value.source?.$refText ?? value.source;
-      }
-      if (isJoinCondition(value)) {
-         return this.serializeJoinCondition(value);
       }
       if (isAstNode(value)) {
          let isFirstNested = isAstNode(parent);
@@ -86,18 +66,9 @@ export class CrossModelSerializer implements Serializer<KDLRoot> {
                   // skip empty arrays
                   return undefined;
                }
-               if (isEntityAttribute(value) && prop === 'identifier' && propValue === false) {
-                  // special: skip identifier property if it is false
-                  return undefined;
-               }
                // arrays and objects start on a new line -- skip some objects that we do not actually serialize in object structure
                const onNewLine =
-                  Array.isArray(propValue) ||
-                  (isAstNode(propValue) &&
-                     !isAttributeMappingSource(propValue) &&
-                     !isAttributeMappingTarget(propValue) &&
-                     !isSourceObjectDependency(propValue) &&
-                     !isJoinCondition(propValue));
+                  Array.isArray(propValue) || (isAstNode(propValue));
                const serializedPropValue = this.toYaml(value, prop, propValue, onNewLine ? indentationLevel + 1 : 0);
                if (!serializedPropValue) {
                   return undefined;
@@ -160,11 +131,6 @@ export class CrossModelSerializer implements Serializer<KDLRoot> {
    protected calcProperties(elementType: string, kind: 'all' | 'mandatory' | 'optional'): string[] {
       const interfaceType = this.astTypes.interfaces.find(type => type.name === elementType);
       const allProperties = interfaceType?.allProperties;
-      if (elementType === EntityAttribute) {
-         // special handling cause the interface order does not reflect property order in grammar due to inheritance
-         const order = ['id', 'name', 'datatype', 'identifier', 'description', 'customProperties'];
-         allProperties?.sort((left, right) => order.indexOf(left.name) - order.indexOf(right.name));
-      }
       return !allProperties
          ? []
          : kind === 'all'
@@ -172,16 +138,6 @@ export class CrossModelSerializer implements Serializer<KDLRoot> {
            : kind === 'optional'
              ? allProperties.filter(prop => prop.optional).map(prop => prop.name)
              : allProperties.filter(prop => !prop.optional).map(prop => prop.name);
-   }
-
-   private serializeJoinCondition(obj: JoinCondition): any {
-      const text = obj.$cstNode?.text?.trim();
-      if (text) {
-         return text;
-      }
-      const left = obj.expression.left.$type === StringLiteral ? quote(obj.expression.left.value) : obj.expression.left.value;
-      const right = obj.expression.right.$type === StringLiteral ? quote(obj.expression.right.value) : obj.expression.right.value;
-      return [left, obj.expression.op, right].join(' ');
    }
 }
 

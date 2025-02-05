@@ -5,11 +5,7 @@ import { Command, DeleteElementOperation, JsonOperationHandler, ModelState, remo
 import { inject, injectable } from 'inversify';
 import {
     ClusterNode,
-    EntityNode,
-    RelationshipEdge,
     isClusterNode,
-    isEntityNode,
-    isRelationshipEdge
 } from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
@@ -38,7 +34,6 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
 
         for (const elementId of operation.elementIds) {
             const element = this.modelState.index.findSemanticElement(elementId, isDiagramElement);
-            // simply remove any diagram nodes or edges from the diagram
             if (isClusterNode(element)) {
                 deleteInfo.clusters.push(element);
             }
@@ -47,8 +42,8 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
     }
 }
 
-function isDiagramElement(item: unknown): item is RelationshipEdge | EntityNode {
-    return isRelationshipEdge(item) || isEntityNode(item);
+function isDiagramElement(item: unknown): item is ClusterNode {
+    return isClusterNode(item);
 }
 
 interface DeleteInfo {

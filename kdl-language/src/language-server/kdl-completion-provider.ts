@@ -5,9 +5,8 @@ import { quote } from '@kdl/protocol';
 import { AstNodeDescription, AstUtils, GrammarAST, GrammarUtils, MaybePromise, ReferenceInfo, Stream } from 'langium';
 import { CompletionAcceptor, CompletionContext, CompletionValueItem, DefaultCompletionProvider, NextFeature } from 'langium/lsp';
 import { v4 as uuid } from 'uuid';
-import { CompletionItemKind, InsertTextFormat, TextEdit } from 'vscode-languageserver-protocol';
+import { CompletionItemKind, InsertTextFormat } from 'vscode-languageserver-protocol';
 import type { Range } from 'vscode-languageserver-types';
-import { AttributeMapping, isAttributeMapping, RelationshipAttribute } from './generated/ast.js';
 import { KDLServices } from './kdl-module.js';
 import { KDLScopeProvider } from './kdl-scope-provider.js';
 import { fixDocument } from './util/ast-util.js';
@@ -63,9 +62,6 @@ export class KDLCompletionProvider extends DefaultCompletionProvider {
         if (assignment.feature === 'id') {
             return this.completionForId(context, assignment, acceptor);
         }
-        if (isAttributeMapping(context.node) && assignment.feature === 'expression') {
-            return this.completeAttributeMappingExpression(context, context.node, acceptor);
-        }
         if (GrammarAST.isRuleCall(assignment.terminal) && assignment.terminal.rule.ref) {
             const type = this.getRuleType(assignment.terminal.rule.ref);
             switch (type) {
@@ -78,32 +74,6 @@ export class KDLCompletionProvider extends DefaultCompletionProvider {
             }
         }
         return super.completionFor(context, next, acceptor);
-    }
-
-    protected completeAttributeMappingExpression(
-        context: CompletionContext,
-        mapping: AttributeMapping,
-        acceptor: CompletionAcceptor
-    ): MaybePromise<void> {
-        const text = context.textDocument.getText();
-        const expressionUpToCursor = text.substring(context.tokenOffset, context.offset);
-        const referenceStart = expressionUpToCursor.lastIndexOf('{{');
-        const referenceEnd = expressionUpToCursor.lastIndexOf('}}');
-        if (referenceEnd >= referenceStart) {
-            // we are not within a reference part
-            return;
-        }
-        const start = context.textDocument.positionAt(context.tokenOffset + referenceStart + '{{'.length);
-        const end = context.textDocument.positionAt(context.offset);
-        const reference = context.textDocument.getText({ start, end }).trim();
-        mapping.sources
-            .filter(source => reference.length === 0 || source.value.$refText.startsWith(reference))
-            .forEach(source => {
-                acceptor(context, {
-                    label: source.value.$refText,
-                    textEdit: TextEdit.replace({ start, end }, source.value.$refText)
-                });
-            });
     }
 
     protected getRuleType(rule: GrammarAST.AbstractRule): string | undefined {
@@ -216,17 +186,6 @@ export class KDLCompletionProvider extends DefaultCompletionProvider {
 
     protected override getReferenceCandidates(refInfo: ReferenceInfo, context: CompletionContext): Stream<AstNodeDescription> {
         return this.services.references.ScopeProvider.getCompletionScope(refInfo).elementScope.getAllElements();
-    }
-
-    protected filterRelationshipAttribute(node: RelationshipAttribute, context: CompletionContext, desc: AstNodeDescription): boolean {
-        // only show relevant attributes depending on the parent or child context
-        if (context.features.find(feature => feature.property === 'child')) {
-            return desc.name.startsWith(node.$container.child?.$refText + '.');
-        }
-        if (context.features.find(feature => feature.property === 'parent')) {
-            return desc.name.startsWith(node.$container.parent?.$refText + '.');
-        }
-        return true;
     }
 
     protected override createReferenceCompletionItem(description: AstNodeDescription): CompletionValueItem {
