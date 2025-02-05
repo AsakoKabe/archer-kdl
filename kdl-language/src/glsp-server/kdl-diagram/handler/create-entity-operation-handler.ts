@@ -22,20 +22,17 @@ import * as uuid from 'uuid';
 
 @injectable()
 export class KDLDiagramCreateEntityOperationHandler extends JsonCreateNodeOperationHandler {
-    override label = 'Create Cluster';
+    override label = 'Cluster';
     elementTypeIds = [ModelTypes.CLUSTER];
 
     @inject(ModelState) declare protected modelState: KDLModelState;
     @inject(ActionDispatcher) protected actionDispatcher!: ActionDispatcher;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-      console.error("KDLDiagramCreateEntityOperationHandler create command", operation)
       return new CrossModelCommand(this.modelState, () => this.createNode(operation));
     }
 
     protected async createNode(operation: CreateNodeOperation): Promise<void> {
-        console.error('create node');
-        console.error(operation);
         const container = this.modelState.kdlDiagram;
         const location = this.getLocation(operation) ?? Point.ORIGIN;
         const cluster: ClusterNode = {

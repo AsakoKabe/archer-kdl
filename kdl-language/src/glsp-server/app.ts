@@ -10,13 +10,13 @@ import {
     SocketLaunchOptions,
     SocketServerLauncher
 } from '@eclipse-glsp/server/node.js';
-import { Container, ContainerModule } from 'inversify';
 import { GLSP_PORT_COMMAND } from '@kdl/protocol';
+import { Container, ContainerModule } from 'inversify';
 import { AddressInfo } from 'node:net';
 import { URI } from 'vscode-uri';
 import { KDLLSPServices } from '../integration.js';
-import { KDLSharedServices, KDLServices } from '../language-server/kdl-module.js';
-import { SystemDiagramModule } from './system-diagram/system-diagram-module.js';
+import { KDLServices, KDLSharedServices } from '../language-server/kdl-module.js';
+import { KDLDiagramModule } from './kdl-diagram/kdl-diagram-module.js';
 
 // export async function launch(argv?: string[]): Promise<void> {
 //     const options = createSocketCliParser().parse(argv);
@@ -54,7 +54,7 @@ export async function startGLSPServer(services: KDLLSPServices, workspaceFolder:
     const appContainer = new Container();
     appContainer.load(appModule, lspModule);
 
-    const serverModule = new ServerModule().configureDiagramModule(new SystemDiagramModule());
+    const serverModule = new ServerModule().configureDiagramModule(new KDLDiagramModule());
 
     const logger = appContainer.get<LoggerFactory>(LoggerFactory)('KDLServer');
     const launcher = appContainer.resolve<SocketServerLauncher>(SocketServerLauncher);

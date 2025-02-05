@@ -59,8 +59,6 @@ export class CrossModelIndex extends GModelIndex {
    findSemanticElement<T extends AstNode>(id: string, guard: (item: unknown) => item is T): T | undefined;
    findSemanticElement<T extends AstNode>(id: string, guard?: (item: unknown) => item is T): T | AstNode | undefined {
       const semanticNode = this.idToSemanticNode.get(id);
-      console.error('idToSemanticNode');
-      console.error(this.idToSemanticNode)
       if (guard) {
          return guard(semanticNode) ? semanticNode : undefined;
       }

@@ -31,13 +31,13 @@ import { KDLDiagramConfiguration } from './kdl-diagram-configuration.js';
 import { KDLDiagramGModelFactory } from './model/kdl-diagram-gmodel-factory.js';
 import { KDLModelIndex } from './model/kdl-index.js';
 import { KDLModelState } from './model/kdl-state.js';
-import { SystemToolPaletteProvider } from './tool-palette/system-tool-palette-provider.js';
+import { SystemToolPaletteProvider } from './tool-palette/kdl-tool-palette-provider.js';
 
 /**
  * Provides configuration about our system diagrams.
  */
 @injectable()
-export class SystemDiagramModule extends DiagramModule {
+export class KDLDiagramModule extends DiagramModule {
     readonly diagramType = 'kdl-diagram';
 
     protected bindDiagramConfiguration(): BindingTarget<DiagramConfiguration> {

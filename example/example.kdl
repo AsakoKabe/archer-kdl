@@ -4,7 +4,13 @@ kdlDiagram:
     clusters:
       - id: C1
         name: "asd"
-        x: 56.8200009216
-        y: 419.7799806464
+        x: 49.8200009216
+        y: 345.7799806464
         width: 303
         height: 179
+      - id: ebf0917-0768-41f8-a7af-b53ff728a1e9
+        name: "CLusterNode"
+        x: 75
+        y: 48
+        width: 198.6015625
+        height: 149
