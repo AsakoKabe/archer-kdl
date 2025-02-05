@@ -128,7 +128,6 @@ export class OpenTextDocumentManager {
         const textDocument = this.isOpen(args.uri)
             ? this.createDummyDocument(args.uri)
             : await this.createDocumentFromFileSystem(args.uri, args.languageId);
-
         // open will trigger a change event which in turn will trigger a build
         this.textDocuments.notifyDidOpenTextDocument({ textDocument }, args.clientId);
         return Disposable.create(() => this.close(args));

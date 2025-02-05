@@ -16,14 +16,13 @@ import {
     overrideModelElement,
     RoundedCornerNodeView,
     StructureCompartmentView,
-    TYPES
-} from '@eclipse-glsp/client';
+    TYPES} from '@eclipse-glsp/client';
 import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
-import { ClusterNode, ContainerNode, IngressNode, PodNode, PortNode, ServiceNode } from './model';
-import { ArrowEdgeView, IngressNodeView } from './view';
 import { MyCustomResponseAction, MyCustomResponseActionHandler } from './kuber-action-hundler';
+import { ClusterNode, IngressNode, PodNode, ServiceNode, ContainerNode, PortNode } from './model';
+import { IngressNodeView, ArrowEdgeView } from './view';
 
 
 const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
@@ -44,7 +43,6 @@ const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => 
     configureModelElement(context, 'port', PortNode, RoundedCornerNodeView);
     overrideModelElement(context, DefaultTypes.EDGE, GEdge, ArrowEdgeView);
     configureActionHandler(context, MyCustomResponseAction.KIND, MyCustomResponseActionHandler);
-
 });
 
 export function initializeKDLDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {

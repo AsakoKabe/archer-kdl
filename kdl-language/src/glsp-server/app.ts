@@ -2,7 +2,6 @@ import 'reflect-metadata';
 
 import {
     createAppModule,
-    createSocketCliParser,
     defaultSocketLaunchOptions,
     LoggerFactory,
     LogLevel,
@@ -12,24 +11,24 @@ import {
     SocketServerLauncher
 } from '@eclipse-glsp/server/node.js';
 import { Container, ContainerModule } from 'inversify';
-import { KDLDiagramModule } from './diagram/kdl-diagram-module.js';
 import { GLSP_PORT_COMMAND } from '@kdl/protocol';
 import { AddressInfo } from 'node:net';
 import { URI } from 'vscode-uri';
 import { KDLLSPServices } from '../integration.js';
 import { KDLSharedServices, KDLServices } from '../language-server/kdl-module.js';
+import { SystemDiagramModule } from './system-diagram/system-diagram-module.js';
 
-export async function launch(argv?: string[]): Promise<void> {
-    const options = createSocketCliParser().parse(argv);
-    const appContainer = new Container();
-    appContainer.load(createAppModule(options));
+// export async function launch(argv?: string[]): Promise<void> {
+//     const options = createSocketCliParser().parse(argv);
+//     const appContainer = new Container();
+//     appContainer.load(createAppModule(options));
 
-    const launcher = appContainer.resolve(SocketServerLauncher);
-    const serverModule = new ServerModule().configureDiagramModule(new KDLDiagramModule());
+//     const launcher = appContainer.resolve(SocketServerLauncher);
+//     const serverModule = new ServerModule().configureDiagramModule(new KDLDiagramModule());
 
-    launcher.configure(serverModule);
-    launcher.start({ port: options.port, host: options.host });
-}
+//     launcher.configure(serverModule);
+//     launcher.start({ port: options.port, host: options.host });
+// }
 
 // launch(process.argv).catch(error => console.error('Error in kdl server launcher:', error));
 
@@ -55,7 +54,7 @@ export async function startGLSPServer(services: KDLLSPServices, workspaceFolder:
     const appContainer = new Container();
     appContainer.load(appModule, lspModule);
 
-    const serverModule = new ServerModule().configureDiagramModule(new KDLDiagramModule());
+    const serverModule = new ServerModule().configureDiagramModule(new SystemDiagramModule());
 
     const logger = appContainer.get<LoggerFactory>(LoggerFactory)('KDLServer');
     const launcher = appContainer.resolve<SocketServerLauncher>(SocketServerLauncher);

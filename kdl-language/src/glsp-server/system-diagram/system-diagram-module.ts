@@ -1,0 +1,85 @@
+/********************************************************************************
+ * Copyright (c) 2023 CrossBreeze.
+ ********************************************************************************/
+import {
+    BindingTarget,
+    ContextActionsProvider,
+    DiagramConfiguration,
+    DiagramModule,
+    GModelFactory,
+    GModelIndex,
+    InstanceMultiBinding,
+    ModelState,
+    ModelSubmissionHandler,
+    MultiBinding,
+    OperationHandlerConstructor,
+    SourceModelStorage,
+    ToolPaletteItemProvider,
+    bindAsService
+} from '@eclipse-glsp/server';
+import { injectable } from 'inversify';
+import { CrossModelIndex } from '../common/cross-model-index.js';
+import { CrossModelState } from '../common/cross-model-state.js';
+import { CrossModelStorage } from '../common/cross-model-storage.js';
+import { CrossModelSubmissionHandler } from '../common/cross-model-submission-handler.js';
+import { SystemDiagramAddEntityActionProvider } from './command-palette/add-entity-action-provider.js';
+import { KDLDiagramApplyLabelEditOperationHandler } from './handler/apply-edit-operation-handler.js';
+import { KDLDiagramChangeBoundsOperationHandler } from './handler/change-bounds-operation-handler.js';
+import { KDLDiagramCreateEntityOperationHandler } from './handler/create-entity-operation-handler.js';
+import { KDLDiagramDeleteOperationHandler } from './handler/delete-operation-handler.js';
+import { KDLDiagramConfiguration } from './kdl-diagram-configuration.js';
+import { KDLDiagramGModelFactory } from './model/kdl-diagram-gmodel-factory.js';
+import { KDLModelIndex } from './model/kdl-index.js';
+import { KDLModelState } from './model/kdl-state.js';
+import { SystemToolPaletteProvider } from './tool-palette/system-tool-palette-provider.js';
+
+/**
+ * Provides configuration about our system diagrams.
+ */
+@injectable()
+export class SystemDiagramModule extends DiagramModule {
+    readonly diagramType = 'kdl-diagram';
+
+    protected bindDiagramConfiguration(): BindingTarget<DiagramConfiguration> {
+        return KDLDiagramConfiguration;
+    }
+
+    protected bindSourceModelStorage(): BindingTarget<SourceModelStorage> {
+        return CrossModelStorage;
+    }
+
+    protected override bindModelSubmissionHandler(): BindingTarget<ModelSubmissionHandler> {
+        return CrossModelSubmissionHandler;
+    }
+
+    protected override configureOperationHandlers(binding: InstanceMultiBinding<OperationHandlerConstructor>): void {
+        super.configureOperationHandlers(binding);
+        binding.add(KDLDiagramChangeBoundsOperationHandler); // move + resize behavior
+        binding.add(KDLDiagramDeleteOperationHandler); // delete elements
+        binding.add(KDLDiagramCreateEntityOperationHandler);
+        binding.add(KDLDiagramApplyLabelEditOperationHandler);
+    }
+
+    protected override configureContextActionProviders(binding: MultiBinding<ContextActionsProvider>): void {
+        super.configureContextActionProviders(binding);
+        binding.add(SystemDiagramAddEntityActionProvider);
+    }
+
+    protected override bindGModelIndex(): BindingTarget<GModelIndex> {
+        bindAsService(this.context, CrossModelIndex, KDLModelIndex);
+        return { service: KDLModelIndex };
+    }
+
+    protected bindModelState(): BindingTarget<ModelState> {
+        bindAsService(this.context, CrossModelState, KDLModelState);
+        return { service: KDLModelState };
+    }
+
+    protected bindGModelFactory(): BindingTarget<GModelFactory> {
+        return KDLDiagramGModelFactory;
+    }
+
+    protected override bindToolPaletteItemProvider(): BindingTarget<ToolPaletteItemProvider> | undefined {
+        return SystemToolPaletteProvider;
+    }
+}

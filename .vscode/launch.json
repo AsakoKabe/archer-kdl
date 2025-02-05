@@ -72,5 +72,12 @@
         "${workspaceFolder}/vscode/kdl-node_modules/langium/**/*.js"
       ]
     }
+    
   ],
+  "compounds": [
+    {
+      "name": "Launch and attach",
+      "configurations": ["Run KDL Extension", "Attach to Language Server"]
+    }
+  ]
 }

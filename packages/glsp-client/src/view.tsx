@@ -90,3 +90,4 @@ export class ArrowEdgeView extends PolylineEdgeViewWithGapsOnIntersections {
         return additionals;
     }
 }
+

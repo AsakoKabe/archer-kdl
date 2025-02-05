@@ -35,6 +35,7 @@ export type KDLKeywordNames =
     | "attribute"
     | "attributes"
     | "child"
+    | "clusters"
     | "conditions"
     | "cross-join"
     | "customProperties"
@@ -52,6 +53,7 @@ export type KDLKeywordNames =
     | "inherits"
     | "inner-join"
     | "join"
+    | "kdlDiagram"
     | "left-join"
     | "mapping"
     | "mappings"
@@ -168,8 +170,26 @@ export function isBinaryExpression(item: unknown): item is BinaryExpression {
     return reflection.isInstance(item, BinaryExpression);
 }
 
+export interface ClusterNode extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'ClusterNode';
+    customProperties: Array<CustomProperty>;
+    height: number;
+    id: string;
+    name: string;
+    width: number;
+    x: number;
+    y: number;
+}
+
+export const ClusterNode = 'ClusterNode';
+
+export function isClusterNode(item: unknown): item is ClusterNode {
+    return reflection.isInstance(item, ClusterNode);
+}
+
 export interface CustomProperty extends AstNode {
-    readonly $container: AttributeMapping | Entity | EntityNode | Mapping | Relationship | RelationshipAttribute | RelationshipEdge | SourceObject | SystemDiagram | TargetObject | WithCustomProperties;
+    readonly $container: AttributeMapping | ClusterNode | Entity | EntityNode | KDLDiagram | Mapping | Relationship | RelationshipAttribute | RelationshipEdge | SourceObject | SystemDiagram | TargetObject | WithCustomProperties;
     readonly $type: 'CustomProperty';
     name: string;
     value?: string;
@@ -230,9 +250,25 @@ export function isJoinCondition(item: unknown): item is JoinCondition {
     return reflection.isInstance(item, JoinCondition);
 }
 
+export interface KDLDiagram extends AstNode {
+    readonly $container: KDLRoot;
+    readonly $type: 'KDLDiagram';
+    clusters: Array<ClusterNode>;
+    customProperties: Array<CustomProperty>;
+    id: string;
+    name: string;
+}
+
+export const KDLDiagram = 'KDLDiagram';
+
+export function isKDLDiagram(item: unknown): item is KDLDiagram {
+    return reflection.isInstance(item, KDLDiagram);
+}
+
 export interface KDLRoot extends AstNode {
     readonly $type: 'KDLRoot';
     entity?: Entity;
+    kdlDiagram?: KDLDiagram;
     mapping?: Mapping;
     relationship?: Relationship;
     systemDiagram?: SystemDiagram;
@@ -463,12 +499,14 @@ export type KDLAstType = {
     AttributeMappingTarget: AttributeMappingTarget
     BinaryExpression: BinaryExpression
     BooleanExpression: BooleanExpression
+    ClusterNode: ClusterNode
     CustomProperty: CustomProperty
     Entity: Entity
     EntityAttribute: EntityAttribute
     EntityNode: EntityNode
     EntityNodeAttribute: EntityNodeAttribute
     JoinCondition: JoinCondition
+    KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
     Mapping: Mapping
     NumberLiteral: NumberLiteral
@@ -490,7 +528,7 @@ export type KDLAstType = {
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [Attribute, AttributeMapping, AttributeMappingSource, AttributeMappingTarget, BinaryExpression, BooleanExpression, CustomProperty, Entity, EntityAttribute, EntityNode, EntityNodeAttribute, JoinCondition, KDLRoot, Mapping, NumberLiteral, Relationship, RelationshipAttribute, RelationshipEdge, SourceObject, SourceObjectAttribute, SourceObjectAttributeReference, SourceObjectCondition, SourceObjectDependency, StringLiteral, SystemDiagram, TargetObject, TargetObjectAttribute, WithCustomProperties];
+        return [Attribute, AttributeMapping, AttributeMappingSource, AttributeMappingTarget, BinaryExpression, BooleanExpression, ClusterNode, CustomProperty, Entity, EntityAttribute, EntityNode, EntityNodeAttribute, JoinCondition, KDLDiagram, KDLRoot, Mapping, NumberLiteral, Relationship, RelationshipAttribute, RelationshipEdge, SourceObject, SourceObjectAttribute, SourceObjectAttributeReference, SourceObjectCondition, SourceObjectDependency, StringLiteral, SystemDiagram, TargetObject, TargetObjectAttribute, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -605,6 +643,20 @@ export class KDLAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case ClusterNode: {
+                return {
+                    name: ClusterNode,
+                    properties: [
+                        { name: 'customProperties', defaultValue: [] },
+                        { name: 'height' },
+                        { name: 'id' },
+                        { name: 'name' },
+                        { name: 'width' },
+                        { name: 'x' },
+                        { name: 'y' }
+                    ]
+                };
+            }
             case CustomProperty: {
                 return {
                     name: CustomProperty,
@@ -651,11 +703,23 @@ export class KDLAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case KDLDiagram: {
+                return {
+                    name: KDLDiagram,
+                    properties: [
+                        { name: 'clusters', defaultValue: [] },
+                        { name: 'customProperties', defaultValue: [] },
+                        { name: 'id' },
+                        { name: 'name' }
+                    ]
+                };
+            }
             case KDLRoot: {
                 return {
                     name: KDLRoot,
                     properties: [
                         { name: 'entity' },
+                        { name: 'kdlDiagram' },
                         { name: 'mapping' },
                         { name: 'relationship' },
                         { name: 'systemDiagram' }
