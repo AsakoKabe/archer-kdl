@@ -14,7 +14,6 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
@@ -41,8 +40,8 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
         const port: ast.PortNode = {
             $type: ast.PortNode,
             $container: container,
-            id: uuid.v4(),
-            name: 'PortNode',
+            id: 'PortNode' + this.modelState.kdlDiagram.ports.length,
+            name: 'PortNode' + this.modelState.kdlDiagram.ports.length,
             number: 8080
         };
         port.dimensions = {

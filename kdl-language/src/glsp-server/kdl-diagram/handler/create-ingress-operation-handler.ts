@@ -14,7 +14,6 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
@@ -41,8 +40,8 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
         const ingress: ast.IngressNode = {
             $type: ast.IngressNode,
             $container: container,
-            id: uuid.v4(),
-            name: 'IngressNode',
+            id: 'IngressNode' + this.modelState.kdlDiagram.ingresses.length,
+            name: 'IngressNode' + this.modelState.kdlDiagram.ingresses.length,
             host: 'localhost'
         };
         ingress.dimensions = {

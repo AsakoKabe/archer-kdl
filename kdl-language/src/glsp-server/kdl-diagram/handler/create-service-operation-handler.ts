@@ -14,7 +14,6 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
@@ -41,8 +40,8 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
         const service: ast.ServiceNode = {
             $type: ast.ServiceNode,
             $container: container,
-            id: uuid.v4(),
-            name: 'ServiceNode',
+            id: 'ServiceNode' + this.modelState.kdlDiagram.services.length,
+            name: 'ServiceNode' + this.modelState.kdlDiagram.services.length,
             ports: []
         };
         service.dimensions = {

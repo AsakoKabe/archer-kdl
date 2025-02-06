@@ -64,47 +64,48 @@ ClusterNode:
             (LIST_ITEM pods+=[PodNode:IDReference])+
         DEDENT
     )?
-    'dimensions' ':' 
+    ('dimensions' ':' 
         INDENT 
-            dimensions=Dimensions?
+            dimensions=Dimensions
         DEDENT
+    )?
 ;
 
 IngressNode:
     'id' ':' id=ID
     'name' ':' name=STRING
     'host' ':' host=STRING
-    'dimensions' ':' 
+    ('dimensions' ':' 
         INDENT 
-            dimensions=Dimensions?
-        DEDENT;
+            dimensions=Dimensions
+        DEDENT
+    )?
+;
 
 ContainerNode:
     'id' ':' id=ID
     'name' ':' name=STRING
-    'dimensions' ':' 
+    ('dimensions' ':' 
         INDENT 
-            dimensions=Dimensions?
+            dimensions=Dimensions
         DEDENT
+    )?
 ;
 
 PortNode:
     'id' ':' id=ID
     'name' ':' name=STRING
     'number' ':' number=NUMBER
-    'dimensions' ':' 
+    ('dimensions' ':' 
         INDENT 
-            dimensions=Dimensions?
+            dimensions=Dimensions
         DEDENT
+    )?
 ;
 
 PodNode:
     'id' ':' id=ID
     'name' ':' name=STRING
-    'dimensions' ':' 
-        INDENT 
-            dimensions=Dimensions?
-        DEDENT
     ('containers' ':'
         INDENT 
             (LIST_ITEM containers+=[ContainerNode:IDReference])+
@@ -115,18 +116,24 @@ PodNode:
             (LIST_ITEM ports+=[PortNode:IDReference])+
         DEDENT
     )?
+    ('dimensions' ':' 
+        INDENT 
+            dimensions=Dimensions
+        DEDENT
+    )?
 ;
 
 ServiceNode:
     'id' ':' id=ID
     'name' ':' name=STRING
-    'dimensions' ':' 
-        INDENT 
-            dimensions=Dimensions?
-        DEDENT
     ('ports' ':'
         INDENT 
             (LIST_ITEM ports+=[PortNode:IDReference])+
+        DEDENT
+    )?
+    ('dimensions' ':' 
+        INDENT 
+            dimensions=Dimensions
         DEDENT
     )?
 ;

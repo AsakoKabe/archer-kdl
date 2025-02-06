@@ -6,7 +6,6 @@ import { inject, injectable } from 'inversify';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import * as ast from '../../../language-server/generated/ast.js';
-import { AstNode } from 'langium';
 
 @injectable()
 export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler {
@@ -18,33 +17,36 @@ export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler
     }
 
     protected isDimensionNode(
-        node: AstNode
-    ): ast.ClusterNode | ast.PodNode | ast.ServiceNode | ast.IngressNode | ast.PortNode | ast.ContainerNode | undefined {
-        if (ast.isClusterNode(node)) {
-            return node;
-        } else if (ast.isPodNode(node)) {
-            return node;
-        } else if (ast.isServiceNode(node)) {
-            return node;
-        } else if (ast.isIngressNode(node)) {
-            return node;
-        } else if (ast.isPortNode(node)) {
-            return node;
-        } else if (ast.isContainerNode(node)) {
-            return node;
-        }
-        return undefined;
+        item: unknown
+    ): item is ast.ClusterNode | ast.PodNode | ast.ServiceNode | ast.IngressNode | ast.PortNode | ast.ContainerNode {
+        return (
+            ast.isClusterNode(item) ||
+            ast.isPodNode(item) ||
+            ast.isServiceNode(item) ||
+            ast.isIngressNode(item) ||
+            ast.isPortNode(item) ||
+            ast.isContainerNode(item)
+        );
     }
 
     protected changeBounds(operation: ChangeBoundsOperation): void {
         operation.newBounds.forEach(elementAndBounds => {
-            const node = this.modelState.index.findSemanticElement(elementAndBounds.elementId);
-            const dimensionNode = node ? this.isDimensionNode(node) : undefined;
-            if (node && dimensionNode?.dimensions) {
-                dimensionNode.dimensions.x = elementAndBounds.newPosition?.x || dimensionNode.dimensions.x;
-                dimensionNode.dimensions.y = elementAndBounds.newPosition?.y || dimensionNode.dimensions.y;
-                dimensionNode.dimensions.width = elementAndBounds.newSize.width;
-                dimensionNode.dimensions.height = elementAndBounds.newSize.height;
+            const node = this.modelState.index.findSemanticElement(elementAndBounds.elementId, this.isDimensionNode);
+            if (node) {
+                if (!node.dimensions){
+                    node.dimensions = {
+                        x: 0,
+                        y: 0,
+                        width: 0,
+                        height: 0,
+                        $container: node,
+                        $type: ast.Dimensions
+                    }
+                }
+                node.dimensions.x = elementAndBounds.newPosition?.x || node.dimensions.x;
+                node.dimensions.y = elementAndBounds.newPosition?.y || node.dimensions.y;
+                node.dimensions.width = elementAndBounds.newSize.width;
+                node.dimensions.height = elementAndBounds.newSize.height;
             }
         });
     }

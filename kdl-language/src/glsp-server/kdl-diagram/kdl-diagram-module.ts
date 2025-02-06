@@ -62,10 +62,10 @@ export class KDLDiagramModule extends DiagramModule {
         binding.add(KDLDiagramDeleteOperationHandler);
         binding.add(KDLDiagramCreateClusterOperationHandler);
         binding.add(KDLDiagramCreateIngressOperationHandler);
+        binding.add(KDLDiagramCreateServiceOperationHandler);
         binding.add(KDLDiagramCreatePodOperationHandler);
         binding.add(KDLDiagramCreateContainerOperationHandler);
         binding.add(KDLDiagramCreatePortOperationHandler);
-        binding.add(KDLDiagramCreateServiceOperationHandler);
         binding.add(KDLDiagramApplyLabelEditOperationHandler);
     }
 

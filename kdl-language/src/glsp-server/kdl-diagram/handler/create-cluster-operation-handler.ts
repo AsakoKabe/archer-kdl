@@ -13,7 +13,6 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as uuid from 'uuid';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
@@ -33,12 +32,11 @@ export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOpera
     protected async createNode(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
         const container = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
-
         const cluster: ast.ClusterNode = {
             $type: ast.ClusterNode,
             $container: container,
-            id: uuid.v4(),
-            name: 'ClusterNode',
+            id: 'ClusterNode' + this.modelState.kdlDiagram.clusters.length,
+            name: 'ClusterNode' + this.modelState.kdlDiagram.clusters.length,
             ingresses: [],
             pods: [],
             services: []
