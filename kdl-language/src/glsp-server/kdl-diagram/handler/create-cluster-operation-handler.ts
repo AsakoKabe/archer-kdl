@@ -13,13 +13,13 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import { ClusterNode } from '../../../language-server/generated/ast.js';
+import * as uuid from 'uuid';
+import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import * as uuid from 'uuid';
 
 @injectable()
-export class KDLDiagramCreateEntityOperationHandler extends JsonCreateNodeOperationHandler {
+export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOperationHandler {
     override label = 'Cluster';
     elementTypeIds = [ModelTypes.CLUSTER];
 
@@ -27,22 +27,29 @@ export class KDLDiagramCreateEntityOperationHandler extends JsonCreateNodeOperat
     @inject(ActionDispatcher) protected actionDispatcher!: ActionDispatcher;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-      return new CrossModelCommand(this.modelState, () => this.createNode(operation));
+        return new CrossModelCommand(this.modelState, () => this.createNode(operation));
     }
 
-    protected async createNode(operation: CreateNodeOperation): Promise<void> {
+    protected async createNode(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
         const container = this.modelState.kdlDiagram;
-        const location = this.getLocation(operation) ?? Point.ORIGIN;
-        const cluster: ClusterNode = {
-            $type: ClusterNode,
+        const location = relativeLocation ?? Point.ORIGIN;
+
+        const cluster: ast.ClusterNode = {
+            $type: ast.ClusterNode,
             $container: container,
             id: uuid.v4(),
-            name: 'CLusterNode',
+            name: 'ClusterNode',
+            ingresses: [],
+            pods: [],
+            services: []
+        };
+        cluster.dimensions = {
             x: location.x,
             y: location.y,
             width: 10,
             height: 10,
-            customProperties: []
+            $container: cluster,
+            $type: ast.Dimensions
         };
         container.clusters.push(cluster);
         this.actionDispatcher.dispatchAfterNextUpdate({

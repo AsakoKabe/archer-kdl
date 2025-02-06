@@ -1,16 +1,113 @@
 kdlDiagram:
-    id: D1
+    id: example
     name: "123"
     clusters:
       - id: dc62b444-55d5-4e5d-b08e-fea513cc3675
-        name: "CLusterNode"
-        x: 71
-        y: 232
-        width: 247.6015625
-        height: 146
-      - id: abacf7c0-1327-4923-ba99-42e7b0dbb40d
-        name: "CLusterNode"
-        x: 90
-        y: 70
-        width: 96.6015625
-        height: 36
+        name: "ClusterNode"
+        ingresses:
+          - example.c0fec069-dac9-4d87-8ce9-01f05f1adf89
+        services:
+          - example.a4ab-175b-49dd-918f-99226712caa1
+          - example.ecc2c-feaf-4a84-8c9f-84e40474c9e6
+          - example.d26530e9-3512-4dec-80f0-f8f95c5abe6f
+        pods:
+          - example.ec45162-6c2e-445e-a665-a7248bff25ac
+          - example.f129afd1-a395-4e5d-89e0-c2191aa1d668
+          - example.d01-fb41-4616-bbb9-d1f106056a9c
+        dimensions:
+            x: -73.3044680168511
+            y: 216.10231429655335
+            width: 582.4960469375378
+            height: 509.3554923015246
+    ingresses:
+      - id: c0fec069-dac9-4d87-8ce9-01f05f1adf89
+        name: "IngressNode"
+        host: "localhost"
+        dimensions:
+            x: 20.58998197127977
+            y: -33.6651171866811
+            width: 93.7109375
+            height: 51
+    services:
+      - id: a4ab-175b-49dd-918f-99226712caa1
+        name: "ServiceNode"
+        dimensions:
+            x: 51.269261167629594
+            y: 102.80671775996296
+            width: 94.4296875
+            height: 36.3659029006958
+        ports:
+          - example.ecedfaa-8f67-4e11-9501-1db9a9534d9d
+      - id: ecc2c-feaf-4a84-8c9f-84e40474c9e6
+        name: "ServiceNode"
+        dimensions:
+            x: 402.676738040662
+            y: 92.29430862323869
+            width: 94.4296875
+            height: 36
+      - id: d26530e9-3512-4dec-80f0-f8f95c5abe6f
+        name: "ServiceNode"
+        dimensions:
+            x: 204
+            y: 90
+            width: 94.4296875
+            height: 36
+    pods:
+      - id: ec45162-6c2e-445e-a665-a7248bff25ac
+        name: "PodNode"
+        dimensions:
+            x: 82.08349366388973
+            y: 334.2710623292809
+            width: 215.4794166834139
+            height: 98.66842008320282
+        containers:
+          - example.c052d9-c4b3-423b-819f-ec9819b6598c
+          - example.e81e85-e961-46c5-ac71-c5517753914d
+        ports:
+          - example.df4eee37-94b8-47df-b884-e7ba13e0e80f
+      - id: f129afd1-a395-4e5d-89e0-c2191aa1d668
+        name: "PodNode"
+        dimensions:
+            x: 15
+            y: 175
+            width: 74.2109375
+            height: 36
+      - id: d01-fb41-4616-bbb9-d1f106056a9c
+        name: "PodNode"
+        dimensions:
+            x: 418.23289965409674
+            y: 367.97315205617946
+            width: 74.20030975341797
+            height: 35.3599271774292
+    containers:
+      - id: c052d9-c4b3-423b-819f-ec9819b6598c
+        name: "MySuperContainer"
+        dimensions:
+            x: 25.473122234787468
+            y: 10.915002182286798
+            width: 107.46074676513672
+            height: 35
+      - id: e81e85-e961-46c5-ac71-c5517753914d
+        name: "ContainerNode"
+        dimensions:
+            x: 118.46940505223338
+            y: 70.0046484399561
+            width: 107.42166900634766
+            height: 34.3599271774292
+    ports:
+      - id: ecedfaa-8f67-4e11-9501-1db9a9534d9d
+        name: "PortNode"
+        number: 8080808080
+        dimensions:
+            x: 23.152661727880854
+            y: -66.67581078613495
+            width: 52.953125
+            height: 40.165414810180664
+      - id: df4eee37-94b8-47df-b884-e7ba13e0e80f
+        name: "PortNode"
+        number: 8080
+        dimensions:
+            x: 93.12100840202254
+            y: -57.30590137185436
+            width: 52.9144401550293
+            height: 40.3797550201416

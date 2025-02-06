@@ -4,7 +4,7 @@
  ******************************************************************************/
 
 /* eslint-disable */
-import type { AstNode, ReferenceInfo, TypeMetaData } from 'langium';
+import type { AstNode, Reference, ReferenceInfo, TypeMetaData } from 'langium';
 import { AbstractAstReflection } from 'langium';
 
 export const KDLTerminals = {
@@ -22,15 +22,22 @@ export const KDLTerminals = {
 export type KDLTerminalNames = keyof typeof KDLTerminals;
 
 export type KDLKeywordNames = 
+    | "."
     | ":"
     | "clusters"
-    | "customProperties"
+    | "containers"
     | "diagram"
+    | "dimensions"
     | "height"
+    | "host"
     | "id"
+    | "ingresses"
     | "kdlDiagram"
     | "name"
-    | "value"
+    | "number"
+    | "pods"
+    | "ports"
+    | "services"
     | "width"
     | "x"
     | "y";
@@ -46,13 +53,12 @@ export function isIDReference(item: unknown): item is IDReference {
 export interface ClusterNode extends AstNode {
     readonly $container: KDLDiagram;
     readonly $type: 'ClusterNode';
-    customProperties: Array<CustomProperty>;
-    height: number;
+    dimensions?: Dimensions;
     id: string;
+    ingresses: Array<Reference<IngressNode>>;
     name: string;
-    width: number;
-    x: number;
-    y: number;
+    pods: Array<Reference<PodNode>>;
+    services: Array<Reference<ServiceNode>>;
 }
 
 export const ClusterNode = 'ClusterNode';
@@ -61,8 +67,22 @@ export function isClusterNode(item: unknown): item is ClusterNode {
     return reflection.isInstance(item, ClusterNode);
 }
 
+export interface ContainerNode extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'ContainerNode';
+    dimensions?: Dimensions;
+    id: string;
+    name: string;
+}
+
+export const ContainerNode = 'ContainerNode';
+
+export function isContainerNode(item: unknown): item is ContainerNode {
+    return reflection.isInstance(item, ContainerNode);
+}
+
 export interface CustomProperty extends AstNode {
-    readonly $container: ClusterNode | KDLDiagram | WithCustomProperties;
+    readonly $container: WithCustomProperties;
     readonly $type: 'CustomProperty';
     name: string;
     value?: string;
@@ -74,13 +94,47 @@ export function isCustomProperty(item: unknown): item is CustomProperty {
     return reflection.isInstance(item, CustomProperty);
 }
 
+export interface Dimensions extends AstNode {
+    readonly $container: ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
+    readonly $type: 'Dimensions';
+    height: number;
+    width: number;
+    x: number;
+    y: number;
+}
+
+export const Dimensions = 'Dimensions';
+
+export function isDimensions(item: unknown): item is Dimensions {
+    return reflection.isInstance(item, Dimensions);
+}
+
+export interface IngressNode extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'IngressNode';
+    dimensions?: Dimensions;
+    host: string;
+    id: string;
+    name: string;
+}
+
+export const IngressNode = 'IngressNode';
+
+export function isIngressNode(item: unknown): item is IngressNode {
+    return reflection.isInstance(item, IngressNode);
+}
+
 export interface KDLDiagram extends AstNode {
     readonly $container: KDLRoot;
     readonly $type: 'KDLDiagram';
     clusters: Array<ClusterNode>;
-    customProperties: Array<CustomProperty>;
+    containers: Array<ContainerNode>;
     id: string;
+    ingresses: Array<IngressNode>;
     name: string;
+    pods: Array<PodNode>;
+    ports: Array<PortNode>;
+    services: Array<ServiceNode>;
 }
 
 export const KDLDiagram = 'KDLDiagram';
@@ -100,6 +154,52 @@ export function isKDLRoot(item: unknown): item is KDLRoot {
     return reflection.isInstance(item, KDLRoot);
 }
 
+export interface PodNode extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'PodNode';
+    containers: Array<Reference<ContainerNode>>;
+    dimensions?: Dimensions;
+    id: string;
+    name: string;
+    ports: Array<Reference<PortNode>>;
+}
+
+export const PodNode = 'PodNode';
+
+export function isPodNode(item: unknown): item is PodNode {
+    return reflection.isInstance(item, PodNode);
+}
+
+export interface PortNode extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'PortNode';
+    dimensions?: Dimensions;
+    id: string;
+    name: string;
+    number: number;
+}
+
+export const PortNode = 'PortNode';
+
+export function isPortNode(item: unknown): item is PortNode {
+    return reflection.isInstance(item, PortNode);
+}
+
+export interface ServiceNode extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'ServiceNode';
+    dimensions?: Dimensions;
+    id: string;
+    name: string;
+    ports: Array<Reference<PortNode>>;
+}
+
+export const ServiceNode = 'ServiceNode';
+
+export function isServiceNode(item: unknown): item is ServiceNode {
+    return reflection.isInstance(item, ServiceNode);
+}
+
 export interface WithCustomProperties extends AstNode {
     readonly $type: 'WithCustomProperties';
     customProperties: Array<CustomProperty>;
@@ -113,16 +213,22 @@ export function isWithCustomProperties(item: unknown): item is WithCustomPropert
 
 export type KDLAstType = {
     ClusterNode: ClusterNode
+    ContainerNode: ContainerNode
     CustomProperty: CustomProperty
+    Dimensions: Dimensions
+    IngressNode: IngressNode
     KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
+    PodNode: PodNode
+    PortNode: PortNode
+    ServiceNode: ServiceNode
     WithCustomProperties: WithCustomProperties
 }
 
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [ClusterNode, CustomProperty, KDLDiagram, KDLRoot, WithCustomProperties];
+        return [ClusterNode, ContainerNode, CustomProperty, Dimensions, IngressNode, KDLDiagram, KDLRoot, PodNode, PortNode, ServiceNode, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -136,6 +242,22 @@ export class KDLAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
+            case 'ClusterNode:ingresses': {
+                return IngressNode;
+            }
+            case 'ClusterNode:pods': {
+                return PodNode;
+            }
+            case 'ClusterNode:services': {
+                return ServiceNode;
+            }
+            case 'PodNode:containers': {
+                return ContainerNode;
+            }
+            case 'PodNode:ports':
+            case 'ServiceNode:ports': {
+                return PortNode;
+            }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
             }
@@ -148,13 +270,22 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: ClusterNode,
                     properties: [
-                        { name: 'customProperties', defaultValue: [] },
-                        { name: 'height' },
+                        { name: 'dimensions' },
                         { name: 'id' },
+                        { name: 'ingresses', defaultValue: [] },
                         { name: 'name' },
-                        { name: 'width' },
-                        { name: 'x' },
-                        { name: 'y' }
+                        { name: 'pods', defaultValue: [] },
+                        { name: 'services', defaultValue: [] }
+                    ]
+                };
+            }
+            case ContainerNode: {
+                return {
+                    name: ContainerNode,
+                    properties: [
+                        { name: 'dimensions' },
+                        { name: 'id' },
+                        { name: 'name' }
                     ]
                 };
             }
@@ -167,14 +298,40 @@ export class KDLAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case Dimensions: {
+                return {
+                    name: Dimensions,
+                    properties: [
+                        { name: 'height' },
+                        { name: 'width' },
+                        { name: 'x' },
+                        { name: 'y' }
+                    ]
+                };
+            }
+            case IngressNode: {
+                return {
+                    name: IngressNode,
+                    properties: [
+                        { name: 'dimensions' },
+                        { name: 'host' },
+                        { name: 'id' },
+                        { name: 'name' }
+                    ]
+                };
+            }
             case KDLDiagram: {
                 return {
                     name: KDLDiagram,
                     properties: [
                         { name: 'clusters', defaultValue: [] },
-                        { name: 'customProperties', defaultValue: [] },
+                        { name: 'containers', defaultValue: [] },
                         { name: 'id' },
-                        { name: 'name' }
+                        { name: 'ingresses', defaultValue: [] },
+                        { name: 'name' },
+                        { name: 'pods', defaultValue: [] },
+                        { name: 'ports', defaultValue: [] },
+                        { name: 'services', defaultValue: [] }
                     ]
                 };
             }
@@ -183,6 +340,40 @@ export class KDLAstReflection extends AbstractAstReflection {
                     name: KDLRoot,
                     properties: [
                         { name: 'kdlDiagram' }
+                    ]
+                };
+            }
+            case PodNode: {
+                return {
+                    name: PodNode,
+                    properties: [
+                        { name: 'containers', defaultValue: [] },
+                        { name: 'dimensions' },
+                        { name: 'id' },
+                        { name: 'name' },
+                        { name: 'ports', defaultValue: [] }
+                    ]
+                };
+            }
+            case PortNode: {
+                return {
+                    name: PortNode,
+                    properties: [
+                        { name: 'dimensions' },
+                        { name: 'id' },
+                        { name: 'name' },
+                        { name: 'number' }
+                    ]
+                };
+            }
+            case ServiceNode: {
+                return {
+                    name: ServiceNode,
+                    properties: [
+                        { name: 'dimensions' },
+                        { name: 'id' },
+                        { name: 'name' },
+                        { name: 'ports', defaultValue: [] }
                     ]
                 };
             }

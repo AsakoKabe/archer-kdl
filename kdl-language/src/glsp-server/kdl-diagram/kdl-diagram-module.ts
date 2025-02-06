@@ -24,13 +24,18 @@ import { CrossModelStorage } from '../common/cross-model-storage.js';
 import { CrossModelSubmissionHandler } from '../common/cross-model-submission-handler.js';
 import { KDLDiagramApplyLabelEditOperationHandler } from './handler/apply-edit-operation-handler.js';
 import { KDLDiagramChangeBoundsOperationHandler } from './handler/change-bounds-operation-handler.js';
-import { KDLDiagramCreateEntityOperationHandler } from './handler/create-entity-operation-handler.js';
+import { KDLDiagramCreateClusterOperationHandler } from './handler/create-cluster-operation-handler.js';
 import { KDLDiagramDeleteOperationHandler } from './handler/delete-operation-handler.js';
 import { KDLDiagramConfiguration } from './kdl-diagram-configuration.js';
 import { KDLDiagramGModelFactory } from './model/kdl-diagram-gmodel-factory.js';
 import { KDLModelIndex } from './model/kdl-index.js';
 import { KDLModelState } from './model/kdl-state.js';
 import { SystemToolPaletteProvider } from './tool-palette/kdl-tool-palette-provider.js';
+import { KDLDiagramCreateIngressOperationHandler } from './handler/create-ingress-operation-handler.js';
+import { KDLDiagramCreatePodOperationHandler } from './handler/create-pod-operation-handler.js';
+import { KDLDiagramCreateContainerOperationHandler } from './handler/create-container-operation-handler.js';
+import { KDLDiagramCreatePortOperationHandler } from './handler/create-port-operation-handler.js';
+import { KDLDiagramCreateServiceOperationHandler } from './handler/create-service-operation-handler.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -53,9 +58,14 @@ export class KDLDiagramModule extends DiagramModule {
 
     protected override configureOperationHandlers(binding: InstanceMultiBinding<OperationHandlerConstructor>): void {
         super.configureOperationHandlers(binding);
-        binding.add(KDLDiagramChangeBoundsOperationHandler); // move + resize behavior
-        binding.add(KDLDiagramDeleteOperationHandler); // delete elements
-        binding.add(KDLDiagramCreateEntityOperationHandler);
+        binding.add(KDLDiagramChangeBoundsOperationHandler);
+        binding.add(KDLDiagramDeleteOperationHandler);
+        binding.add(KDLDiagramCreateClusterOperationHandler);
+        binding.add(KDLDiagramCreateIngressOperationHandler);
+        binding.add(KDLDiagramCreatePodOperationHandler);
+        binding.add(KDLDiagramCreateContainerOperationHandler);
+        binding.add(KDLDiagramCreatePortOperationHandler);
+        binding.add(KDLDiagramCreateServiceOperationHandler);
         binding.add(KDLDiagramApplyLabelEditOperationHandler);
     }
 
