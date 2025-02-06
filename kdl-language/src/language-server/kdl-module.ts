@@ -37,6 +37,7 @@ import { KDLValidator, registerValidationChecks } from './kdl-validator.js';
 import { KDLWorkspaceManager } from './kdl-workspace-manager.js';
 import { KDLTokenBuilder } from './parser/kdl-indentation-aware.js';
 import { KDLLinker } from './references/kdl-linker.js';
+import { KDLSemanticTokenProvider } from './kdl-semantic-token-provider.js';
 
 /***************************
  * Shared Module
@@ -183,7 +184,8 @@ export function createCrossModelModule(
         lsp: {
             CodeActionProvider: () => new KDLCodeActionProvider(),
             CompletionProvider: services => new KDLCompletionProvider(services),
-            Formatter: () => new KDLModelFormatter()
+            Formatter: () => new KDLModelFormatter(),
+            SemanticTokenProvider: services => new KDLSemanticTokenProvider(services),
         },
         serializer: {
             Serializer: services => new CrossModelSerializer(services.Grammar)
