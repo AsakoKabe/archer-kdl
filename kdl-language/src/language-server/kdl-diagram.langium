@@ -4,7 +4,7 @@ import 'terminals'
 KDLDiagram:
     ('kdlDiagram' | 'diagram') ':' 
     INDENT
-        'id' ':' id=ID &
+        'id' ':' id=ID
         ('name' ':'  name=STRING)
         (
             (
