@@ -53,7 +53,7 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
             this.deleteModelElement(container.ref);
         });
         pod.ports.forEach(port => {
-            this.deleteModelElement(port.ref);
+            this.deleteModelElement(port);
         });
         this.modelState.kdlDiagram.clusters.forEach(cluster => {
             cluster.pods = cluster.pods.filter(existedPod => existedPod.ref !== pod);
@@ -63,7 +63,7 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
 
     private deleteService(service: ast.ServiceNode): void {
         service.ports.forEach(port => {
-            this.deleteModelElement(port.ref);
+            this.deleteModelElement(port);
         });
         this.modelState.kdlDiagram.clusters.forEach(cluster => {
             cluster.services = cluster.services.filter(existedService => existedService.ref !== service);
@@ -80,12 +80,21 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
 
     private deletePort(port: ast.PortNode): void {
         this.modelState.kdlDiagram.pods.forEach(pod => {
-            pod.ports = pod.ports.filter(existedPort => existedPort.ref !== port);
+            pod.ports = pod.ports.filter(existedPort => existedPort !== port);
         });
         this.modelState.kdlDiagram.services.forEach(service => {
-            service.ports = service.ports.filter(existedPort => existedPort.ref !== port);
+            service.ports = service.ports.filter(existedPort => existedPort !== port);
         });
-        remove(this.modelState.kdlDiagram.ports, port);
+        this.modelState.kdlDiagram.ingresses.forEach(ingress => {
+            ingress.links = ingress.links.filter(link => link.ref !== port)
+        })
+        this.modelState.kdlDiagram.services.forEach(service => {
+            service.links = service.links.filter(link => link.ref !== port)
+        })
+        this.modelState.kdlDiagram.containers.forEach(container => {
+            container.links = container.links.filter(link => link.ref !== port)
+        })
+        // remove(this.modelState.kdlDiagram.ports, port);
     }
 
     private deleteCluster(cluster: ast.ClusterNode): void {

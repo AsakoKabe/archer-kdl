@@ -42,7 +42,8 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
             $container: container,
             id: 'ServiceNode' + this.modelState.kdlDiagram.services.length,
             name: 'ServiceNode' + this.modelState.kdlDiagram.services.length,
-            ports: []
+            ports: [],
+            links: []
         };
         service.dimensions = {
             x: location.x,

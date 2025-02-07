@@ -31,11 +31,6 @@ KDLDiagram:
                 (LIST_ITEM containers+=ContainerNode)+
             DEDENT
         )?
-        ('ports' ':'
-            INDENT 
-                (LIST_ITEM ports+=PortNode)+
-            DEDENT
-        )?
     DEDENT
 ;
 
@@ -75,6 +70,11 @@ IngressNode:
     'id' ':' id=ID
     'name' ':' name=STRING
     'host' ':' host=STRING
+    ('links' ':'
+        INDENT 
+            (LIST_ITEM links+=[PortNode:IDReference])+
+        DEDENT
+    )?
     ('dimensions' ':' 
         INDENT 
             dimensions=Dimensions
@@ -85,6 +85,11 @@ IngressNode:
 ContainerNode:
     'id' ':' id=ID
     'name' ':' name=STRING
+    ('links' ':'
+        INDENT 
+            (LIST_ITEM links+=[PortNode:IDReference])+
+        DEDENT
+    )?
     ('dimensions' ':' 
         INDENT 
             dimensions=Dimensions
@@ -113,7 +118,7 @@ PodNode:
     )?
     ('ports' ':'
         INDENT 
-            (LIST_ITEM ports+=[PortNode:IDReference])+
+             (LIST_ITEM ports+=PortNode)+
         DEDENT
     )?
     ('dimensions' ':' 
@@ -128,7 +133,12 @@ ServiceNode:
     'name' ':' name=STRING
     ('ports' ':'
         INDENT 
-            (LIST_ITEM ports+=[PortNode:IDReference])+
+             (LIST_ITEM ports+=PortNode)+
+        DEDENT
+    )?
+    ('links' ':'
+        INDENT 
+            (LIST_ITEM links+=[PortNode:IDReference])+
         DEDENT
     )?
     ('dimensions' ':' 

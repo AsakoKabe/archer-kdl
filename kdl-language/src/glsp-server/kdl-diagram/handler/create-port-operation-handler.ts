@@ -34,14 +34,23 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
         if (!operation.containerId) {
             throw new GLSPServerError("Port can't be outside service or pod");
         }
-        const container = this.modelState.kdlDiagram;
+        let container: ast.PodNode | ast.ServiceNode | undefined = undefined;
+        const astParent = this.modelState.index.findSemanticElement(operation.containerId);
+        if (ast.isServiceNode(astParent)) {
+            container = astParent;
+        } else if (ast.isPodNode(astParent)) {
+            container = astParent;
+        }
+        if (!container){
+            throw new GLSPServerError("Port can't be outside service or pod");
+        }
         const location = relativeLocation ?? Point.ORIGIN;
 
         const port: ast.PortNode = {
             $type: ast.PortNode,
             $container: container,
-            id: 'PortNode' + this.modelState.kdlDiagram.ports.length,
-            name: 'PortNode' + this.modelState.kdlDiagram.ports.length,
+            id: container.$type + 'Port' + container.ports.length,
+            name: 'PortNode' + container.ports.length,
             number: 8080
         };
         port.dimensions = {
@@ -54,12 +63,12 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
         },
         container.ports.push(port);
 
-        const parent = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isPodNode(parent) || ast.isServiceNode(parent)) {
-            parent.ports.push(
-                { ref: port, $refText: this.modelState.idProvider.getLocalId(port) || port.id || '' }
-            );
-        }
+        // const parent = this.modelState.index.findSemanticElement(operation.containerId);
+        // if (ast.isPodNode(parent) || ast.isServiceNode(parent)) {
+        //     parent.ports.push(
+        //         { ref: port, $refText: this.modelState.idProvider.getLocalId(port) || port.id || '' }
+        //     );
+        // }
         this.actionDispatcher.dispatchAfterNextUpdate({
             kind: 'EditLabel',
             labelId: `${this.modelState.index.createId(port)}_label`

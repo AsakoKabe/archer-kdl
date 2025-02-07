@@ -43,6 +43,7 @@ const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => 
     configureModelElement(context, 'port', PortNode, RoundedCornerNodeView);
     overrideModelElement(context, DefaultTypes.EDGE, GEdge, ArrowEdgeView);
     configureActionHandler(context, MyCustomResponseAction.KIND, MyCustomResponseActionHandler);
+
 });
 
 export function initializeKDLDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {

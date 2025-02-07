@@ -42,7 +42,8 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
             $container: container,
             id: 'IngressNode' + this.modelState.kdlDiagram.ingresses.length,
             name: 'IngressNode' + this.modelState.kdlDiagram.ingresses.length,
-            host: 'localhost'
+            host: 'localhost',
+            links: [],
         };
         ingress.dimensions = {
             x: location.x,

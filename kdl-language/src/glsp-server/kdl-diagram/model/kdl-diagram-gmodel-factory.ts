@@ -1,7 +1,7 @@
 /********************************************************************************
  * Copyright (c) 2023 CrossBreeze.
  ********************************************************************************/
-import { ArgsUtil, GCompartment, GGraph, GModelFactory, ModelState } from '@eclipse-glsp/server';
+import { ArgsUtil, GCompartment, GEdge, GGraph, GGraphBuilder, GModelFactory, ModelState } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
@@ -12,6 +12,7 @@ import { PodNode } from './graph-extension/pod-node.js';
 import { ServiceNode } from './graph-extension/service-node.js';
 import { ContainerNode } from './graph-extension/container-node.js';
 import { PortNode } from './graph-extension/port-node.js';
+import * as uuid from 'uuid';
 
 /**
  * Custom factory that translates the semantic diagram root from Langium to a GLSP graph.
@@ -30,21 +31,43 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         }
     }
 
+    protected createLinkEdge(sourceID: string, targetID: string): GEdge {
+        return (
+            GEdge.builder()
+                .id(uuid.v4())
+                .addCssClass('link')
+                .sourceId(sourceID)
+                .targetId(targetID)
+                // .addRoutingPoints(link.routingPoints)
+                .build()
+        );
+    }
+
     protected createGraph(): GGraph | undefined {
         const diagramRoot = this.modelState.kdlDiagram;
         if (!diagramRoot) {
             return;
         }
         const graphBuilder = GGraph.builder().id(this.modelState.semanticUri);
-        diagramRoot.clusters.map(cluster => this.createClusterNode(cluster)).forEach(cluster => graphBuilder.add(cluster));
+        diagramRoot.clusters.map(cluster => this.createClusterNode(cluster, graphBuilder)).forEach(cluster => graphBuilder.add(cluster));
+
+        diagramRoot.ingresses.map(ingress =>
+            ingress.links.map(link => this.createLinkEdge(ingress.id, link.ref!.id)).forEach(link => graphBuilder.add(link))
+        );
+        diagramRoot.services.map(service =>
+            service.links.map(link => this.createLinkEdge(service.id, link.ref!.id)).forEach(link => graphBuilder.add(link))
+        );
+        diagramRoot.containers.map(container =>
+            container.links.map(link => this.createLinkEdge(container.id, link.ref!.id)).forEach(link => graphBuilder.add(link))
+        );
         return graphBuilder.build();
     }
 
-    protected createClusterNode(cluster: ast.ClusterNode): GCompartment {
+    protected createClusterNode(cluster: ast.ClusterNode, graphBuilder: GGraphBuilder): GCompartment {
         const ingressNodes = cluster.ingresses
             .map(id => id.ref)
             .filter((e): e is ast.IngressNode => e !== undefined)
-            .map(ingress => this.createIngressNode(ingress));
+            .map(ingress => this.createIngressNode(ingress, graphBuilder));
 
         const podNodes = cluster.pods
             .map(id => id.ref)
@@ -65,7 +88,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .addIngressNodes(ingressNodes)
             .addPodNodes(podNodes)
             .addServiceNodes(serviceNodes);
-            
+
         if (cluster.dimensions) {
             builder
                 .position({ x: cluster.dimensions.x, y: cluster.dimensions.y })
@@ -75,8 +98,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         return builder.build();
     }
 
-
-    protected createIngressNode(ingress: ast.IngressNode): GCompartment {
+    protected createIngressNode(ingress: ast.IngressNode, graphBuilder: GGraphBuilder): GCompartment {
         const builder = IngressNode.builder().type(ModelTypes.INGRESS).name(ingress.name).host(ingress.host).id(ingress.id);
         if (ingress.dimensions) {
             builder
@@ -94,10 +116,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .filter((e): e is ast.ContainerNode => e !== undefined)
             .map(container => this.createContainerNode(container));
 
-        const portNodes = pod.ports
-            .map(id => id.ref)
-            .filter((e): e is ast.PortNode => e !== undefined)
-            .map(port => this.createPortNode(port));
+        const portNodes = pod.ports.map(port => this.createPortNode(port));
 
         const builder = PodNode.builder()
             .type(ModelTypes.POD)
@@ -117,10 +136,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     }
 
     protected createServiceNode(service: ast.ServiceNode): GCompartment {
-        const portNodes = service.ports
-            .map(id => id.ref)
-            .filter((e): e is ast.PortNode => e !== undefined)
-            .map(port => this.createPortNode(port));
+        const portNodes = service.ports.map(port => this.createPortNode(port));
 
         const builder = ServiceNode.builder()
             .type(ModelTypes.SERVICE)

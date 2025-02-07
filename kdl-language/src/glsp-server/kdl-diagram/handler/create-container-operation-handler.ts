@@ -42,6 +42,7 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
             $container: container,
             id: 'ContainerNode' + this.modelState.kdlDiagram.containers.length,
             name: 'ContainerNode' + this.modelState.kdlDiagram.containers.length,
+            links: [],
         };
         containerNode.dimensions = {
             x: location.x,

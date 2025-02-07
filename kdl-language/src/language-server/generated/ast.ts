@@ -33,6 +33,7 @@ export type KDLKeywordNames =
     | "id"
     | "ingresses"
     | "kdlDiagram"
+    | "links"
     | "name"
     | "number"
     | "pods"
@@ -72,6 +73,7 @@ export interface ContainerNode extends AstNode {
     readonly $type: 'ContainerNode';
     dimensions?: Dimensions;
     id: string;
+    links: Array<Reference<PortNode>>;
     name: string;
 }
 
@@ -115,6 +117,7 @@ export interface IngressNode extends AstNode {
     dimensions?: Dimensions;
     host: string;
     id: string;
+    links: Array<Reference<PortNode>>;
     name: string;
 }
 
@@ -133,7 +136,6 @@ export interface KDLDiagram extends AstNode {
     ingresses: Array<IngressNode>;
     name: string;
     pods: Array<PodNode>;
-    ports: Array<PortNode>;
     services: Array<ServiceNode>;
 }
 
@@ -161,7 +163,7 @@ export interface PodNode extends AstNode {
     dimensions?: Dimensions;
     id: string;
     name: string;
-    ports: Array<Reference<PortNode>>;
+    ports: Array<PortNode>;
 }
 
 export const PodNode = 'PodNode';
@@ -171,7 +173,7 @@ export function isPodNode(item: unknown): item is PodNode {
 }
 
 export interface PortNode extends AstNode {
-    readonly $container: KDLDiagram;
+    readonly $container: PodNode | ServiceNode;
     readonly $type: 'PortNode';
     dimensions?: Dimensions;
     id: string;
@@ -190,8 +192,9 @@ export interface ServiceNode extends AstNode {
     readonly $type: 'ServiceNode';
     dimensions?: Dimensions;
     id: string;
+    links: Array<Reference<PortNode>>;
     name: string;
-    ports: Array<Reference<PortNode>>;
+    ports: Array<PortNode>;
 }
 
 export const ServiceNode = 'ServiceNode';
@@ -251,12 +254,13 @@ export class KDLAstReflection extends AbstractAstReflection {
             case 'ClusterNode:services': {
                 return ServiceNode;
             }
+            case 'ContainerNode:links':
+            case 'IngressNode:links':
+            case 'ServiceNode:links': {
+                return PortNode;
+            }
             case 'PodNode:containers': {
                 return ContainerNode;
-            }
-            case 'PodNode:ports':
-            case 'ServiceNode:ports': {
-                return PortNode;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
@@ -285,6 +289,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                     properties: [
                         { name: 'dimensions' },
                         { name: 'id' },
+                        { name: 'links', defaultValue: [] },
                         { name: 'name' }
                     ]
                 };
@@ -316,6 +321,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                         { name: 'dimensions' },
                         { name: 'host' },
                         { name: 'id' },
+                        { name: 'links', defaultValue: [] },
                         { name: 'name' }
                     ]
                 };
@@ -330,7 +336,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                         { name: 'ingresses', defaultValue: [] },
                         { name: 'name' },
                         { name: 'pods', defaultValue: [] },
-                        { name: 'ports', defaultValue: [] },
                         { name: 'services', defaultValue: [] }
                     ]
                 };
@@ -372,6 +377,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                     properties: [
                         { name: 'dimensions' },
                         { name: 'id' },
+                        { name: 'links', defaultValue: [] },
                         { name: 'name' },
                         { name: 'ports', defaultValue: [] }
                     ]
