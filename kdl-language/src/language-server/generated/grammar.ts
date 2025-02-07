@@ -40,58 +40,38 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
       "$type": "ParserRule",
       "name": "KDLDiagram",
       "definition": {
-        "$type": "Group",
+        "$type": "UnorderedGroup",
         "elements": [
-          {
-            "$type": "Alternatives",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "kdlDiagram"
-              },
-              {
-                "$type": "Keyword",
-                "value": "diagram"
-              }
-            ]
-          },
-          {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@15"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "Keyword",
-            "value": "id"
-          },
-          {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "id",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@20"
-              },
-              "arguments": []
-            }
-          },
           {
             "$type": "Group",
             "elements": [
               {
+                "$type": "Alternatives",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "kdlDiagram"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": "diagram"
+                  }
+                ]
+              },
+              {
                 "$type": "Keyword",
-                "value": "name"
+                "value": ":"
+              },
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@15"
+                },
+                "arguments": []
+              },
+              {
+                "$type": "Keyword",
+                "value": "id"
               },
               {
                 "$type": "Keyword",
@@ -99,12 +79,12 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               },
               {
                 "$type": "Assignment",
-                "feature": "name",
+                "feature": "id",
                 "operator": "=",
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@12"
+                    "$ref": "#/rules@20"
                   },
                   "arguments": []
                 }
@@ -115,44 +95,295 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "$type": "Group",
             "elements": [
               {
-                "$type": "Keyword",
-                "value": "clusters"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
                 "$type": "Group",
                 "elements": [
                   {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@17"
-                    },
-                    "arguments": []
+                    "$type": "Keyword",
+                    "value": "name"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
                   },
                   {
                     "$type": "Assignment",
-                    "feature": "clusters",
-                    "operator": "+=",
+                    "feature": "name",
+                    "operator": "=",
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@3"
+                        "$ref": "#/rules@12"
                       },
                       "arguments": []
                     }
                   }
+                ]
+              },
+              {
+                "$type": "UnorderedGroup",
+                "elements": [
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Keyword",
+                        "value": "clusters"
+                      },
+                      {
+                        "$type": "Keyword",
+                        "value": ":"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@15"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Group",
+                        "elements": [
+                          {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@17"
+                            },
+                            "arguments": []
+                          },
+                          {
+                            "$type": "Assignment",
+                            "feature": "clusters",
+                            "operator": "+=",
+                            "terminal": {
+                              "$type": "RuleCall",
+                              "rule": {
+                                "$ref": "#/rules@3"
+                              },
+                              "arguments": []
+                            }
+                          }
+                        ],
+                        "cardinality": "+"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@16"
+                        },
+                        "arguments": []
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Keyword",
+                        "value": "ingresses"
+                      },
+                      {
+                        "$type": "Keyword",
+                        "value": ":"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@15"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Group",
+                        "elements": [
+                          {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@17"
+                            },
+                            "arguments": []
+                          },
+                          {
+                            "$type": "Assignment",
+                            "feature": "ingresses",
+                            "operator": "+=",
+                            "terminal": {
+                              "$type": "RuleCall",
+                              "rule": {
+                                "$ref": "#/rules@4"
+                              },
+                              "arguments": []
+                            }
+                          }
+                        ],
+                        "cardinality": "+"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@16"
+                        },
+                        "arguments": []
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Keyword",
+                        "value": "services"
+                      },
+                      {
+                        "$type": "Keyword",
+                        "value": ":"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@15"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Group",
+                        "elements": [
+                          {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@17"
+                            },
+                            "arguments": []
+                          },
+                          {
+                            "$type": "Assignment",
+                            "feature": "services",
+                            "operator": "+=",
+                            "terminal": {
+                              "$type": "RuleCall",
+                              "rule": {
+                                "$ref": "#/rules@8"
+                              },
+                              "arguments": []
+                            }
+                          }
+                        ],
+                        "cardinality": "+"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@16"
+                        },
+                        "arguments": []
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Keyword",
+                        "value": "pods"
+                      },
+                      {
+                        "$type": "Keyword",
+                        "value": ":"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@15"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Group",
+                        "elements": [
+                          {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@17"
+                            },
+                            "arguments": []
+                          },
+                          {
+                            "$type": "Assignment",
+                            "feature": "pods",
+                            "operator": "+=",
+                            "terminal": {
+                              "$type": "RuleCall",
+                              "rule": {
+                                "$ref": "#/rules@7"
+                              },
+                              "arguments": []
+                            }
+                          }
+                        ],
+                        "cardinality": "+"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@16"
+                        },
+                        "arguments": []
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "Keyword",
+                        "value": "containers"
+                      },
+                      {
+                        "$type": "Keyword",
+                        "value": ":"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@15"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Group",
+                        "elements": [
+                          {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@17"
+                            },
+                            "arguments": []
+                          },
+                          {
+                            "$type": "Assignment",
+                            "feature": "containers",
+                            "operator": "+=",
+                            "terminal": {
+                              "$type": "RuleCall",
+                              "rule": {
+                                "$ref": "#/rules@5"
+                              },
+                              "arguments": []
+                            }
+                          }
+                        ],
+                        "cardinality": "+"
+                      },
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@16"
+                        },
+                        "arguments": []
+                      }
+                    ]
+                  }
                 ],
-                "cardinality": "+"
+                "cardinality": "?"
               },
               {
                 "$type": "RuleCall",
@@ -161,227 +392,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 },
                 "arguments": []
               }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "ingresses"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@17"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "ingresses",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@4"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "services"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@17"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "services",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@8"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "pods"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@17"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "pods",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@7"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "containers"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@17"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "containers",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@5"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@16"
-            },
-            "arguments": []
+            ]
           }
         ]
       },
@@ -396,87 +407,107 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
       "$type": "ParserRule",
       "name": "Dimensions",
       "definition": {
-        "$type": "Group",
+        "$type": "UnorderedGroup",
         "elements": [
           {
-            "$type": "Keyword",
-            "value": "x"
-          },
-          {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "x",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@13"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": "x"
               },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "y"
-          },
-          {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "y",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@13"
+              {
+                "$type": "Keyword",
+                "value": ":"
               },
-              "arguments": []
-            }
+              {
+                "$type": "Assignment",
+                "feature": "x",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@13"
+                  },
+                  "arguments": []
+                }
+              }
+            ]
           },
           {
-            "$type": "Keyword",
-            "value": "width"
-          },
-          {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "width",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@13"
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": "y"
               },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "height"
-          },
-          {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "height",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@13"
+              {
+                "$type": "Keyword",
+                "value": ":"
               },
-              "arguments": []
-            }
+              {
+                "$type": "Assignment",
+                "feature": "y",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@13"
+                  },
+                  "arguments": []
+                }
+              }
+            ]
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": "width"
+              },
+              {
+                "$type": "Keyword",
+                "value": ":"
+              },
+              {
+                "$type": "Assignment",
+                "feature": "width",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@13"
+                  },
+                  "arguments": []
+                }
+              }
+            ]
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": "height"
+              },
+              {
+                "$type": "Keyword",
+                "value": ":"
+              },
+              {
+                "$type": "Assignment",
+                "feature": "height",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@13"
+                  },
+                  "arguments": []
+                }
+              }
+            ]
           }
         ]
       },
@@ -534,221 +565,223 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             }
           },
           {
-            "$type": "Group",
+            "$type": "UnorderedGroup",
             "elements": [
               {
-                "$type": "Keyword",
-                "value": "ingresses"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "ingresses"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@15"
+                    },
+                    "arguments": []
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@17"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "ingresses",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$ref": "#/rules@4"
+                          },
+                          "terminal": {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@9"
+                            },
+                            "arguments": []
+                          },
+                          "deprecatedSyntax": false
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "services"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
-                    "$type": "Assignment",
-                    "feature": "ingresses",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$ref": "#/rules@4"
-                      },
-                      "terminal": {
+                    "$type": "Group",
+                    "elements": [
+                      {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@9"
+                          "$ref": "#/rules@17"
                         },
                         "arguments": []
                       },
-                      "deprecatedSyntax": false
-                    }
+                      {
+                        "$type": "Assignment",
+                        "feature": "services",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$ref": "#/rules@8"
+                          },
+                          "terminal": {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@9"
+                            },
+                            "arguments": []
+                          },
+                          "deprecatedSyntax": false
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
                   }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "services"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
+                ]
               },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "pods"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
-                    "$type": "Assignment",
-                    "feature": "services",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$ref": "#/rules@8"
-                      },
-                      "terminal": {
+                    "$type": "Group",
+                    "elements": [
+                      {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@9"
+                          "$ref": "#/rules@17"
                         },
                         "arguments": []
                       },
-                      "deprecatedSyntax": false
-                    }
+                      {
+                        "$type": "Assignment",
+                        "feature": "pods",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$ref": "#/rules@7"
+                          },
+                          "terminal": {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@9"
+                            },
+                            "arguments": []
+                          },
+                          "deprecatedSyntax": false
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
                   }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "pods"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
+                ]
               },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "dimensions"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
                     "$type": "Assignment",
-                    "feature": "pods",
-                    "operator": "+=",
+                    "feature": "dimensions",
+                    "operator": "=",
                     "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$ref": "#/rules@7"
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@2"
                       },
-                      "terminal": {
-                        "$type": "RuleCall",
-                        "rule": {
-                          "$ref": "#/rules@9"
-                        },
-                        "arguments": []
-                      },
-                      "deprecatedSyntax": false
+                      "arguments": []
                     }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "dimensions"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "dimensions",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@2"
                   },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               }
             ],
             "cardinality": "?"
@@ -829,101 +862,105 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             }
           },
           {
-            "$type": "Group",
+            "$type": "UnorderedGroup",
             "elements": [
               {
-                "$type": "Keyword",
-                "value": "links"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "links"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@15"
+                    },
+                    "arguments": []
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@17"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "links",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$ref": "#/rules@6"
+                          },
+                          "terminal": {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@9"
+                            },
+                            "arguments": []
+                          },
+                          "deprecatedSyntax": false
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "dimensions"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
                     "$type": "Assignment",
-                    "feature": "links",
-                    "operator": "+=",
+                    "feature": "dimensions",
+                    "operator": "=",
                     "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$ref": "#/rules@6"
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@2"
                       },
-                      "terminal": {
-                        "$type": "RuleCall",
-                        "rule": {
-                          "$ref": "#/rules@9"
-                        },
-                        "arguments": []
-                      },
-                      "deprecatedSyntax": false
+                      "arguments": []
                     }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "dimensions"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "dimensions",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@2"
                   },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               }
             ],
             "cardinality": "?"
@@ -984,101 +1021,105 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             }
           },
           {
-            "$type": "Group",
+            "$type": "UnorderedGroup",
             "elements": [
               {
-                "$type": "Keyword",
-                "value": "links"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "links"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@15"
+                    },
+                    "arguments": []
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@17"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "links",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$ref": "#/rules@6"
+                          },
+                          "terminal": {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@9"
+                            },
+                            "arguments": []
+                          },
+                          "deprecatedSyntax": false
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "dimensions"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
                     "$type": "Assignment",
-                    "feature": "links",
-                    "operator": "+=",
+                    "feature": "dimensions",
+                    "operator": "=",
                     "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$ref": "#/rules@6"
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@2"
                       },
-                      "terminal": {
-                        "$type": "RuleCall",
-                        "rule": {
-                          "$ref": "#/rules@9"
-                        },
-                        "arguments": []
-                      },
-                      "deprecatedSyntax": false
+                      "arguments": []
                     }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "dimensions"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "dimensions",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@2"
                   },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               }
             ],
             "cardinality": "?"
@@ -1254,154 +1295,157 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             }
           },
           {
-            "$type": "Group",
+            "$type": "UnorderedGroup",
             "elements": [
-              {
-                "$type": "Keyword",
-                "value": "containers"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "containers"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
-                    "$type": "Assignment",
-                    "feature": "containers",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$ref": "#/rules@5"
-                      },
-                      "terminal": {
+                    "$type": "Group",
+                    "elements": [
+                      {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@9"
+                          "$ref": "#/rules@17"
                         },
                         "arguments": []
                       },
-                      "deprecatedSyntax": false
-                    }
+                      {
+                        "$type": "Assignment",
+                        "feature": "containers",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$ref": "#/rules@5"
+                          },
+                          "terminal": {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@9"
+                            },
+                            "arguments": []
+                          },
+                          "deprecatedSyntax": false
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
                   }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "ports"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
+                ]
               },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "ports"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
+                    },
+                    "arguments": []
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@17"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "ports",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@6"
+                          },
+                          "arguments": []
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "dimensions"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
                     "$type": "Assignment",
-                    "feature": "ports",
-                    "operator": "+=",
+                    "feature": "dimensions",
+                    "operator": "=",
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@6"
+                        "$ref": "#/rules@2"
                       },
                       "arguments": []
                     }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "dimensions"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "dimensions",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@2"
                   },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               }
             ],
             "cardinality": "?"
@@ -1462,154 +1506,157 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             }
           },
           {
-            "$type": "Group",
+            "$type": "UnorderedGroup",
             "elements": [
-              {
-                "$type": "Keyword",
-                "value": "ports"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
               {
                 "$type": "Group",
                 "elements": [
                   {
+                    "$type": "Keyword",
+                    "value": "ports"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@17"
+                      "$ref": "#/rules@15"
                     },
                     "arguments": []
                   },
                   {
-                    "$type": "Assignment",
-                    "feature": "ports",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@6"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "links"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@17"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "links",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "CrossReference",
-                      "type": {
-                        "$ref": "#/rules@6"
-                      },
-                      "terminal": {
+                    "$type": "Group",
+                    "elements": [
+                      {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@9"
+                          "$ref": "#/rules@17"
                         },
                         "arguments": []
                       },
-                      "deprecatedSyntax": false
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "dimensions"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@15"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Assignment",
-                "feature": "dimensions",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@2"
+                      {
+                        "$type": "Assignment",
+                        "feature": "ports",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@6"
+                          },
+                          "arguments": []
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
                   },
-                  "arguments": []
-                }
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               },
               {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@16"
-                },
-                "arguments": []
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "links"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@15"
+                    },
+                    "arguments": []
+                  },
+                  {
+                    "$type": "Group",
+                    "elements": [
+                      {
+                        "$type": "RuleCall",
+                        "rule": {
+                          "$ref": "#/rules@17"
+                        },
+                        "arguments": []
+                      },
+                      {
+                        "$type": "Assignment",
+                        "feature": "links",
+                        "operator": "+=",
+                        "terminal": {
+                          "$type": "CrossReference",
+                          "type": {
+                            "$ref": "#/rules@6"
+                          },
+                          "terminal": {
+                            "$type": "RuleCall",
+                            "rule": {
+                              "$ref": "#/rules@9"
+                            },
+                            "arguments": []
+                          },
+                          "deprecatedSyntax": false
+                        }
+                      }
+                    ],
+                    "cardinality": "+"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "dimensions"
+                  },
+                  {
+                    "$type": "Keyword",
+                    "value": ":"
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@15"
+                    },
+                    "arguments": []
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "dimensions",
+                    "operator": "=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@2"
+                      },
+                      "arguments": []
+                    }
+                  },
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@16"
+                    },
+                    "arguments": []
+                  }
+                ]
               }
             ],
             "cardinality": "?"

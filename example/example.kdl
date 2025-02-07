@@ -1,3 +1,37 @@
 kdlDiagram:
     id: example
     name: "123"
+    clusters:
+      - id: ClusterNode0
+        name: "ClusterNode0"
+        ingresses:
+          - example.IngressNode0
+        services:
+          - example.ServiceNode0
+        pods:
+          - example.Pod1
+        dimensions:
+            x: 142
+            y: 26
+            width: 572.65625
+            height: 384
+    ingresses:
+      - id: IngressNode0
+        name: "IngressNode0"
+        host: "localhost"
+        dimensions:
+            x: 163
+            y: 181
+            width: 100.9453125
+            height: 51
+    services:
+      - id: ServiceNode0
+        name: "ServiceNode0"
+        dimensions:
+            x: 399
+            y: 175
+            width: 101.65625
+            height: 36
+    pods:
+      - id: Pod1
+        name: "Pod1"

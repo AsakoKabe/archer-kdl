@@ -36,7 +36,8 @@ import { KDLDiagramCreatePodOperationHandler } from './handler/create-pod-operat
 import { KDLDiagramCreateContainerOperationHandler } from './handler/create-container-operation-handler.js';
 import { KDLDiagramCreatePortOperationHandler } from './handler/create-port-operation-handler.js';
 import { KDLDiagramCreateServiceOperationHandler } from './handler/create-service-operation-handler.js';
-import { KDLDiagramCreateLinkOperationHandler } from './handler/create-relationship-operation-handler.js';
+import { KDLDiagramCreateLinkOperationHandler } from './handler/create-link-operation-handler.js';
+import { KDLDiagramChangeRoutingPointsOperation } from './handler/kdl-change-routing-points-handler.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -69,6 +70,7 @@ export class KDLDiagramModule extends DiagramModule {
         binding.add(KDLDiagramCreatePortOperationHandler);
         binding.add(KDLDiagramApplyLabelEditOperationHandler);
         binding.add(KDLDiagramCreateLinkOperationHandler);
+        binding.add(KDLDiagramChangeRoutingPointsOperation);
     }
 
     protected override configureContextActionProviders(binding: MultiBinding<ContextActionsProvider>): void {

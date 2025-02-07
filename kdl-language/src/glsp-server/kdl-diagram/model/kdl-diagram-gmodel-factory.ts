@@ -1,7 +1,7 @@
 /********************************************************************************
  * Copyright (c) 2023 CrossBreeze.
  ********************************************************************************/
-import { ArgsUtil, GCompartment, GEdge, GGraph, GGraphBuilder, GModelFactory, ModelState } from '@eclipse-glsp/server';
+import { ArgsUtil, GCompartment, GEdge, GGraph, GGraphBuilder, GModelFactory, ModelState, Point } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
@@ -12,7 +12,6 @@ import { PodNode } from './graph-extension/pod-node.js';
 import { ServiceNode } from './graph-extension/service-node.js';
 import { ContainerNode } from './graph-extension/container-node.js';
 import { PortNode } from './graph-extension/port-node.js';
-import * as uuid from 'uuid';
 
 /**
  * Custom factory that translates the semantic diagram root from Langium to a GLSP graph.
@@ -34,7 +33,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     protected createLinkEdge(sourceID: string, targetID: string): GEdge {
         return (
             GEdge.builder()
-                .id(uuid.v4())
+                .id(sourceID + '$' + targetID) // use to change routing points
                 .addCssClass('link')
                 .sourceId(sourceID)
                 .targetId(targetID)
@@ -84,26 +83,37 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .name(cluster.name)
             .id(cluster.id)
             .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: cluster.dimensions ? cluster.dimensions.x : Point.ORIGIN.x,
+                y: cluster.dimensions ? cluster.dimensions.y : Point.ORIGIN.y
+            })
             .children()
             .addIngressNodes(ingressNodes)
             .addPodNodes(podNodes)
             .addServiceNodes(serviceNodes);
 
-        if (cluster.dimensions) {
-            builder
-                .position({ x: cluster.dimensions.x, y: cluster.dimensions.y })
-                .addLayoutOptions({ prefWidth: cluster.dimensions.width, prefHeight: cluster.dimensions.height });
+        if (cluster.dimensions?.width && cluster.dimensions?.height) {
+            builder.addLayoutOptions({ prefWidth: cluster.dimensions.width, prefHeight: cluster.dimensions.height });
         }
 
         return builder.build();
     }
 
     protected createIngressNode(ingress: ast.IngressNode, graphBuilder: GGraphBuilder): GCompartment {
-        const builder = IngressNode.builder().type(ModelTypes.INGRESS).name(ingress.name).host(ingress.host).id(ingress.id);
-        if (ingress.dimensions) {
-            builder
-                .position({ x: ingress.dimensions.x, y: ingress.dimensions.y })
-                .addLayoutOptions({ prefWidth: ingress.dimensions.width, prefHeight: ingress.dimensions.height });
+        const builder = IngressNode.builder()
+            .type(ModelTypes.INGRESS)
+            .name(ingress.name)
+            .host(ingress.host)
+            .id(ingress.id)
+            .position({
+                x: ingress.dimensions ? ingress.dimensions.x : Point.ORIGIN.x,
+                y: ingress.dimensions ? ingress.dimensions.y : Point.ORIGIN.y
+            });
+        if (ingress.dimensions?.width && ingress.dimensions?.height) {
+            builder.addLayoutOptions({
+                prefWidth: ingress.dimensions.width,
+                prefHeight: ingress.dimensions.height
+            });
         }
         builder.children();
 
@@ -123,14 +133,19 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .name(pod.name)
             .id(pod.id)
             .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: pod.dimensions ? pod.dimensions.x : Point.ORIGIN.x,
+                y: pod.dimensions ? pod.dimensions.y : Point.ORIGIN.y
+            })
             .children()
             .addContainerNodes(containerNodes)
             .addPortNodes(portNodes);
 
-        if (pod.dimensions) {
-            builder
-                .position({ x: pod.dimensions.x, y: pod.dimensions.y })
-                .addLayoutOptions({ prefWidth: pod.dimensions.width, prefHeight: pod.dimensions.height });
+        if (pod.dimensions?.width && pod.dimensions?.height) {
+            builder.addLayoutOptions({
+                prefWidth: pod.dimensions.width,
+                prefHeight: pod.dimensions.height
+            });
         }
         return builder.build();
     }
@@ -143,13 +158,18 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .name(service.name)
             .id(service.id)
             .addArgs(ArgsUtil.cornerRadius(50))
+            .position({
+                x: service.dimensions ? service.dimensions.x : Point.ORIGIN.x,
+                y: service.dimensions ? service.dimensions.y : Point.ORIGIN.y
+            })
             .children()
             .addPortNodes(portNodes);
 
-        if (service.dimensions) {
-            builder
-                .position({ x: service.dimensions.x, y: service.dimensions.y })
-                .addLayoutOptions({ prefWidth: service.dimensions.width, prefHeight: service.dimensions.height });
+        if (service.dimensions?.width && service.dimensions?.height) {
+            builder.addLayoutOptions({
+                prefWidth: service.dimensions.width,
+                prefHeight: service.dimensions.height
+            });
         }
         return builder.build();
     }
@@ -160,12 +180,17 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .name(container.name)
             .id(container.id)
             .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: container.dimensions ? container.dimensions.x : Point.ORIGIN.x,
+                y: container.dimensions ? container.dimensions.y : Point.ORIGIN.y
+            })
             .children();
 
-        if (container.dimensions) {
-            builder
-                .position({ x: container.dimensions.x, y: container.dimensions.y })
-                .addLayoutOptions({ prefWidth: container.dimensions.width, prefHeight: container.dimensions.height });
+        if (container.dimensions?.width && container.dimensions?.height) {
+            builder.addLayoutOptions({
+                prefWidth: container.dimensions.width,
+                prefHeight: container.dimensions.height
+            });
         }
         return builder.build();
     }
@@ -177,12 +202,17 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .number(port.number.toString())
             .id(port.id)
             .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: port.dimensions ? port.dimensions.x : Point.ORIGIN.x,
+                y: port.dimensions ? port.dimensions.y : Point.ORIGIN.y
+            })
             .children();
 
-        if (port.dimensions) {
-            builder
-                .position({ x: port.dimensions.x, y: port.dimensions.y })
-                .addLayoutOptions({ prefWidth: port.dimensions.width, prefHeight: port.dimensions.height });
+        if (port.dimensions?.height && port.dimensions?.width) {
+            builder.addLayoutOptions({
+                prefWidth: port.dimensions.width,
+                prefHeight: port.dimensions.height
+            });
         }
         return builder.build();
     }
