@@ -2,7 +2,6 @@
  * Copyright (c) 2024 CrossBreeze.
  ********************************************************************************/
 import {
-    Action,
     ActionDispatcher,
     Command,
     CreateNodeOperation,
@@ -27,17 +26,27 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
     @inject(ActionDispatcher) protected actionDispatcher!: ActionDispatcher;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-        return new CrossModelCommand(this.modelState, () => this.createNode(operation));
+        return new CrossModelCommand(this.modelState, () => this.createPod(operation));
     }
-
-    protected async createNode(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+    protected async createPod(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
         if (!operation.containerId) {
             throw new GLSPServerError("Pod can't be outside cluster");
         }
-        const container = this.modelState.kdlDiagram;
+        const kdlDiagram = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
+        const pod = this.createPodNode(kdlDiagram);
 
-        const pod: ast.PodNode = {
+        this.createNodeAttribute(kdlDiagram, pod, location);
+        kdlDiagram.pods.push(pod);
+
+        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
+        if (ast.isClusterNode(cluster)) {
+            cluster.pods.push({ ref: pod, $refText: this.modelState.idProvider.getLocalId(pod) || pod.id || '' });
+        }
+    }
+
+    private createPodNode(container: ast.KDLDiagram): ast.PodNode {
+        return {
             $type: ast.PodNode,
             $container: container,
             id: 'PodNode' + this.modelState.kdlDiagram.pods.length,
@@ -45,24 +54,27 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
             containers: [],
             ports: []
         };
-        pod.dimensions = {
+    }
+
+    private createNodeAttribute(kdlDiagram: ast.KDLDiagram, pod: ast.PodNode, location: Point) {
+        const attribute: ast.NodeAttribute = {
+            $type: ast.NodeAttribute,
+            $container: kdlDiagram,
+            nodeID: {
+                $refText: this.modelState.idProvider.getLocalId(pod) || pod.id || '',
+                ref: pod
+            },
+            dimensions: {} as ast.Dimensions
+        };
+        const dimensions: ast.Dimensions = {
             x: location.x,
             y: location.y,
             width: 10,
             height: 10,
-            $container: pod,
+            $container: attribute,
             $type: ast.Dimensions
-        },
-        container.pods.push(pod);
-        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isClusterNode(cluster)) {
-            cluster.pods.push(
-                { ref: pod, $refText: this.modelState.idProvider.getLocalId(pod) || pod.id || '' }
-            );
-        }
-        this.actionDispatcher.dispatchAfterNextUpdate({
-            kind: 'EditLabel',
-            labelId: `${this.modelState.index.createId(pod)}_label`
-        } as Action);
+        };
+        attribute.dimensions = dimensions;
+        kdlDiagram.nodeAttributes.push(attribute);
     }
 }

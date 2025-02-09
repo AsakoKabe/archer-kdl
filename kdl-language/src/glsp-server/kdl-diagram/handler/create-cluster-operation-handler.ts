@@ -2,7 +2,6 @@
  * Copyright (c) 2024 CrossBreeze.
  ********************************************************************************/
 import {
-    Action,
     ActionDispatcher,
     Command,
     CreateNodeOperation,
@@ -26,33 +25,48 @@ export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOpera
     @inject(ActionDispatcher) protected actionDispatcher!: ActionDispatcher;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-        return new CrossModelCommand(this.modelState, () => this.createNode(operation));
+        return new CrossModelCommand(this.modelState, () => this.createCluster(operation));
     }
 
-    protected async createNode(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        const container = this.modelState.kdlDiagram;
+    protected async createCluster(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        const kdlDiagram = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
-        const cluster: ast.ClusterNode = {
+        const cluster = this.createClusterNode(kdlDiagram);
+
+        this.createNodeAttribute(kdlDiagram, cluster, location);
+        kdlDiagram.clusters.push(cluster);
+    }
+
+    private createClusterNode(kdlDiagram: ast.KDLDiagram): ast.ClusterNode {
+        return {
             $type: ast.ClusterNode,
-            $container: container,
+            $container: kdlDiagram,
             id: 'ClusterNode' + this.modelState.kdlDiagram.clusters.length,
             name: 'ClusterNode' + this.modelState.kdlDiagram.clusters.length,
             ingresses: [],
             pods: [],
             services: []
         };
-        cluster.dimensions = {
+    }
+    private createNodeAttribute(kdlDiagram: ast.KDLDiagram, cluster: ast.ClusterNode, location: Point) {
+        const attribute: ast.NodeAttribute = {
+            $type: ast.NodeAttribute,
+            $container: kdlDiagram,
+            nodeID: {
+                $refText: this.modelState.idProvider.getLocalId(cluster) || cluster.id || '',
+                ref: cluster
+            },
+            dimensions: {} as ast.Dimensions
+        };
+        const dimensions: ast.Dimensions = {
             x: location.x,
             y: location.y,
             width: 10,
             height: 10,
-            $container: cluster,
+            $container: attribute,
             $type: ast.Dimensions
         };
-        container.clusters.push(cluster);
-        this.actionDispatcher.dispatchAfterNextUpdate({
-            kind: 'EditLabel',
-            labelId: `${this.modelState.index.createId(cluster)}_label`
-        } as Action);
+        attribute.dimensions = dimensions;
+        kdlDiagram.nodeAttributes.push(attribute);
     }
 }

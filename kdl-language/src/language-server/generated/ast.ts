@@ -35,6 +35,8 @@ export type KDLKeywordNames =
     | "kdlDiagram"
     | "links"
     | "name"
+    | "nodeAttributes"
+    | "nodeID"
     | "number"
     | "pods"
     | "ports"
@@ -51,10 +53,17 @@ export function isIDReference(item: unknown): item is IDReference {
     return typeof item === 'string';
 }
 
+export type NodeType = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
+
+export const NodeType = 'NodeType';
+
+export function isNodeType(item: unknown): item is NodeType {
+    return reflection.isInstance(item, NodeType);
+}
+
 export interface ClusterNode extends AstNode {
     readonly $container: KDLDiagram;
     readonly $type: 'ClusterNode';
-    dimensions?: Dimensions;
     id: string;
     ingresses: Array<Reference<IngressNode>>;
     name: string;
@@ -71,7 +80,6 @@ export function isClusterNode(item: unknown): item is ClusterNode {
 export interface ContainerNode extends AstNode {
     readonly $container: KDLDiagram;
     readonly $type: 'ContainerNode';
-    dimensions?: Dimensions;
     id: string;
     links: Array<Reference<PortNode>>;
     name: string;
@@ -97,7 +105,7 @@ export function isCustomProperty(item: unknown): item is CustomProperty {
 }
 
 export interface Dimensions extends AstNode {
-    readonly $container: ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
+    readonly $container: NodeAttribute;
     readonly $type: 'Dimensions';
     height: number;
     width: number;
@@ -114,7 +122,6 @@ export function isDimensions(item: unknown): item is Dimensions {
 export interface IngressNode extends AstNode {
     readonly $container: KDLDiagram;
     readonly $type: 'IngressNode';
-    dimensions?: Dimensions;
     host: string;
     id: string;
     links: Array<Reference<PortNode>>;
@@ -135,6 +142,7 @@ export interface KDLDiagram extends AstNode {
     id: string;
     ingresses: Array<IngressNode>;
     name: string;
+    nodeAttributes: Array<NodeAttribute>;
     pods: Array<PodNode>;
     services: Array<ServiceNode>;
 }
@@ -156,11 +164,23 @@ export function isKDLRoot(item: unknown): item is KDLRoot {
     return reflection.isInstance(item, KDLRoot);
 }
 
+export interface NodeAttribute extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'NodeAttribute';
+    dimensions: Dimensions;
+    nodeID: Reference<NodeType>;
+}
+
+export const NodeAttribute = 'NodeAttribute';
+
+export function isNodeAttribute(item: unknown): item is NodeAttribute {
+    return reflection.isInstance(item, NodeAttribute);
+}
+
 export interface PodNode extends AstNode {
     readonly $container: KDLDiagram;
     readonly $type: 'PodNode';
     containers: Array<Reference<ContainerNode>>;
-    dimensions?: Dimensions;
     id: string;
     name: string;
     ports: Array<PortNode>;
@@ -175,7 +195,6 @@ export function isPodNode(item: unknown): item is PodNode {
 export interface PortNode extends AstNode {
     readonly $container: PodNode | ServiceNode;
     readonly $type: 'PortNode';
-    dimensions?: Dimensions;
     id: string;
     name: string;
     number: number;
@@ -190,7 +209,6 @@ export function isPortNode(item: unknown): item is PortNode {
 export interface ServiceNode extends AstNode {
     readonly $container: KDLDiagram;
     readonly $type: 'ServiceNode';
-    dimensions?: Dimensions;
     id: string;
     links: Array<Reference<PortNode>>;
     name: string;
@@ -222,6 +240,8 @@ export type KDLAstType = {
     IngressNode: IngressNode
     KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
+    NodeAttribute: NodeAttribute
+    NodeType: NodeType
     PodNode: PodNode
     PortNode: PortNode
     ServiceNode: ServiceNode
@@ -231,11 +251,19 @@ export type KDLAstType = {
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [ClusterNode, ContainerNode, CustomProperty, Dimensions, IngressNode, KDLDiagram, KDLRoot, PodNode, PortNode, ServiceNode, WithCustomProperties];
+        return [ClusterNode, ContainerNode, CustomProperty, Dimensions, IngressNode, KDLDiagram, KDLRoot, NodeAttribute, NodeType, PodNode, PortNode, ServiceNode, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
+            case ClusterNode:
+            case ContainerNode:
+            case IngressNode:
+            case PodNode:
+            case PortNode:
+            case ServiceNode: {
+                return this.isSubtype(NodeType, supertype);
+            }
             default: {
                 return false;
             }
@@ -259,6 +287,9 @@ export class KDLAstReflection extends AbstractAstReflection {
             case 'ServiceNode:links': {
                 return PortNode;
             }
+            case 'NodeAttribute:nodeID': {
+                return NodeType;
+            }
             case 'PodNode:containers': {
                 return ContainerNode;
             }
@@ -274,7 +305,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: ClusterNode,
                     properties: [
-                        { name: 'dimensions' },
                         { name: 'id' },
                         { name: 'ingresses', defaultValue: [] },
                         { name: 'name' },
@@ -287,7 +317,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: ContainerNode,
                     properties: [
-                        { name: 'dimensions' },
                         { name: 'id' },
                         { name: 'links', defaultValue: [] },
                         { name: 'name' }
@@ -318,7 +347,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: IngressNode,
                     properties: [
-                        { name: 'dimensions' },
                         { name: 'host' },
                         { name: 'id' },
                         { name: 'links', defaultValue: [] },
@@ -335,6 +363,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                         { name: 'id' },
                         { name: 'ingresses', defaultValue: [] },
                         { name: 'name' },
+                        { name: 'nodeAttributes', defaultValue: [] },
                         { name: 'pods', defaultValue: [] },
                         { name: 'services', defaultValue: [] }
                     ]
@@ -348,12 +377,20 @@ export class KDLAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case NodeAttribute: {
+                return {
+                    name: NodeAttribute,
+                    properties: [
+                        { name: 'dimensions' },
+                        { name: 'nodeID' }
+                    ]
+                };
+            }
             case PodNode: {
                 return {
                     name: PodNode,
                     properties: [
                         { name: 'containers', defaultValue: [] },
-                        { name: 'dimensions' },
                         { name: 'id' },
                         { name: 'name' },
                         { name: 'ports', defaultValue: [] }
@@ -364,7 +401,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: PortNode,
                     properties: [
-                        { name: 'dimensions' },
                         { name: 'id' },
                         { name: 'name' },
                         { name: 'number' }
@@ -375,7 +411,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: ServiceNode,
                     properties: [
-                        { name: 'dimensions' },
                         { name: 'id' },
                         { name: 'links', defaultValue: [] },
                         { name: 'name' },

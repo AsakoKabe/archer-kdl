@@ -38,14 +38,12 @@ KDLDiagram:
                 DEDENT
             )
         )?
+        ('nodeAttributes' ':' 
+            INDENT
+                (LIST_ITEM nodeAttributes+=NodeAttribute)+
+            DEDENT
+        )?
     DEDENT
-;
-
-Dimensions:
-    ('x' ':' x=NUMBER) &
-    ('y' ':' y=NUMBER) &
-    ('width' ':' width=NUMBER) & 
-    ('height' ':' height=NUMBER)
 ;
 
 ClusterNode:
@@ -69,12 +67,6 @@ ClusterNode:
             INDENT 
                 (LIST_ITEM pods+=[PodNode:IDReference])+
             DEDENT
-        ) &
-        (
-            'dimensions' ':' 
-            INDENT 
-                dimensions=Dimensions
-            DEDENT
         )
     )?
 ;
@@ -89,12 +81,6 @@ IngressNode:
             INDENT 
                 (LIST_ITEM links+=[PortNode:IDReference])+
             DEDENT
-        ) &
-        (
-            'dimensions' ':' 
-            INDENT 
-                dimensions=Dimensions
-            DEDENT
         )
     )?
 ;
@@ -108,12 +94,6 @@ ContainerNode:
             INDENT 
                 (LIST_ITEM links+=[PortNode:IDReference])+
             DEDENT
-        ) &
-        (
-            'dimensions' ':' 
-            INDENT 
-                dimensions=Dimensions
-            DEDENT
         )
     )?
 ;
@@ -122,12 +102,6 @@ PortNode:
     'id' ':' id=ID
     'name' ':' name=STRING
     'number' ':' number=NUMBER
-    (
-        'dimensions' ':' 
-        INDENT 
-            dimensions=Dimensions
-        DEDENT
-    )?
 ;
 
 PodNode:
@@ -144,12 +118,6 @@ PodNode:
             'ports' ':'
             INDENT 
                 (LIST_ITEM ports+=PortNode)+
-            DEDENT
-        ) &
-        (
-            'dimensions' ':' 
-            INDENT 
-                dimensions=Dimensions
             DEDENT
         )
     )?
@@ -170,12 +138,28 @@ ServiceNode:
             INDENT 
                 (LIST_ITEM links+=[PortNode:IDReference])+
             DEDENT
-        ) &
-        (
-            'dimensions' ':' 
-            INDENT 
-                dimensions=Dimensions
-            DEDENT
         )
     )?
+;
+
+NodeType:
+    ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode
+;
+
+
+Dimensions:
+    ('x' ':' x=NUMBER) &
+    ('y' ':' y=NUMBER) &
+    ('width' ':' width=NUMBER) & 
+    ('height' ':' height=NUMBER)
+;
+
+NodeAttribute:
+    'nodeID' ':' nodeID=[NodeType:IDReference]
+    (
+        'dimensions' ':' 
+        INDENT 
+            dimensions=Dimensions
+        DEDENT
+    )
 ;

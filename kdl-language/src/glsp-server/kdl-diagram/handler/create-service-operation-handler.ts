@@ -2,7 +2,6 @@
  * Copyright (c) 2024 CrossBreeze.
  ********************************************************************************/
 import {
-    Action,
     ActionDispatcher,
     Command,
     CreateNodeOperation,
@@ -27,17 +26,28 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
     @inject(ActionDispatcher) protected actionDispatcher!: ActionDispatcher;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-        return new CrossModelCommand(this.modelState, () => this.createNode(operation));
+        return new CrossModelCommand(this.modelState, () => this.createService(operation));
     }
 
-    protected async createNode(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+    protected async createService(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
         if (!operation.containerId) {
             throw new GLSPServerError("Service can't be outside cluster");
         }
-        const container = this.modelState.kdlDiagram;
+        const kdlDiagram = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
+        const service = this.createServiceNode(kdlDiagram);
 
-        const service: ast.ServiceNode = {
+        this.createNodeAttribute(kdlDiagram, service, location);
+        kdlDiagram.services.push(service);
+
+        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
+        if (ast.isClusterNode(cluster)) {
+            cluster.services.push({ ref: service, $refText: this.modelState.idProvider.getLocalId(service) || service.id || '' });
+        }
+    }
+
+    private createServiceNode(container: ast.KDLDiagram): ast.ServiceNode {
+        return {
             $type: ast.ServiceNode,
             $container: container,
             id: 'ServiceNode' + this.modelState.kdlDiagram.services.length,
@@ -45,22 +55,27 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
             ports: [],
             links: []
         };
-        service.dimensions = {
+    }
+
+    private createNodeAttribute(kdlDiagram: ast.KDLDiagram, service: ast.ServiceNode, location: Point) {
+        const attribute: ast.NodeAttribute = {
+            $type: ast.NodeAttribute,
+            $container: kdlDiagram,
+            nodeID: {
+                $refText: this.modelState.idProvider.getLocalId(service) || service.id || '',
+                ref: service
+            },
+            dimensions: {} as ast.Dimensions
+        };
+        const dimensions: ast.Dimensions = {
             x: location.x,
             y: location.y,
             width: 10,
             height: 10,
-            $container: service,
+            $container: attribute,
             $type: ast.Dimensions
         };
-        container.services.push(service);
-        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isClusterNode(cluster)) {
-            cluster.services.push({ ref: service, $refText: this.modelState.idProvider.getLocalId(service) || service.id || '' });
-        }
-        this.actionDispatcher.dispatchAfterNextUpdate({
-            kind: 'EditLabel',
-            labelId: `${this.modelState.index.createId(service)}_label`
-        } as Action);
+        attribute.dimensions = dimensions;
+        kdlDiagram.nodeAttributes.push(attribute);
     }
 }

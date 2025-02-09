@@ -2,7 +2,6 @@
  * Copyright (c) 2024 CrossBreeze.
  ********************************************************************************/
 import {
-    Action,
     ActionDispatcher,
     Command,
     CreateNodeOperation,
@@ -27,51 +26,54 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
     @inject(ActionDispatcher) protected actionDispatcher!: ActionDispatcher;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-        return new CrossModelCommand(this.modelState, () => this.createNode(operation));
+        return new CrossModelCommand(this.modelState, () => this.createPort(operation));
     }
 
-    protected async createNode(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+    protected async createPort(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
         if (!operation.containerId) {
             throw new GLSPServerError("Port can't be outside service or pod");
         }
-        let container: ast.PodNode | ast.ServiceNode | undefined = undefined;
         const astParent = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isServiceNode(astParent)) {
-            container = astParent;
-        } else if (ast.isPodNode(astParent)) {
-            container = astParent;
-        }
-        if (!container){
+        const container = ast.isServiceNode(astParent) || ast.isPodNode(astParent) ? astParent : undefined;
+        if (!container) {
             throw new GLSPServerError("Port can't be outside service or pod");
         }
         const location = relativeLocation ?? Point.ORIGIN;
 
-        const port: ast.PortNode = {
+        const port: ast.PortNode = this.createPortNode(container);
+        this.createNodeAttribute(this.modelState.kdlDiagram, port, location);
+        container.ports.push(port);
+    }
+
+    private createPortNode(container: ast.PodNode | ast.ServiceNode): ast.PortNode {
+        return {
             $type: ast.PortNode,
             $container: container,
             id: container.$type + 'Port' + container.ports.length,
             name: 'PortNode' + container.ports.length,
             number: 8080
         };
-        port.dimensions = {
+    }
+
+    private createNodeAttribute(kdlDiagram: ast.KDLDiagram, port: ast.PortNode, location: Point) {
+        const attribute: ast.NodeAttribute = {
+            $type: ast.NodeAttribute,
+            $container: kdlDiagram,
+            nodeID: {
+                $refText: this.modelState.idProvider.getLocalId(port) || port.id || '',
+                ref: port
+            },
+            dimensions: {} as ast.Dimensions
+        };
+        const dimensions: ast.Dimensions = {
             x: location.x,
             y: location.y,
             width: 10,
             height: 10,
-            $container: port,
+            $container: attribute,
             $type: ast.Dimensions
-        },
-        container.ports.push(port);
-
-        // const parent = this.modelState.index.findSemanticElement(operation.containerId);
-        // if (ast.isPodNode(parent) || ast.isServiceNode(parent)) {
-        //     parent.ports.push(
-        //         { ref: port, $refText: this.modelState.idProvider.getLocalId(port) || port.id || '' }
-        //     );
-        // }
-        this.actionDispatcher.dispatchAfterNextUpdate({
-            kind: 'EditLabel',
-            labelId: `${this.modelState.index.createId(port)}_label`
-        } as Action);
+        };
+        attribute.dimensions = dimensions;
+        kdlDiagram.nodeAttributes.push(attribute);
     }
 }

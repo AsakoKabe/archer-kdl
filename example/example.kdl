@@ -3,35 +3,75 @@ kdlDiagram:
     name: "123"
     clusters:
       - id: ClusterNode0
-        name: "ClusterNode0"
+        name: "123"
         ingresses:
           - example.IngressNode0
+          - example.IngressNode1
         services:
           - example.ServiceNode0
         pods:
-          - example.Pod1
-        dimensions:
-            x: 142
-            y: 26
-            width: 572.65625
-            height: 384
+          - example.PodNode0
+      - id: ClusterNode1
+        name: "ClusterNode1"
     ingresses:
       - id: IngressNode0
         name: "IngressNode0"
         host: "localhost"
-        dimensions:
-            x: 163
-            y: 181
-            width: 100.9453125
-            height: 51
+        links:
+          - example.ServiceNode0.ServiceNodePort0
+      - id: IngressNode1
+        name: "IngressNode1"
+        host: "localhost"
     services:
       - id: ServiceNode0
-        name: "ServiceNode0"
-        dimensions:
-            x: 399
-            y: 175
-            width: 101.65625
-            height: 36
+        name: "dasda"
+        ports:
+          - id: ServiceNodePort0
+            name: "PortNode0"
+            number: 123
     pods:
-      - id: Pod1
-        name: "Pod1"
+      - id: PodNode0
+        name: "fdsfds"
+    nodeAttributes:
+      - nodeID: example.IngressNode0
+        dimensions:
+            x: 76
+            y: 9
+            width: 100.9453125
+            height: 51
+      - nodeID: example.IngressNode1
+        dimensions:
+            x: 198
+            y: -15
+            width: 100.9453125
+            height: 51
+      - nodeID: example.ServiceNode0.ServiceNodePort0
+        dimensions:
+            x: 21
+            y: -84
+            width: 57.296875
+            height: 40
+      - nodeID: example.ServiceNode0
+        dimensions:
+            x: 41
+            y: 257
+            width: 101.65625
+            height: 76
+      - nodeID: example.ClusterNode0
+        dimensions:
+            x: 72
+            y: 21.171601920000057
+            width: 318.65625
+            height: 389
+      - nodeID: example.ClusterNode1
+        dimensions:
+            x: 127
+            y: 490
+            width: 99.4921875
+            height: 36
+      - nodeID: example.PodNode0
+        dimensions:
+            x: 196
+            y: 107
+            width: 81.4453125
+            height: 36

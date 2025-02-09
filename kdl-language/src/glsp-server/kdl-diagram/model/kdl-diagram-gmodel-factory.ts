@@ -12,6 +12,7 @@ import { PodNode } from './graph-extension/pod-node.js';
 import { ServiceNode } from './graph-extension/service-node.js';
 import { ContainerNode } from './graph-extension/container-node.js';
 import { PortNode } from './graph-extension/port-node.js';
+import { KDLNode } from './graph-extension/utils.js';
 
 /**
  * Custom factory that translates the semantic diagram root from Langium to a GLSP graph.
@@ -62,6 +63,35 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         return graphBuilder.build();
     }
 
+    protected findNodeAttribute(node: KDLNode): ast.NodeAttribute {
+        const nodeAttributes = this.modelState.kdlDiagram.nodeAttributes;
+        const nodeLocalID = this.modelState.idProvider.getLocalId(node);
+        let nodeAttribute = 
+        nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === nodeLocalID);
+        if (!nodeAttribute) {
+            nodeAttribute = {
+                $type: ast.NodeAttribute,
+                $container: this.modelState.kdlDiagram,
+                nodeID: {
+                    $refText: this.modelState.idProvider.getLocalId(node) || node.id || '',
+                    ref: node
+                },
+                dimensions: {} as ast.Dimensions
+            };
+            const dimensions: ast.Dimensions = {
+                x: Point.ORIGIN.x,
+                y: Point.ORIGIN.y,
+                width: 10,
+                height: 10,
+                $container: nodeAttribute,
+                $type: ast.Dimensions
+            };
+            nodeAttribute.dimensions = dimensions;
+            this.modelState.kdlDiagram.nodeAttributes.push(nodeAttribute);
+        }
+        return nodeAttribute;
+    }
+
     protected createClusterNode(cluster: ast.ClusterNode, graphBuilder: GGraphBuilder): GCompartment {
         const ingressNodes = cluster.ingresses
             .map(id => id.ref)
@@ -78,43 +108,40 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .filter((e): e is ast.ServiceNode => e !== undefined)
             .map(service => this.createServiceNode(service));
 
+        const clusterAttributes = this.findNodeAttribute(cluster);
         const builder = ClusterNode.builder()
             .type(ModelTypes.CLUSTER)
             .name(cluster.name)
             .id(cluster.id)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
-                x: cluster.dimensions ? cluster.dimensions.x : Point.ORIGIN.x,
-                y: cluster.dimensions ? cluster.dimensions.y : Point.ORIGIN.y
+                x: clusterAttributes.dimensions.x,
+                y: clusterAttributes.dimensions.y
             })
+            .addLayoutOptions({ prefWidth: clusterAttributes.dimensions.width, prefHeight: clusterAttributes.dimensions.height })
             .children()
             .addIngressNodes(ingressNodes)
             .addPodNodes(podNodes)
             .addServiceNodes(serviceNodes);
 
-        if (cluster.dimensions?.width && cluster.dimensions?.height) {
-            builder.addLayoutOptions({ prefWidth: cluster.dimensions.width, prefHeight: cluster.dimensions.height });
-        }
-
         return builder.build();
     }
 
     protected createIngressNode(ingress: ast.IngressNode, graphBuilder: GGraphBuilder): GCompartment {
+        const ingressAttributes = this.findNodeAttribute(ingress);
         const builder = IngressNode.builder()
             .type(ModelTypes.INGRESS)
             .name(ingress.name)
             .host(ingress.host)
             .id(ingress.id)
             .position({
-                x: ingress.dimensions ? ingress.dimensions.x : Point.ORIGIN.x,
-                y: ingress.dimensions ? ingress.dimensions.y : Point.ORIGIN.y
+                x: ingressAttributes.dimensions.x,
+                y: ingressAttributes.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: ingressAttributes.dimensions.width,
+                prefHeight: ingressAttributes.dimensions.height
             });
-        if (ingress.dimensions?.width && ingress.dimensions?.height) {
-            builder.addLayoutOptions({
-                prefWidth: ingress.dimensions.width,
-                prefHeight: ingress.dimensions.height
-            });
-        }
         builder.children();
 
         return builder.build();
@@ -128,74 +155,72 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
         const portNodes = pod.ports.map(port => this.createPortNode(port));
 
+        const podAttributes = this.findNodeAttribute(pod);
         const builder = PodNode.builder()
             .type(ModelTypes.POD)
             .name(pod.name)
             .id(pod.id)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
-                x: pod.dimensions ? pod.dimensions.x : Point.ORIGIN.x,
-                y: pod.dimensions ? pod.dimensions.y : Point.ORIGIN.y
+                x: podAttributes.dimensions.x,
+                y: podAttributes.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: podAttributes.dimensions.width,
+                prefHeight: podAttributes.dimensions.height
             })
             .children()
             .addContainerNodes(containerNodes)
             .addPortNodes(portNodes);
 
-        if (pod.dimensions?.width && pod.dimensions?.height) {
-            builder.addLayoutOptions({
-                prefWidth: pod.dimensions.width,
-                prefHeight: pod.dimensions.height
-            });
-        }
         return builder.build();
     }
 
     protected createServiceNode(service: ast.ServiceNode): GCompartment {
         const portNodes = service.ports.map(port => this.createPortNode(port));
-
+        const serviceAttributes = this.findNodeAttribute(service);
         const builder = ServiceNode.builder()
             .type(ModelTypes.SERVICE)
             .name(service.name)
             .id(service.id)
             .addArgs(ArgsUtil.cornerRadius(50))
             .position({
-                x: service.dimensions ? service.dimensions.x : Point.ORIGIN.x,
-                y: service.dimensions ? service.dimensions.y : Point.ORIGIN.y
+                x: serviceAttributes.dimensions.x,
+                y: serviceAttributes.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: serviceAttributes.dimensions.width,
+                prefHeight: serviceAttributes.dimensions.height
             })
             .children()
             .addPortNodes(portNodes);
 
-        if (service.dimensions?.width && service.dimensions?.height) {
-            builder.addLayoutOptions({
-                prefWidth: service.dimensions.width,
-                prefHeight: service.dimensions.height
-            });
-        }
         return builder.build();
     }
 
     protected createContainerNode(container: ast.ContainerNode): GCompartment {
+        const containerAttributes = this.findNodeAttribute(container);
+
         const builder = ContainerNode.builder()
             .type(ModelTypes.CONTAINER)
             .name(container.name)
             .id(container.id)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
-                x: container.dimensions ? container.dimensions.x : Point.ORIGIN.x,
-                y: container.dimensions ? container.dimensions.y : Point.ORIGIN.y
+                x: containerAttributes.dimensions.x,
+                y: containerAttributes.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: containerAttributes.dimensions.width,
+                prefHeight: containerAttributes.dimensions.height
             })
             .children();
-
-        if (container.dimensions?.width && container.dimensions?.height) {
-            builder.addLayoutOptions({
-                prefWidth: container.dimensions.width,
-                prefHeight: container.dimensions.height
-            });
-        }
         return builder.build();
     }
 
     protected createPortNode(port: ast.PortNode): GCompartment {
+        const portAttributes = this.findNodeAttribute(port);
+
         const builder = PortNode.builder()
             .type(ModelTypes.PORT)
             .name(port.name)
@@ -203,17 +228,14 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .id(port.id)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
-                x: port.dimensions ? port.dimensions.x : Point.ORIGIN.x,
-                y: port.dimensions ? port.dimensions.y : Point.ORIGIN.y
+                x: portAttributes.dimensions.x,
+                y: portAttributes.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: portAttributes.dimensions.width,
+                prefHeight: portAttributes.dimensions.height
             })
             .children();
-
-        if (port.dimensions?.height && port.dimensions?.width) {
-            builder.addLayoutOptions({
-                prefWidth: port.dimensions.width,
-                prefHeight: port.dimensions.height
-            });
-        }
         return builder.build();
     }
 }

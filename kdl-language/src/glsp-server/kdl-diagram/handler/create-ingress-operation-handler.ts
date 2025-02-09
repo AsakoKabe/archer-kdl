@@ -2,7 +2,6 @@
  * Copyright (c) 2024 CrossBreeze.
  ********************************************************************************/
 import {
-    Action,
     ActionDispatcher,
     Command,
     CreateNodeOperation,
@@ -27,40 +26,55 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
     @inject(ActionDispatcher) protected actionDispatcher!: ActionDispatcher;
 
     override createCommand(operation: CreateNodeOperation): MaybePromise<Command | undefined> {
-        return new CrossModelCommand(this.modelState, () => this.createNode(operation));
+        return new CrossModelCommand(this.modelState, () => this.createIngress(operation));
     }
 
-    protected async createNode(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+    protected async createIngress(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
         if (!operation.containerId) {
             throw new GLSPServerError("Ingress can't be outside cluster");
         }
-        const container = this.modelState.kdlDiagram;
+        const kdlDiagram = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
+        const ingress = this.createIngressNode(kdlDiagram);
 
-        const ingress: ast.IngressNode = {
+        this.addNodeAttribute(kdlDiagram, ingress, location);
+        kdlDiagram.ingresses.push(ingress);
+
+        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
+        if (ast.isClusterNode(cluster)) {
+            cluster.ingresses.push({ ref: ingress, $refText: this.modelState.idProvider.getLocalId(ingress) || ingress.id || '' });
+        }
+    }
+
+    private createIngressNode(container: ast.KDLDiagram): ast.IngressNode {
+        return {
             $type: ast.IngressNode,
             $container: container,
             id: 'IngressNode' + this.modelState.kdlDiagram.ingresses.length,
             name: 'IngressNode' + this.modelState.kdlDiagram.ingresses.length,
             host: 'localhost',
-            links: [],
+            links: []
         };
-        ingress.dimensions = {
+    }
+    private addNodeAttribute(kdlDiagram: ast.KDLDiagram, ingress: ast.IngressNode, location: Point) {
+        const attribute: ast.NodeAttribute = {
+            $type: ast.NodeAttribute,
+            $container: kdlDiagram,
+            nodeID: {
+                $refText: this.modelState.idProvider.getLocalId(ingress) || ingress.id || '',
+                ref: ingress
+            },
+            dimensions: {} as ast.Dimensions
+        };
+        const dimensions: ast.Dimensions = {
             x: location.x,
             y: location.y,
             width: 10,
             height: 10,
-            $container: ingress,
+            $container: attribute,
             $type: ast.Dimensions
         };
-        container.ingresses.push(ingress);
-        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isClusterNode(cluster)) {
-            cluster.ingresses.push({ ref: ingress, $refText: this.modelState.idProvider.getLocalId(ingress) || ingress.id || '' });
-        }
-        this.actionDispatcher.dispatchAfterNextUpdate({
-            kind: 'EditLabel',
-            labelId: `${this.modelState.index.createId(ingress)}_label`
-        } as Action);
+        attribute.dimensions = dimensions;
+        kdlDiagram.nodeAttributes.push(attribute);
     }
 }
