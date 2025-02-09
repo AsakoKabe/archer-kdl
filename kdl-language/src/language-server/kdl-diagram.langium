@@ -2,53 +2,74 @@ import 'terminals'
 
 // Diagram definition
 KDLDiagram:
-    ('kdlDiagram' | 'diagram') ':' 
-    INDENT
-        'id' ':' id=ID
-        ('name' ':'  name=STRING)
-        (
+    'kdlDiagram' ':' 
+        INDENT
+            'id' ':' id=ID
+            ('name' ':'  name=STRING)
             (
-                'clusters' ':'
-                INDENT 
-                    (LIST_ITEM clusters+=ClusterNode)+
-                DEDENT
-            ) &
-            (
-                'ingresses' ':'
-                INDENT 
-                    (LIST_ITEM ingresses+=IngressNode)+
-                DEDENT
-            ) &
-            (
-                'services' ':'
-                INDENT 
-                    (LIST_ITEM services+=ServiceNode)+
-                DEDENT
-            ) &
-            (
-                'pods' ':'
-                INDENT 
-                    (LIST_ITEM pods+=PodNode)+
-                DEDENT
-            ) & 
-            (
-                'containers' ':'
-                INDENT 
-                    (LIST_ITEM containers+=ContainerNode)+
+                'model' ':' 
+                INDENT
+                    model=Model
                 DEDENT
             )
-        )?
-        ('nodeAttributes' ':' 
-            INDENT
-                (LIST_ITEM nodeAttributes+=NodeAttribute)+
+
+            (
+                'diagram' ':' 
+                INDENT
+                    diagram=Diagram
+                DEDENT
+            )
+        DEDENT
+;
+
+Model:
+    (
+        (
+            'clusters' ':'
+            INDENT 
+                (LIST_ITEM clusters+=ClusterNode)+
             DEDENT
-        )?
-        ('edgeAttributes' ':' 
-            INDENT
-                (LIST_ITEM edgeAttributes+=EdgeAttribute)+
+        ) &
+        (
+            'ingresses' ':'
+            INDENT 
+                (LIST_ITEM ingresses+=IngressNode)+
             DEDENT
-        )?
-    DEDENT
+        ) &
+        (
+            'services' ':'
+            INDENT 
+                (LIST_ITEM services+=ServiceNode)+
+            DEDENT
+        ) &
+        (
+            'pods' ':'
+            INDENT 
+                (LIST_ITEM pods+=PodNode)+
+            DEDENT
+        ) & 
+        (
+            'containers' ':'
+            INDENT 
+                (LIST_ITEM containers+=ContainerNode)+
+            DEDENT
+        )
+    )?
+;
+
+Diagram:
+    (
+        'nodeAttributes' ':' 
+        INDENT
+            (LIST_ITEM nodeAttributes+=NodeAttribute)+
+        DEDENT
+    )?
+    ('edgeAttributes' ':' 
+        INDENT
+            (LIST_ITEM edgeAttributes+=EdgeAttribute)+
+        DEDENT
+    )?
+
 ;
 
 ClusterNode:

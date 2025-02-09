@@ -34,15 +34,15 @@ export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOpera
         const cluster = this.createClusterNode(kdlDiagram);
 
         this.createNodeAttribute(kdlDiagram, cluster, location);
-        kdlDiagram.clusters.push(cluster);
+        kdlDiagram.model.clusters.push(cluster);
     }
 
     private createClusterNode(kdlDiagram: ast.KDLDiagram): ast.ClusterNode {
         return {
             $type: ast.ClusterNode,
-            $container: kdlDiagram,
-            id: 'ClusterNode' + this.modelState.kdlDiagram.clusters.length,
-            name: 'ClusterNode' + this.modelState.kdlDiagram.clusters.length,
+            $container: kdlDiagram.model,
+            id: 'ClusterNode' + kdlDiagram.model.clusters.length,
+            name: 'ClusterNode' + kdlDiagram.model.clusters.length,
             ingresses: [],
             pods: [],
             services: []
@@ -51,7 +51,7 @@ export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOpera
     private createNodeAttribute(kdlDiagram: ast.KDLDiagram, cluster: ast.ClusterNode, location: Point) {
         const attribute: ast.NodeAttribute = {
             $type: ast.NodeAttribute,
-            $container: kdlDiagram,
+            $container: kdlDiagram.diagram,
             nodeID: {
                 $refText: this.modelState.idProvider.getLocalId(cluster) || cluster.id || '',
                 ref: cluster
@@ -67,6 +67,6 @@ export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOpera
             $type: ast.Dimensions
         };
         attribute.dimensions = dimensions;
-        kdlDiagram.nodeAttributes.push(attribute);
+        kdlDiagram.diagram.nodeAttributes.push(attribute);
     }
 }

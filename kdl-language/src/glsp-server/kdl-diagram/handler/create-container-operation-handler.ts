@@ -38,7 +38,7 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
         const containerNode = this.createContainerNode(kdlDiagram);
 
         this.setNodeAttribute(kdlDiagram, containerNode, location);
-        kdlDiagram.containers.push(containerNode);
+        kdlDiagram.model.containers.push(containerNode);
 
         const pod = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isPodNode(pod)) {
@@ -46,12 +46,12 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
         }
     }
 
-    protected createContainerNode(container: ast.KDLDiagram): ast.ContainerNode {
+    protected createContainerNode(kdlDiagram: ast.KDLDiagram): ast.ContainerNode {
         return {
             $type: ast.ContainerNode,
-            $container: container,
-            id: 'ContainerNode' + this.modelState.kdlDiagram.containers.length,
-            name: 'ContainerNode' + this.modelState.kdlDiagram.containers.length,
+            $container: kdlDiagram.model,
+            id: 'ContainerNode' + kdlDiagram.model.containers.length,
+            name: 'ContainerNode' + kdlDiagram.model.containers.length,
             links: []
         };
     }
@@ -59,7 +59,7 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
     private setNodeAttribute(kdlDiagram: ast.KDLDiagram, containerNode: ast.ContainerNode, location: Point) {
         const attribute: ast.NodeAttribute = {
             $type: ast.NodeAttribute,
-            $container: kdlDiagram,
+            $container: kdlDiagram.diagram,
             nodeID: {
                 $refText: this.modelState.idProvider.getLocalId(containerNode) || containerNode.id || '',
                 ref: containerNode
@@ -75,6 +75,6 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
             $type: ast.Dimensions
         };
         attribute.dimensions = dimensions;
-        kdlDiagram.nodeAttributes.push(attribute);
+        kdlDiagram.diagram.nodeAttributes.push(attribute);
     }
 }

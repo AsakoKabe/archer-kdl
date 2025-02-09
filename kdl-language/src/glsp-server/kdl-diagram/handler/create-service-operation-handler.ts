@@ -38,7 +38,7 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
         const service = this.createServiceNode(kdlDiagram);
 
         this.createNodeAttribute(kdlDiagram, service, location);
-        kdlDiagram.services.push(service);
+        kdlDiagram.model.services.push(service);
 
         const cluster = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isClusterNode(cluster)) {
@@ -46,12 +46,12 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
         }
     }
 
-    private createServiceNode(container: ast.KDLDiagram): ast.ServiceNode {
+    private createServiceNode(kdlDiagram: ast.KDLDiagram): ast.ServiceNode {
         return {
             $type: ast.ServiceNode,
-            $container: container,
-            id: 'ServiceNode' + this.modelState.kdlDiagram.services.length,
-            name: 'ServiceNode' + this.modelState.kdlDiagram.services.length,
+            $container: kdlDiagram.model,
+            id: 'ServiceNode' + kdlDiagram.model.services.length,
+            name: 'ServiceNode' + kdlDiagram.model.services.length,
             ports: [],
             links: []
         };
@@ -60,7 +60,7 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
     private createNodeAttribute(kdlDiagram: ast.KDLDiagram, service: ast.ServiceNode, location: Point) {
         const attribute: ast.NodeAttribute = {
             $type: ast.NodeAttribute,
-            $container: kdlDiagram,
+            $container: kdlDiagram.diagram,
             nodeID: {
                 $refText: this.modelState.idProvider.getLocalId(service) || service.id || '',
                 ref: service
@@ -76,6 +76,6 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
             $type: ast.Dimensions
         };
         attribute.dimensions = dimensions;
-        kdlDiagram.nodeAttributes.push(attribute);
+        kdlDiagram.diagram.nodeAttributes.push(attribute);
     }
 }

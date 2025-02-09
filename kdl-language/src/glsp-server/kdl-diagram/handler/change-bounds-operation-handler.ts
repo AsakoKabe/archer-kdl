@@ -19,7 +19,7 @@ export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler
         operation.newBounds.forEach(elementAndBounds => {
             const node = this.modelState.index.findSemanticElement(elementAndBounds.elementId);
             const nodeAttribute = 
-                this.modelState.kdlDiagram.nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.ref === node);
+                this.modelState.kdlDiagram.diagram.nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.ref === node);
 
             if (nodeAttribute) {
                 nodeAttribute.dimensions.x = elementAndBounds.newPosition?.x || nodeAttribute.dimensions.x;

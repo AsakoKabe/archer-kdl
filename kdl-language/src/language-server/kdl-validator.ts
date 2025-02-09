@@ -4,10 +4,7 @@
 import { ModelFileExtensions } from '@kdl/protocol';
 import { AstNode, UriUtils, ValidationAcceptor, ValidationChecks } from 'langium';
 import { Diagnostic } from 'vscode-languageserver-protocol';
-import {
-    isKDLDiagram,
-    KDLAstType,
-} from './generated/ast.js';
+import { isKDLDiagram, KDLAstType } from './generated/ast.js';
 import type { KDLServices } from './kdl-module.js';
 import { ID_PROPERTY, IdentifiableAstNode } from './kdl-naming.js';
 import { findDocument, isSemanticRoot } from './util/ast-util.js';
@@ -36,7 +33,7 @@ export function registerValidationChecks(services: KDLServices): void {
     const validator = services.validation.CrossModelValidator;
 
     const checks: ValidationChecks<KDLAstType> = {
-        AstNode: validator.checkNode,
+        AstNode: validator.checkNode
     };
     registry.register(checks, validator);
 }
@@ -100,7 +97,19 @@ export class KDLValidator {
 
     protected checkUniqueNodeId(node: AstNode, accept: ValidationAcceptor): void {
         if (isKDLDiagram(node)) {
-            this.markDuplicateIds(node.clusters, accept);
+            this.markDuplicateIds(
+                Array.of<IdentifiableAstNode>(
+                    // ...node.model.clusters,
+                    // ...node.model.ingresses,
+                    // ...node.model.services,
+                    // ...node.model.services.flatMap(s => s.ports),
+                    // ...node.model.pods,
+                    // ...node.model.pods.flatMap(p => p.ports),
+                    // ...node.model.containers,
+                    // ...node.diagram.edgeAttributes
+                ),
+                accept
+            );
         }
     }
 

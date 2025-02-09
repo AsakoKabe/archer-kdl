@@ -37,7 +37,7 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         const pod = this.createPodNode(kdlDiagram);
 
         this.createNodeAttribute(kdlDiagram, pod, location);
-        kdlDiagram.pods.push(pod);
+        kdlDiagram.model.pods.push(pod);
 
         const cluster = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isClusterNode(cluster)) {
@@ -45,12 +45,12 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         }
     }
 
-    private createPodNode(container: ast.KDLDiagram): ast.PodNode {
+    private createPodNode(kdlDiagram: ast.KDLDiagram): ast.PodNode {
         return {
             $type: ast.PodNode,
-            $container: container,
-            id: 'PodNode' + this.modelState.kdlDiagram.pods.length,
-            name: 'PodNode' + this.modelState.kdlDiagram.pods.length,
+            $container: kdlDiagram.model,
+            id: 'PodNode' + kdlDiagram.model.pods.length,
+            name: 'PodNode' + kdlDiagram.model.pods.length,
             containers: [],
             ports: []
         };
@@ -59,7 +59,7 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
     private createNodeAttribute(kdlDiagram: ast.KDLDiagram, pod: ast.PodNode, location: Point) {
         const attribute: ast.NodeAttribute = {
             $type: ast.NodeAttribute,
-            $container: kdlDiagram,
+            $container: kdlDiagram.diagram,
             nodeID: {
                 $refText: this.modelState.idProvider.getLocalId(pod) || pod.id || '',
                 ref: pod
@@ -75,6 +75,6 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
             $type: ast.Dimensions
         };
         attribute.dimensions = dimensions;
-        kdlDiagram.nodeAttributes.push(attribute);
+        kdlDiagram.diagram.nodeAttributes.push(attribute);
     }
 }

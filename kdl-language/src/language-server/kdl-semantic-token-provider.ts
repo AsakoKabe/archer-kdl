@@ -1,12 +1,16 @@
 import { AstNode } from 'langium';
 import { AbstractSemanticTokenProvider, SemanticTokenAcceptor } from 'langium/lsp';
 import { SemanticTokenTypes } from 'vscode-languageserver-protocol';
-import { isClusterNode, isContainerNode, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram, isNodeAttribute, isPodNode, isPortNode, isServiceNode } from './generated/ast.js';
+import { isClusterNode, isContainerNode, isDiagram, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram, isModel, isNodeAttribute, isPodNode, isPortNode, isServiceNode } from './generated/ast.js';
 
 export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
     protected highlightElement(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         if (isKDLDiagram(node)) {
             this.highlightKDLDiagram(node, acceptor);
+        } else if (isModel(node)) {
+            this.highlightModelNode(node, acceptor);
+        } else if (isDiagram(node)){
+            this.highlightDiagramNode(node, acceptor);
         } else if (isClusterNode(node)) {
             this.highlightClusterNode(node, acceptor);
         } else if (isIngressNode(node)) {
@@ -27,7 +31,18 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             this.highlightEdgeAttribute(node, acceptor);
         }
     }
-
+    private highlightDiagramNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
+        acceptor({
+            node,
+            keyword: 'nodeAttributes',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            keyword: 'edgeAttributes',
+            type: SemanticTokenTypes.keyword
+        });
+    }
     private highlightKDLDiagram(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         acceptor({
             node,
@@ -59,6 +74,19 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             property: 'name',
             type: SemanticTokenTypes.string
         });
+        acceptor({
+            node,
+            keyword: 'model',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            keyword: 'diagram',
+            type: SemanticTokenTypes.keyword
+        });
+    }
+
+    private highlightModelNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         acceptor({
             node,
             keyword: 'clusters',
@@ -95,6 +123,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             type: SemanticTokenTypes.class
         });
     }
+
 
     private highlightClusterNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         acceptor({

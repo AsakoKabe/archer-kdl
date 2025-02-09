@@ -1,3 +1,48 @@
 kdlDiagram:
     id: example
-    name: "123"
+    name: "example"
+    model:
+        clusters:
+          - id: Cluster0
+            name: "Cluster0"
+            ingresses:
+              - example.IngressNode0
+            services:
+              - example.ServiceNode0
+        ingresses:
+          - id: IngressNode0
+            name: "IngressNode0"
+            host: "localhost"
+        services:
+          - id: ServiceNode0
+            name: "ServiceNode0"
+            ports:
+              - id: ServiceNodePort0
+                name: "PortNode0"
+                number: 8080
+    diagram:
+        nodeAttributes:
+          - nodeID: example.Cluster0
+            dimensions:
+                x: 3.7266688560534362
+                y: 162.834325804296
+                width: 451.66327756988323
+                height: 403.5094545159729
+          - nodeID: example.IngressNode0
+            dimensions:
+                x: 8.699328102510265
+                y: -28.873439431176323
+                width: 100.93929290771484
+                height: 51.183509826660156
+          - nodeID: example.ServiceNode0
+            dimensions:
+                x: 17.51772707720977
+                y: 126.74590767628308
+                width: 101.65625
+                height: 76
+          - nodeID: example.ServiceNode0.ServiceNodePort0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10

@@ -58,7 +58,7 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
     private createNodeAttribute(kdlDiagram: ast.KDLDiagram, port: ast.PortNode, location: Point) {
         const attribute: ast.NodeAttribute = {
             $type: ast.NodeAttribute,
-            $container: kdlDiagram,
+            $container: kdlDiagram.diagram,
             nodeID: {
                 $refText: this.modelState.idProvider.getLocalId(port) || port.id || '',
                 ref: port
@@ -74,6 +74,6 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
             $type: ast.Dimensions
         };
         attribute.dimensions = dimensions;
-        kdlDiagram.nodeAttributes.push(attribute);
+        kdlDiagram.diagram.nodeAttributes.push(attribute);
     }
 }

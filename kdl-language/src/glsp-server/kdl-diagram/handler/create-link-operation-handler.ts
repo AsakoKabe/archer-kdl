@@ -42,8 +42,8 @@ export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperatio
         if ((isIngressNode(sourceNode) || isContainerNode(sourceNode) || isServiceNode(sourceNode)) && isPortNode(targetNode)) {
             sourceNode.links.push({ ref: targetNode, $refText: operation.targetElementId });
 
-            this.modelState.kdlDiagram.edgeAttributes.push({
-                $container: this.modelState.kdlDiagram,
+            this.modelState.kdlDiagram.diagram.edgeAttributes.push({
+                $container: this.modelState.kdlDiagram.diagram,
                 $type: ast.EdgeAttribute,
                 id: createEdgeID(sourceID, targetID),
                 sourceID: {
