@@ -24,7 +24,7 @@ export class CrossModelIndex extends GModelIndex {
    }
 
    protected doFindId(node?: AstNode): string | undefined {
-      return this.services.language.references.IdProvider.getNodeId(node);
+      return this.services.language.references.IdProvider.getLocalId(node);
    }
 
    createId(node?: AstNode): string {

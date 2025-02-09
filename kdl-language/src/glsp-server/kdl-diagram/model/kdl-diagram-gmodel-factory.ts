@@ -12,7 +12,7 @@ import { PodNode } from './graph-extension/pod-node.js';
 import { ServiceNode } from './graph-extension/service-node.js';
 import { ContainerNode } from './graph-extension/container-node.js';
 import { PortNode } from './graph-extension/port-node.js';
-import { KDLNode } from './graph-extension/utils.js';
+import { createEdgeID, KDLNode } from './graph-extension/utils.js';
 
 /**
  * Custom factory that translates the semantic diagram root from Langium to a GLSP graph.
@@ -31,49 +31,79 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         }
     }
 
-    protected createLinkEdge(sourceID: string, targetID: string): GEdge {
-        return (
-            GEdge.builder()
-                .id(sourceID + '$' + targetID) // use to change routing points
-                .addCssClass('link')
-                .sourceId(sourceID)
-                .targetId(targetID)
-                // .addRoutingPoints(link.routingPoints)
-                .build()
-        );
-    }
-
     protected createGraph(): GGraph | undefined {
         const diagramRoot = this.modelState.kdlDiagram;
         if (!diagramRoot) {
             return;
         }
         const graphBuilder = GGraph.builder().id(this.modelState.semanticUri);
-        diagramRoot.clusters.map(cluster => this.createClusterNode(cluster, graphBuilder)).forEach(cluster => graphBuilder.add(cluster));
-
-        diagramRoot.ingresses.map(ingress =>
-            ingress.links.map(link => this.createLinkEdge(ingress.id, link.ref!.id)).forEach(link => graphBuilder.add(link))
-        );
-        diagramRoot.services.map(service =>
-            service.links.map(link => this.createLinkEdge(service.id, link.ref!.id)).forEach(link => graphBuilder.add(link))
-        );
-        diagramRoot.containers.map(container =>
-            container.links.map(link => this.createLinkEdge(container.id, link.ref!.id)).forEach(link => graphBuilder.add(link))
-        );
+        this.addClustersToGraph(diagramRoot, graphBuilder);
+        this.addLinksToGraph(diagramRoot, graphBuilder);
         return graphBuilder.build();
     }
 
-    protected findNodeAttribute(node: KDLNode): ast.NodeAttribute {
+    protected addClustersToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
+        diagramRoot.clusters
+            .map(cluster => this.createClusterNode(cluster, graphBuilder))
+            .forEach(cluster => graphBuilder.add(cluster));
+    }
+
+    protected addLinksToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
+        const links = this.collectLinks(diagramRoot);
+        links.map(link => this.createLinkEdge(link)).forEach(edge => graphBuilder.add(edge));
+    }
+
+    protected collectLinks(diagramRoot: ast.KDLDiagram): { sourceID: string; targetID: string }[] {
+        return [
+            ...diagramRoot.ingresses.flatMap(ingress =>
+                ingress.links.map(link => ({ sourceID: this.modelState.idProvider.getLocalId(ingress)!, targetID: link.$refText}))
+            ),
+            ...diagramRoot.services.flatMap(service =>
+                service.links.map(link => ({ sourceID: this.modelState.idProvider.getLocalId(service)!, targetID: link.$refText }))
+            ),
+            ...diagramRoot.containers.flatMap(container =>
+                container.links.map(link => ({ sourceID: this.modelState.idProvider.getLocalId(container)!, targetID: link.$refText }))
+            )
+        ]
+    }
+
+    protected createLinkEdge(link: { sourceID: string; targetID: string }): GEdge {
+        const edgeAttribute = this.findOrCreateEdgeAttribute(link.sourceID, link.targetID);
+        return GEdge.builder()
+            .id(this.modelState.idProvider.getLocalId(edgeAttribute)!)
+            .addCssClass('link')
+            .sourceId(link.sourceID)
+            .targetId(link.targetID)
+            // .addRoutingPoints(edgeAttribute.points)
+            .build();
+    }
+
+    protected findOrCreateEdgeAttribute(sourceID: string, targetID: string): ast.EdgeAttribute {
+        const edgeAttributes = this.modelState.kdlDiagram.edgeAttributes;
+        let edgeAttribute = edgeAttributes.find(edgeAttribute => edgeAttribute.id === createEdgeID(sourceID, targetID));
+        if (!edgeAttribute) {
+            edgeAttribute = {
+                $type: ast.EdgeAttribute,
+                $container: this.modelState.kdlDiagram,
+                id: createEdgeID(sourceID, targetID),
+                sourceID: { $refText: sourceID},
+                targetID: { $refText: targetID}
+            };
+            this.modelState.kdlDiagram.edgeAttributes.push(edgeAttribute);
+        }
+        return edgeAttribute;
+    }
+
+    protected findOrCreateNodeAttribute(node: KDLNode): ast.NodeAttribute {
         const nodeAttributes = this.modelState.kdlDiagram.nodeAttributes;
-        const nodeLocalID = this.modelState.idProvider.getLocalId(node);
-        let nodeAttribute = 
-        nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === nodeLocalID);
+        const nodeLocalID = this.modelState.idProvider.getLocalId(node)!;
+        let nodeAttribute = nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === nodeLocalID);
         if (!nodeAttribute) {
             nodeAttribute = {
                 $type: ast.NodeAttribute,
                 $container: this.modelState.kdlDiagram,
                 nodeID: {
-                    $refText: this.modelState.idProvider.getLocalId(node) || node.id || '',
+                    $refText: nodeLocalID,
                     ref: node
                 },
                 dimensions: {} as ast.Dimensions
@@ -108,11 +138,11 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .filter((e): e is ast.ServiceNode => e !== undefined)
             .map(service => this.createServiceNode(service));
 
-        const clusterAttributes = this.findNodeAttribute(cluster);
+        const clusterAttributes = this.findOrCreateNodeAttribute(cluster);
         const builder = ClusterNode.builder()
             .type(ModelTypes.CLUSTER)
             .name(cluster.name)
-            .id(cluster.id)
+            .id(this.modelState.idProvider.getLocalId(cluster)!)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: clusterAttributes.dimensions.x,
@@ -128,12 +158,12 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     }
 
     protected createIngressNode(ingress: ast.IngressNode, graphBuilder: GGraphBuilder): GCompartment {
-        const ingressAttributes = this.findNodeAttribute(ingress);
+        const ingressAttributes = this.findOrCreateNodeAttribute(ingress);
         const builder = IngressNode.builder()
             .type(ModelTypes.INGRESS)
             .name(ingress.name)
             .host(ingress.host)
-            .id(ingress.id)
+            .id(this.modelState.idProvider.getLocalId(ingress)!)
             .position({
                 x: ingressAttributes.dimensions.x,
                 y: ingressAttributes.dimensions.y
@@ -155,11 +185,11 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
         const portNodes = pod.ports.map(port => this.createPortNode(port));
 
-        const podAttributes = this.findNodeAttribute(pod);
+        const podAttributes = this.findOrCreateNodeAttribute(pod);
         const builder = PodNode.builder()
             .type(ModelTypes.POD)
             .name(pod.name)
-            .id(pod.id)
+            .id(this.modelState.idProvider.getLocalId(pod)!)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: podAttributes.dimensions.x,
@@ -178,11 +208,11 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected createServiceNode(service: ast.ServiceNode): GCompartment {
         const portNodes = service.ports.map(port => this.createPortNode(port));
-        const serviceAttributes = this.findNodeAttribute(service);
+        const serviceAttributes = this.findOrCreateNodeAttribute(service);
         const builder = ServiceNode.builder()
             .type(ModelTypes.SERVICE)
             .name(service.name)
-            .id(service.id)
+            .id(this.modelState.idProvider.getLocalId(service)!)
             .addArgs(ArgsUtil.cornerRadius(50))
             .position({
                 x: serviceAttributes.dimensions.x,
@@ -199,12 +229,12 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     }
 
     protected createContainerNode(container: ast.ContainerNode): GCompartment {
-        const containerAttributes = this.findNodeAttribute(container);
+        const containerAttributes = this.findOrCreateNodeAttribute(container);
 
         const builder = ContainerNode.builder()
             .type(ModelTypes.CONTAINER)
             .name(container.name)
-            .id(container.id)
+            .id(this.modelState.idProvider.getLocalId(container)!)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: containerAttributes.dimensions.x,
@@ -219,13 +249,13 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     }
 
     protected createPortNode(port: ast.PortNode): GCompartment {
-        const portAttributes = this.findNodeAttribute(port);
+        const portAttributes = this.findOrCreateNodeAttribute(port);
 
         const builder = PortNode.builder()
             .type(ModelTypes.PORT)
             .name(port.name)
             .number(port.number.toString())
-            .id(port.id)
+            .id(this.modelState.idProvider.getLocalId(port)!)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: portAttributes.dimensions.x,

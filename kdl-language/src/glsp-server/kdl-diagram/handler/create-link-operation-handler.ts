@@ -9,11 +9,14 @@ import {
     DefaultTypes,
     GLSPServerError,
     JsonCreateEdgeOperationHandler,
-    ModelState} from '@eclipse-glsp/server';
+    ModelState
+} from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import { isContainerNode, isIngressNode, isPortNode, isServiceNode } from '../../../language-server/generated/ast.js';
+import * as ast from '../../../language-server/generated/ast.js';
+import { createEdgeID } from '../model/graph-extension/utils.js';
 
 @injectable()
 export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperationHandler {
@@ -28,14 +31,30 @@ export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperatio
     }
 
     protected async createEdge(operation: CreateEdgeOperation): Promise<void> {
-        const sourceNode = this.modelState.index.findSemanticElement(operation.sourceElementId);
-        const targetNode = this.modelState.index.findSemanticElement(operation.targetElementId);
+        const sourceID = operation.sourceElementId;
+        const targetID = operation.targetElementId;
+        const sourceNode = this.modelState.index.findSemanticElement(sourceID);
+        const targetNode = this.modelState.index.findSemanticElement(targetID);
         if (!sourceNode || !targetNode) {
             throw new GLSPServerError('Source or target node not found');
         }
 
         if ((isIngressNode(sourceNode) || isContainerNode(sourceNode) || isServiceNode(sourceNode)) && isPortNode(targetNode)) {
-            sourceNode.links.push({ ref: targetNode, $refText: this.modelState.idProvider.getLocalId(targetNode) || targetNode.id || '' });
+            sourceNode.links.push({ ref: targetNode, $refText: operation.targetElementId });
+
+            this.modelState.kdlDiagram.edgeAttributes.push({
+                $container: this.modelState.kdlDiagram,
+                $type: ast.EdgeAttribute,
+                id: createEdgeID(sourceID, targetID),
+                sourceID: {
+                    ref: sourceNode,
+                    $refText: sourceID
+                },
+                targetID: {
+                    ref: targetNode,
+                    $refText: targetID
+                }
+            });
         }
     }
 }

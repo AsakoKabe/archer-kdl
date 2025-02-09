@@ -43,6 +43,11 @@ KDLDiagram:
                 (LIST_ITEM nodeAttributes+=NodeAttribute)+
             DEDENT
         )?
+        ('edgeAttributes' ':' 
+            INDENT
+                (LIST_ITEM edgeAttributes+=EdgeAttribute)+
+            DEDENT
+        )?
     DEDENT
 ;
 
@@ -163,3 +168,15 @@ NodeAttribute:
         DEDENT
     )
 ;
+
+Point:
+    'x' ':' x=NUMBER
+    'y' ':' y=NUMBER
+;
+
+EdgeAttribute:
+    'id' ':' id=ID
+    'sourceID' ':' sourceID=[NodeType:IDReference]
+    'targetID' ':' targetID=[NodeType:IDReference]
+;
+    

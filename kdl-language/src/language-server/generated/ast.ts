@@ -28,6 +28,7 @@ export type KDLKeywordNames =
     | "containers"
     | "diagram"
     | "dimensions"
+    | "edgeAttributes"
     | "height"
     | "host"
     | "id"
@@ -41,6 +42,8 @@ export type KDLKeywordNames =
     | "pods"
     | "ports"
     | "services"
+    | "sourceID"
+    | "targetID"
     | "width"
     | "x"
     | "y";
@@ -119,6 +122,20 @@ export function isDimensions(item: unknown): item is Dimensions {
     return reflection.isInstance(item, Dimensions);
 }
 
+export interface EdgeAttribute extends AstNode {
+    readonly $container: KDLDiagram;
+    readonly $type: 'EdgeAttribute';
+    id: string;
+    sourceID: Reference<NodeType>;
+    targetID: Reference<NodeType>;
+}
+
+export const EdgeAttribute = 'EdgeAttribute';
+
+export function isEdgeAttribute(item: unknown): item is EdgeAttribute {
+    return reflection.isInstance(item, EdgeAttribute);
+}
+
 export interface IngressNode extends AstNode {
     readonly $container: KDLDiagram;
     readonly $type: 'IngressNode';
@@ -139,6 +156,7 @@ export interface KDLDiagram extends AstNode {
     readonly $type: 'KDLDiagram';
     clusters: Array<ClusterNode>;
     containers: Array<ContainerNode>;
+    edgeAttributes: Array<EdgeAttribute>;
     id: string;
     ingresses: Array<IngressNode>;
     name: string;
@@ -192,6 +210,18 @@ export function isPodNode(item: unknown): item is PodNode {
     return reflection.isInstance(item, PodNode);
 }
 
+export interface Point extends AstNode {
+    readonly $type: 'Point';
+    x: number;
+    y: number;
+}
+
+export const Point = 'Point';
+
+export function isPoint(item: unknown): item is Point {
+    return reflection.isInstance(item, Point);
+}
+
 export interface PortNode extends AstNode {
     readonly $container: PodNode | ServiceNode;
     readonly $type: 'PortNode';
@@ -237,12 +267,14 @@ export type KDLAstType = {
     ContainerNode: ContainerNode
     CustomProperty: CustomProperty
     Dimensions: Dimensions
+    EdgeAttribute: EdgeAttribute
     IngressNode: IngressNode
     KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
     NodeAttribute: NodeAttribute
     NodeType: NodeType
     PodNode: PodNode
+    Point: Point
     PortNode: PortNode
     ServiceNode: ServiceNode
     WithCustomProperties: WithCustomProperties
@@ -251,7 +283,7 @@ export type KDLAstType = {
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [ClusterNode, ContainerNode, CustomProperty, Dimensions, IngressNode, KDLDiagram, KDLRoot, NodeAttribute, NodeType, PodNode, PortNode, ServiceNode, WithCustomProperties];
+        return [ClusterNode, ContainerNode, CustomProperty, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -287,6 +319,8 @@ export class KDLAstReflection extends AbstractAstReflection {
             case 'ServiceNode:links': {
                 return PortNode;
             }
+            case 'EdgeAttribute:sourceID':
+            case 'EdgeAttribute:targetID':
             case 'NodeAttribute:nodeID': {
                 return NodeType;
             }
@@ -343,6 +377,16 @@ export class KDLAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case EdgeAttribute: {
+                return {
+                    name: EdgeAttribute,
+                    properties: [
+                        { name: 'id' },
+                        { name: 'sourceID' },
+                        { name: 'targetID' }
+                    ]
+                };
+            }
             case IngressNode: {
                 return {
                     name: IngressNode,
@@ -360,6 +404,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                     properties: [
                         { name: 'clusters', defaultValue: [] },
                         { name: 'containers', defaultValue: [] },
+                        { name: 'edgeAttributes', defaultValue: [] },
                         { name: 'id' },
                         { name: 'ingresses', defaultValue: [] },
                         { name: 'name' },
@@ -394,6 +439,15 @@ export class KDLAstReflection extends AbstractAstReflection {
                         { name: 'id' },
                         { name: 'name' },
                         { name: 'ports', defaultValue: [] }
+                    ]
+                };
+            }
+            case Point: {
+                return {
+                    name: Point,
+                    properties: [
+                        { name: 'x' },
+                        { name: 'y' }
                     ]
                 };
             }

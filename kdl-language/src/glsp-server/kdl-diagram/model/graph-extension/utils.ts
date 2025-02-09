@@ -13,3 +13,6 @@ export function isKDLNode(node: AstNode | unknown): node is ast.ClusterNode | as
 }
 
 export type KDLNode = ast.ClusterNode | ast.PodNode | ast.ServiceNode | ast.IngressNode | ast.PortNode | ast.ContainerNode;
+export function createEdgeID(sourceID: string, targetID: string): string {
+    return `${sourceID}-${targetID}`.replaceAll('.', '_');
+}

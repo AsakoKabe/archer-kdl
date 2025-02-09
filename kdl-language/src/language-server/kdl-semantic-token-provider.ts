@@ -1,7 +1,7 @@
 import { AstNode } from 'langium';
 import { AbstractSemanticTokenProvider, SemanticTokenAcceptor } from 'langium/lsp';
 import { SemanticTokenTypes } from 'vscode-languageserver-protocol';
-import { isClusterNode, isContainerNode, isDimensions, isIngressNode, isKDLDiagram, isNodeAttribute, isPodNode, isPortNode, isServiceNode } from './generated/ast.js';
+import { isClusterNode, isContainerNode, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram, isNodeAttribute, isPodNode, isPortNode, isServiceNode } from './generated/ast.js';
 
 export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
     protected highlightElement(node: AstNode, acceptor: SemanticTokenAcceptor): void {
@@ -23,6 +23,8 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             this.highlightDimensions(node, acceptor);
         } else if (isNodeAttribute(node)) {
             this.highlightNodeAttribute(node, acceptor);
+        } else if (isEdgeAttribute(node)) {
+            this.highlightEdgeAttribute(node, acceptor);
         }
     }
 
@@ -30,7 +32,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'kdlDiagram',
-            type: SemanticTokenTypes.keyword
+            type: SemanticTokenTypes.class
         });
         acceptor({
             node,
@@ -85,6 +87,11 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'nodeAttributes',
+            type: SemanticTokenTypes.class
+        });
+        acceptor({
+            node,
+            keyword: 'edgeAttributes',
             type: SemanticTokenTypes.class
         });
     }
@@ -425,6 +432,39 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             node,
             keyword: 'dimensions',
             type: SemanticTokenTypes.keyword
+        });
+    }
+
+    private highlightEdgeAttribute(node: AstNode, acceptor: SemanticTokenAcceptor): void {
+        acceptor({
+            node,
+            keyword: 'id',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'id',
+            type: SemanticTokenTypes.string
+        });
+        acceptor({
+            node,
+            keyword: 'sourceID',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'sourceID',
+            type: SemanticTokenTypes.parameter
+        });
+        acceptor({
+            node,
+            keyword: 'targetID',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'targetID',
+            type: SemanticTokenTypes.parameter
         });
     }
 }

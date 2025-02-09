@@ -38,9 +38,12 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
             this.deleteContainer(modelElement);
         } else if (ast.isPortNode(modelElement)) {
             this.deletePort(modelElement);
-        };
-        
-        this.modelState.kdlDiagram.nodeAttributes = this.modelState.kdlDiagram.nodeAttributes.filter(nodeAttribute => nodeAttribute.nodeID.$refNode === modelElement);
+        }
+
+        const nodeAttribute = this.modelState.kdlDiagram.nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.ref === modelElement);
+        remove(this.modelState.kdlDiagram.nodeAttributes, nodeAttribute);
+        const edgeAttributes = this.modelState.kdlDiagram.edgeAttributes.filter(edgeAttribute => edgeAttribute.sourceID.ref === modelElement || edgeAttribute.targetID.ref === modelElement);
+        remove(this.modelState.kdlDiagram.edgeAttributes, ...edgeAttributes);
     }
     
     private deleteIngress(ingress: ast.IngressNode): void {

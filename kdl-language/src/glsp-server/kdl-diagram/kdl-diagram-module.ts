@@ -37,7 +37,7 @@ import { KDLDiagramCreateContainerOperationHandler } from './handler/create-cont
 import { KDLDiagramCreatePortOperationHandler } from './handler/create-port-operation-handler.js';
 import { KDLDiagramCreateServiceOperationHandler } from './handler/create-service-operation-handler.js';
 import { KDLDiagramCreateLinkOperationHandler } from './handler/create-link-operation-handler.js';
-import { KDLDiagramChangeRoutingPointsOperation } from './handler/kdl-change-routing-points-handler.js';
+import { KDLDiagramChangeRoutingPointsOperation } from './handler/change-routing-points-handler.js';
 
 /**
  * Provides configuration about our system diagrams.
