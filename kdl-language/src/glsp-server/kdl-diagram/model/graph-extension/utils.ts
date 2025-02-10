@@ -22,15 +22,26 @@ export function createEdgeID(sourceID: string, targetID: string): string {
 }
 
 export function addNodeAttribute(kdlDiagram: ast.KDLDiagram, idProvider: IdProvider, node: KDLNode, location?: Point) {
+    kdlDiagram.diagram.nodeAttributes.push(createNodeAttribute(kdlDiagram, idProvider, node, location));
+}
+
+export function createNodeAttribute(
+    kdlDiagram: ast.KDLDiagram,
+    idProvider: IdProvider,
+    node: KDLNode,
+    location?: Point
+): ast.NodeAttribute {
     const attribute: ast.NodeAttribute = {
         $type: ast.NodeAttribute,
         $container: kdlDiagram.diagram,
+        id: ast.NodeAttribute + kdlDiagram.diagram.nodeAttributes.length,
         nodeID: {
             $refText: idProvider.getLocalId(node) || node.id || '',
             ref: node
         },
         dimensions: {} as ast.Dimensions
     };
+
     const dimensions: ast.Dimensions = {
         x: location ? location.x : Point.ORIGIN.x,
         y: location ? location.y : Point.ORIGIN.y,
@@ -40,11 +51,12 @@ export function addNodeAttribute(kdlDiagram: ast.KDLDiagram, idProvider: IdProvi
         $type: ast.Dimensions
     };
     attribute.dimensions = dimensions;
-    kdlDiagram.diagram.nodeAttributes.push(attribute);
+
+    return attribute;
 }
 
 export function addEdgeAttribute(kdlDiagram: ast.KDLDiagram, sourceID: string, targetID: string, sourceNode: KDLNode, targetNode: KDLNode) {
-   kdlDiagram.diagram.edgeAttributes.push({
+    kdlDiagram.diagram.edgeAttributes.push({
         $container: kdlDiagram.diagram,
         $type: ast.EdgeAttribute,
         id: createEdgeID(sourceID, targetID),
@@ -56,7 +68,7 @@ export function addEdgeAttribute(kdlDiagram: ast.KDLDiagram, sourceID: string, t
             ref: targetNode,
             $refText: targetID
         }
-    })
+    });
 }
 
 export function createClusterNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ClusterNode {

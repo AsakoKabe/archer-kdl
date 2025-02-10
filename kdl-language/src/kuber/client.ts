@@ -15,14 +15,14 @@ export class KuberClient {
         this.k8sNerwokingApi = this.kc.makeApiClient(k8s.NetworkingV1Api);
     }
 
-    public async ping(): Promise<void> {
-        try {
-            const pods = await this.k8sApi.listNamespacedPod({ namespace: 'default' });
-            console.error('Pods: ', pods.items);
-        } catch (err) {
-            console.error(err);
-        }
-    }
+    // public async ping(): Promise<void> {
+    //     try {
+    //         const pods = await this.k8sApi.listNamespacedPod({ namespace: 'default' });
+    //         console.error('Pods: ', pods.items);
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // }
 
     public async getNamespaces(): Promise<string[]> {
         try {

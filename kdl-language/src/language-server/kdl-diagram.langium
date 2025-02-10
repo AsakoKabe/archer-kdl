@@ -181,6 +181,7 @@ Dimensions:
 ;
 
 NodeAttribute:
+    'id' ':' id=ID
     'nodeID' ':' nodeID=[NodeType:IDReference]
     (
         'dimensions' ':' 

@@ -449,6 +449,16 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
     private highlightNodeAttribute(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         acceptor({
             node,
+            keyword: 'id',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'id',
+            type: SemanticTokenTypes.string
+        });
+        acceptor({
+            node,
             keyword: 'nodeID',
             type: SemanticTokenTypes.keyword
         });

@@ -1,7 +1,7 @@
 /********************************************************************************
  * Copyright (c) 2023 CrossBreeze.
  ********************************************************************************/
-import { ArgsUtil, GCompartment, GEdge, GGraph, GGraphBuilder, GModelFactory, ModelState, Point } from '@eclipse-glsp/server';
+import { ArgsUtil, GCompartment, GEdge, GGraph, GGraphBuilder, GModelFactory, ModelState } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
@@ -12,7 +12,7 @@ import { PodNode } from './graph-extension/pod-node.js';
 import { ServiceNode } from './graph-extension/service-node.js';
 import { ContainerNode } from './graph-extension/container-node.js';
 import { PortNode } from './graph-extension/port-node.js';
-import { createEdgeID, KDLNode } from './graph-extension/utils.js';
+import { createEdgeID, createNodeAttribute, KDLNode } from './graph-extension/utils.js';
 
 /**
  * Custom factory that translates the semantic diagram root from Langium to a GLSP graph.
@@ -78,10 +78,6 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected findOrCreateEdgeAttribute(source: KDLNode, sourceID: string, target: KDLNode, targetID: string): ast.EdgeAttribute {
         const edgeAttributes = this.modelState.kdlDiagram.diagram.edgeAttributes;
-        if (!edgeAttributes) {
-            this.modelState.kdlDiagram.diagram.edgeAttributes = [];
-        }
-
         let edgeAttribute = edgeAttributes.find(edgeAttribute => edgeAttribute.id === createEdgeID(sourceID, targetID));
         if (!edgeAttribute) {
             edgeAttribute = {
@@ -91,35 +87,17 @@ export class KDLDiagramGModelFactory implements GModelFactory {
                 sourceID: { $refText: sourceID, ref: source },
                 targetID: { $refText: targetID, ref: target }
             };
-            this.modelState.kdlDiagram.diagram.edgeAttributes.push(edgeAttribute);
+            // this.modelState.kdlDiagram.diagram.edgeAttributes.push(edgeAttribute);
         }
         return edgeAttribute;
     }
 
     protected findOrCreateNodeAttribute(node: KDLNode): ast.NodeAttribute {
         const nodeAttributes = this.modelState.kdlDiagram.diagram.nodeAttributes;
-        const nodeLocalID = this.modelState.idProvider.getLocalId(node)!;
-        let nodeAttribute = nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.ref === node);
+        let nodeAttribute = nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(node));
         if (!nodeAttribute) {
-            nodeAttribute = {
-                $type: ast.NodeAttribute,
-                $container: this.modelState.kdlDiagram.diagram,
-                nodeID: {
-                    $refText: nodeLocalID,
-                    ref: node
-                },
-                dimensions: {} as ast.Dimensions
-            };
-            const dimensions: ast.Dimensions = {
-                x: Point.ORIGIN.x,
-                y: Point.ORIGIN.y,
-                width: 10,
-                height: 10,
-                $container: nodeAttribute,
-                $type: ast.Dimensions
-            };
-            nodeAttribute.dimensions = dimensions;
-            this.modelState.kdlDiagram.diagram.nodeAttributes.push(nodeAttribute);
+            nodeAttribute = createNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, node);
+            // this.modelState.kdlDiagram.diagram.nodeAttributes.push(nodeAttribute);
         }
         return nodeAttribute;
     }

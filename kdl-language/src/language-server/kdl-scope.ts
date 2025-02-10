@@ -89,7 +89,6 @@ export class KDLScopeComputation extends DefaultScopeComputation {
         let description: AstNodeDescription | undefined;
         const localId = this.idProvider.getLocalId(node);
         if (localId) {
-            console.error(node);
             description = this.descriptions.createDescription(node, localId, document);
             exports.push(new PackageLocalAstNodeDescription(packageId, localId, description));
         }

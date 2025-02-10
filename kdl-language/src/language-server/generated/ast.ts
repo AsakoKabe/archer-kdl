@@ -211,6 +211,7 @@ export interface NodeAttribute extends AstNode {
     readonly $container: Diagram;
     readonly $type: 'NodeAttribute';
     dimensions: Dimensions;
+    id: string;
     nodeID: Reference<NodeType>;
 }
 
@@ -470,6 +471,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                     name: NodeAttribute,
                     properties: [
                         { name: 'dimensions' },
+                        { name: 'id' },
                         { name: 'nodeID' }
                     ]
                 };
