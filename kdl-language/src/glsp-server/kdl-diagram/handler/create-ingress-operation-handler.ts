@@ -15,6 +15,7 @@ import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
+import { addNodeAttribute, createIngressNode } from '../model/graph-extension/utils.js';
 import { KDLModelState } from '../model/kdl-state.js';
 
 @injectable()
@@ -35,46 +36,14 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
         }
         const kdlDiagram = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
-        const ingress = this.createIngressNode(kdlDiagram);
+        const ingress = createIngressNode(kdlDiagram);
 
-        this.addNodeAttribute(kdlDiagram, ingress, location);
+        addNodeAttribute(kdlDiagram, this.modelState.idProvider, ingress, location);
         kdlDiagram.model.ingresses.push(ingress);
 
         const cluster = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isClusterNode(cluster)) {
             cluster.ingresses.push({ ref: ingress, $refText: this.modelState.idProvider.getLocalId(ingress) || ingress.id || '' });
         }
-    }
-
-    private createIngressNode(kdlDiagram: ast.KDLDiagram): ast.IngressNode {
-        return {
-            $type: ast.IngressNode,
-            $container: kdlDiagram.model,
-            id: 'IngressNode' + kdlDiagram.model.ingresses.length,
-            name: 'IngressNode' + kdlDiagram.model.ingresses.length,
-            host: 'localhost',
-            links: []
-        };
-    }
-    private addNodeAttribute(kdlDiagram: ast.KDLDiagram, ingress: ast.IngressNode, location: Point) {
-        const attribute: ast.NodeAttribute = {
-            $type: ast.NodeAttribute,
-            $container: kdlDiagram.diagram,
-            nodeID: {
-                $refText: this.modelState.idProvider.getLocalId(ingress) || ingress.id || '',
-                ref: ingress
-            },
-            dimensions: {} as ast.Dimensions
-        };
-        const dimensions: ast.Dimensions = {
-            x: location.x,
-            y: location.y,
-            width: 10,
-            height: 10,
-            $container: attribute,
-            $type: ast.Dimensions
-        };
-        attribute.dimensions = dimensions;
-        kdlDiagram.diagram.nodeAttributes.push(attribute);
     }
 }

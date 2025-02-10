@@ -42,6 +42,7 @@ export interface KDLDocument<T = KDLRoot, D = ModelDiagnostic> {
 }
 
 export interface KDLRoot extends KDLElement {
+   // TODO: FIX ME
    readonly $type: 'KDLRoot';
    entity?: Entity;
    relationship?: Relationship;

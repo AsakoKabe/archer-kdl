@@ -15,8 +15,8 @@ import { inject, injectable } from 'inversify';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import { isContainerNode, isIngressNode, isPortNode, isServiceNode } from '../../../language-server/generated/ast.js';
-import * as ast from '../../../language-server/generated/ast.js';
-import { createEdgeID } from '../model/graph-extension/utils.js';
+import { addEdgeAttribute } from '../model/graph-extension/utils.js';
+
 
 @injectable()
 export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperationHandler {
@@ -42,19 +42,7 @@ export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperatio
         if ((isIngressNode(sourceNode) || isContainerNode(sourceNode) || isServiceNode(sourceNode)) && isPortNode(targetNode)) {
             sourceNode.links.push({ ref: targetNode, $refText: operation.targetElementId });
 
-            this.modelState.kdlDiagram.diagram.edgeAttributes.push({
-                $container: this.modelState.kdlDiagram.diagram,
-                $type: ast.EdgeAttribute,
-                id: createEdgeID(sourceID, targetID),
-                sourceID: {
-                    ref: sourceNode,
-                    $refText: sourceID
-                },
-                targetID: {
-                    ref: targetNode,
-                    $refText: targetID
-                }
-            });
+            addEdgeAttribute(this.modelState.kdlDiagram, sourceID, targetID, sourceNode, targetNode);
         }
     }
 }

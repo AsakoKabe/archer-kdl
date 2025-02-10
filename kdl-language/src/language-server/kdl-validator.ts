@@ -98,6 +98,7 @@ export class KDLValidator {
     protected checkUniqueNodeId(node: AstNode, accept: ValidationAcceptor): void {
         if (isKDLDiagram(node)) {
             this.markDuplicateIds(
+                // TODO: FIX ME
                 Array.of<IdentifiableAstNode>(
                     // ...node.model.clusters,
                     // ...node.model.ingresses,

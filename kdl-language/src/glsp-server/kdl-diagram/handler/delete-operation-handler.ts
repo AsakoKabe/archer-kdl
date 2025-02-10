@@ -26,6 +26,13 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         this.deleteModelElement(element);
     }
     private deleteModelElement(modelElement: AstNode | undefined): void {
+
+        const nodeAttribute = this.modelState.kdlDiagram.diagram.nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(modelElement)!);
+        remove(this.modelState.kdlDiagram.diagram.nodeAttributes, nodeAttribute);
+
+        const edgeAttributes = this.modelState.kdlDiagram.diagram.edgeAttributes.filter(edgeAttribute => edgeAttribute.sourceID.ref === modelElement || edgeAttribute.targetID.ref === modelElement);
+        remove(this.modelState.kdlDiagram.diagram.edgeAttributes, ...edgeAttributes);
+
         if (ast.isClusterNode(modelElement)) {
             this.deleteCluster(modelElement);
         } else if (ast.isIngressNode(modelElement)) {
@@ -39,11 +46,6 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         } else if (ast.isPortNode(modelElement)) {
             this.deletePort(modelElement);
         }
-
-        const nodeAttribute = this.modelState.kdlDiagram.diagram.nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.ref === modelElement);
-        remove(this.modelState.kdlDiagram.diagram.nodeAttributes, nodeAttribute);
-        const edgeAttributes = this.modelState.kdlDiagram.diagram.edgeAttributes.filter(edgeAttribute => edgeAttribute.sourceID.ref === modelElement || edgeAttribute.targetID.ref === modelElement);
-        remove(this.modelState.kdlDiagram.diagram.edgeAttributes, ...edgeAttributes);
     }
     
     private deleteIngress(ingress: ast.IngressNode): void {

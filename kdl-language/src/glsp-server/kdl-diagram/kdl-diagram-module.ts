@@ -2,6 +2,7 @@
  * Copyright (c) 2023 CrossBreeze.
  ********************************************************************************/
 import {
+    ActionHandlerConstructor,
     BindingTarget,
     ContextActionsProvider,
     DiagramConfiguration,
@@ -38,6 +39,8 @@ import { KDLDiagramCreatePortOperationHandler } from './handler/create-port-oper
 import { KDLDiagramCreateServiceOperationHandler } from './handler/create-service-operation-handler.js';
 import { KDLDiagramCreateLinkOperationHandler } from './handler/create-link-operation-handler.js';
 import { KDLDiagramChangeRoutingPointsOperation } from './handler/change-routing-points-handler.js';
+import { KuberRecoverActionHandler } from './handler/kuber-recover-action.js';
+import { KuberClient } from '../../kuber/client.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -93,5 +96,11 @@ export class KDLDiagramModule extends DiagramModule {
 
     protected override bindToolPaletteItemProvider(): BindingTarget<ToolPaletteItemProvider> | undefined {
         return SystemToolPaletteProvider;
+    }
+
+    protected override configureActionHandlers(binding: InstanceMultiBinding<ActionHandlerConstructor>): void {
+        super.configureActionHandlers(binding);
+        binding.add(KuberRecoverActionHandler);
+        this.context.bind(KuberClient).toSelf().inSingletonScope();
     }
 }

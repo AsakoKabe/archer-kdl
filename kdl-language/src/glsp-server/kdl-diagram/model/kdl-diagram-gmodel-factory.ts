@@ -38,7 +38,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         }
         const graphBuilder = GGraph.builder().id(this.modelState.semanticUri);
         this.addClustersToGraph(diagramRoot, graphBuilder);
-        this.addLinksToGraph(diagramRoot, graphBuilder);
+        this.addLinksToGraph(diagramRoot, graphBuilder);     
         return graphBuilder.build();
     }
 
@@ -50,44 +50,46 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected addLinksToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
         const links = this.collectLinks(diagramRoot);
-        links.map(link => this.createLinkEdge(link)).forEach(edge => graphBuilder.add(edge));
+        links.map(link => this.createEdge(link)).forEach(edge => graphBuilder.add(edge));
     }
 
-    protected collectLinks(diagramRoot: ast.KDLDiagram): { sourceID: string; targetID: string }[] {
+    protected collectLinks(diagramRoot: ast.KDLDiagram): { source: KDLNode; target: KDLNode }[] {
         return [
-            ...diagramRoot.model.ingresses.flatMap(ingress =>
-                ingress.links.map(link => ({ sourceID: this.modelState.idProvider.getLocalId(ingress)!, targetID: link.$refText}))
-            ),
-            ...diagramRoot.model.services.flatMap(service =>
-                service.links.map(link => ({ sourceID: this.modelState.idProvider.getLocalId(service)!, targetID: link.$refText }))
-            ),
-            ...diagramRoot.model.containers.flatMap(container =>
-                container.links.map(link => ({ sourceID: this.modelState.idProvider.getLocalId(container)!, targetID: link.$refText }))
-            )
+            ...diagramRoot.model.ingresses.flatMap(ingress => ingress.links.map(link => ({ source: ingress, target: link.ref! }))),
+            ...diagramRoot.model.services.flatMap(service => service.links.map(link => ({ source: service, target: link.ref! }))),
+            ...diagramRoot.model.containers.flatMap(container => container.links.map(link => ({ source: container, target: link.ref! })))
         ]
     }
 
-    protected createLinkEdge(link: { sourceID: string; targetID: string }): GEdge {
-        const edgeAttribute = this.findOrCreateEdgeAttribute(link.sourceID, link.targetID);
-        return GEdge.builder()
-            .id(this.modelState.idProvider.getLocalId(edgeAttribute)!)
-            .addCssClass('link')
-            .sourceId(link.sourceID)
-            .targetId(link.targetID)
-            // .addRoutingPoints(edgeAttribute.points)
-            .build();
+    protected createEdge(link: { source: KDLNode; target: KDLNode }): GEdge {
+        const sourceID = this.modelState.idProvider.getLocalId(link.source)!;
+        const targetID = this.modelState.idProvider.getLocalId(link.target)!;
+        const edgeAttribute = this.findOrCreateEdgeAttribute(link.source, sourceID, link.target, targetID);
+        return (
+            GEdge.builder()
+                .id(this.modelState.idProvider.getLocalId(edgeAttribute)!)
+                .addCssClass('link')
+                .sourceId(sourceID)
+                .targetId(targetID)
+                // .addRoutingPoints(edgeAttribute.points)
+                .build()
+        );
     }
 
-    protected findOrCreateEdgeAttribute(sourceID: string, targetID: string): ast.EdgeAttribute {
+    protected findOrCreateEdgeAttribute(source: KDLNode, sourceID: string, target: KDLNode, targetID: string): ast.EdgeAttribute {
         const edgeAttributes = this.modelState.kdlDiagram.diagram.edgeAttributes;
+        if (!edgeAttributes) {
+            this.modelState.kdlDiagram.diagram.edgeAttributes = [];
+        }
+
         let edgeAttribute = edgeAttributes.find(edgeAttribute => edgeAttribute.id === createEdgeID(sourceID, targetID));
         if (!edgeAttribute) {
             edgeAttribute = {
                 $type: ast.EdgeAttribute,
                 $container: this.modelState.kdlDiagram.diagram,
                 id: createEdgeID(sourceID, targetID),
-                sourceID: { $refText: sourceID},
-                targetID: { $refText: targetID}
+                sourceID: { $refText: sourceID, ref: source },
+                targetID: { $refText: targetID, ref: target }
             };
             this.modelState.kdlDiagram.diagram.edgeAttributes.push(edgeAttribute);
         }
@@ -97,7 +99,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     protected findOrCreateNodeAttribute(node: KDLNode): ast.NodeAttribute {
         const nodeAttributes = this.modelState.kdlDiagram.diagram.nodeAttributes;
         const nodeLocalID = this.modelState.idProvider.getLocalId(node)!;
-        let nodeAttribute = nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === nodeLocalID);
+        let nodeAttribute = nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.ref === node);
         if (!nodeAttribute) {
             nodeAttribute = {
                 $type: ast.NodeAttribute,

@@ -15,6 +15,7 @@ import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
+import { addNodeAttribute, createPodNode } from '../model/graph-extension/utils.js';
 import { KDLModelState } from '../model/kdl-state.js';
 
 @injectable()
@@ -34,47 +35,14 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         }
         const kdlDiagram = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
-        const pod = this.createPodNode(kdlDiagram);
+        const pod = createPodNode(kdlDiagram);
 
-        this.createNodeAttribute(kdlDiagram, pod, location);
+        addNodeAttribute(kdlDiagram, this.modelState.idProvider, pod, location);
         kdlDiagram.model.pods.push(pod);
 
         const cluster = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isClusterNode(cluster)) {
             cluster.pods.push({ ref: pod, $refText: this.modelState.idProvider.getLocalId(pod) || pod.id || '' });
         }
-    }
-
-    private createPodNode(kdlDiagram: ast.KDLDiagram): ast.PodNode {
-        return {
-            $type: ast.PodNode,
-            $container: kdlDiagram.model,
-            id: 'PodNode' + kdlDiagram.model.pods.length,
-            name: 'PodNode' + kdlDiagram.model.pods.length,
-            containers: [],
-            ports: []
-        };
-    }
-
-    private createNodeAttribute(kdlDiagram: ast.KDLDiagram, pod: ast.PodNode, location: Point) {
-        const attribute: ast.NodeAttribute = {
-            $type: ast.NodeAttribute,
-            $container: kdlDiagram.diagram,
-            nodeID: {
-                $refText: this.modelState.idProvider.getLocalId(pod) || pod.id || '',
-                ref: pod
-            },
-            dimensions: {} as ast.Dimensions
-        };
-        const dimensions: ast.Dimensions = {
-            x: location.x,
-            y: location.y,
-            width: 10,
-            height: 10,
-            $container: attribute,
-            $type: ast.Dimensions
-        };
-        attribute.dimensions = dimensions;
-        kdlDiagram.diagram.nodeAttributes.push(attribute);
     }
 }
