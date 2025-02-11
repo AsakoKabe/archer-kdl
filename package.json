@@ -17,7 +17,7 @@
     "all": "yarn clean && yarn install && yarn lint",
     "build": "yarn build:packages && yarn langium-generate && yarn compile && yarn bundle",
     "bundle": "yarn kdl-language build && yarn webview build && yarn extension build",
-    "build:packages": "lerna run --scope=\"@kdl/*\" build",
+    "build:packages": "lerna run --scope=@kdl/protocol build && lerna run --scope=@kdl/glsp-client build",
     "clean": "lerna run clean",
     "compile": "tsc -b",
     "lint": "eslint --ext .ts,.tsx .",

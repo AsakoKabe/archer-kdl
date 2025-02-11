@@ -2,7 +2,6 @@
  * Copyright (c) 2024 CrossBreeze.
  ********************************************************************************/
 
-import { ModelFileExtensions } from '@kdl/protocol';
 import { UriUtils, type LangiumDocument } from 'langium';
 import type { CodeActionProvider } from 'langium/lsp';
 import { RenameFile, type CodeAction, type CodeActionParams } from 'vscode-languageserver-protocol';
@@ -30,7 +29,7 @@ export class KDLCodeActionProvider implements CodeActionProvider {
         if (!semanticRoot || !semanticRoot.id) {
             return undefined;
         }
-        const newName = semanticRoot.id + ModelFileExtensions.getFileExtension(document.uri.toString());
+        const newName = semanticRoot.id + '.kdl';
         const newUri = UriUtils.joinPath(UriUtils.dirname(document.uri), newName);
         return {
             title: `Rename file to '${newName}'`,

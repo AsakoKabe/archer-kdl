@@ -5,12 +5,218 @@ kdlDiagram:
         clusters:
           - id: Cluster0
             name: "Cluster0"
+          - id: ClusterNode1
+            name: "default"
+            services:
+              - example.ServiceNode1
+            pods:
+              - example.PodNode2
+          - id: ClusterNode2
+            name: "llll"
+            ingresses:
+              - example.IngressNode0
+            services:
+              - example.ServiceNode0
+              - example.ServiceNode2
+            pods:
+              - example.PodNode0
+              - example.PodNode1
+        ingresses:
+          - id: IngressNode0
+            name: "ingress"
+            host: "rags.corernd.space"
+            links:
+              - example.ServiceNode0.roninPort0
+              - example.ServiceNode2.uiPort0
+        services:
+          - id: ServiceNode0
+            name: "ronin"
+            ports:
+              - id: roninPort0
+                name: "ronin-service"
+                number: 8080
+            links:
+              - example.PodNode0.ronin-6dbdd7fbfc-bzf56Port0
+          - id: ServiceNode1
+            name: "kubernetes"
+            ports:
+              - id: kubernetesPort0
+                name: "https"
+                number: 443
+          - id: ServiceNode2
+            name: "ui"
+            ports:
+              - id: uiPort0
+                name: "ui-service"
+                number: 3000
+            links:
+              - example.PodNode1.ui-86df54f46d-l7hkcPort0
+        pods:
+          - id: PodNode0
+            name: "ronin-6dbdd7fbfc-bzf56"
+            containers:
+              - example.ContainerNode0
+            ports:
+              - id: ronin-6dbdd7fbfc-bzf56Port0
+                name: "http-port"
+                number: 8080
+          - id: PodNode1
+            name: "ui-86df54f46d-l7hkc"
+            containers:
+              - example.ContainerNode1
+            ports:
+              - id: ui-86df54f46d-l7hkcPort0
+                name: "http-port"
+                number: 3000
+          - id: PodNode2
+            name: "nginx-676b6c5bbc-kbtq6"
+            containers:
+              - example.ContainerNode2
+        containers:
+          - id: ContainerNode0
+            name: "ronin"
+          - id: ContainerNode1
+            name: "ui"
+          - id: ContainerNode2
+            name: "nginx"
     diagram:
         nodeAttributes:
           - id: NodeAttribute0
             nodeID: example.Cluster0
             dimensions:
-                x: 152
-                y: 343
+                x: -176.23186422338134
+                y: 9.898903935642096
                 width: 100
                 height: 100
+          - id: NodeAttribute1
+            nodeID: example.ClusterNode1
+            dimensions:
+                x: 10.674900869033735
+                y: -39.78826687548941
+                width: 172.3828125
+                height: 112
+          - id: NodeAttribute2
+            nodeID: example.ClusterNode2
+            dimensions:
+                x: -99.35897275991134
+                y: 200.0245230713378
+                width: 367.49668704518956
+                height: 267.313191724575
+          - id: NodeAttribute3
+            nodeID: example.PodNode0.ronin-6dbdd7fbfc-bzf56Port0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute4
+            nodeID: example.ContainerNode0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute5
+            nodeID: example.PodNode0
+            dimensions:
+                x: 203.79356204518956
+                y: 155.27128536776348
+                width: 153.703125
+                height: 76
+          - id: NodeAttribute6
+            nodeID: example.PodNode1.ui-86df54f46d-l7hkcPort0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute7
+            nodeID: example.ContainerNode1
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute8
+            nodeID: example.PodNode1
+            dimensions:
+                x: 26.202029405810094
+                y: 148.47816663292383
+                width: 134.1953125
+                height: 76
+          - id: NodeAttribute9
+            nodeID: example.ContainerNode2
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute10
+            nodeID: example.PodNode2
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute11
+            nodeID: example.ServiceNode0.roninPort0
+            dimensions:
+                x: 23.290692805164554
+                y: -62.10851414710544
+                width: 64.6484375
+                height: 40
+          - id: NodeAttribute12
+            nodeID: example.ServiceNode1.kubernetesPort0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute13
+            nodeID: example.ServiceNode0
+            dimensions:
+                x: 200.88222544454393
+                y: 26.202029405810094
+                width: 128.02294184516867
+                height: 36.04190635681152
+          - id: NodeAttribute14
+            nodeID: example.ServiceNode2.uiPort0
+            dimensions:
+                x: 29.113366006455664
+                y: -52.40405881162013
+                width: 53.375
+                height: 40
+          - id: NodeAttribute15
+            nodeID: example.ServiceNode1
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute16
+            nodeID: example.ServiceNode2
+            dimensions:
+                x: -9.704455335485221
+                y: 65.01783843189249
+                width: 192.44425596195336
+                height: 36.04190635681152
+          - id: NodeAttribute17
+            nodeID: example.IngressNode0
+            dimensions:
+                x: -29.11336600645565
+                y: -59.19717754645984
+                width: 131.27523040771484
+                height: 51.08381271362305
+        edgeAttributes:
+          - id: example_ServiceNode0-example_PodNode0_ronin-6dbdd7fbfc-bzf56Port0
+            sourceID: example.ServiceNode0
+            targetID: example.PodNode0.ronin-6dbdd7fbfc-bzf56Port0
+          - id: example_ServiceNode2-example_PodNode1_ui-86df54f46d-l7hkcPort0
+            sourceID: example.ServiceNode2
+            targetID: example.PodNode1.ui-86df54f46d-l7hkcPort0
+          - id: example_IngressNode0-example_ServiceNode0_roninPort0
+            sourceID: example.IngressNode0
+            targetID: example.ServiceNode0.roninPort0
+          - id: example_IngressNode0-example_ServiceNode2_uiPort0
+            sourceID: example.IngressNode0
+            targetID: example.ServiceNode2.uiPort0

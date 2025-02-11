@@ -1,13 +1,11 @@
 /********************************************************************************
  * Copyright (c) 2023 CrossBreeze.
  ********************************************************************************/
-import { ModelFileExtensions } from '@kdl/protocol';
-import { AstNode, UriUtils, ValidationAcceptor, ValidationChecks } from 'langium';
+import { AstNode, ValidationAcceptor, ValidationChecks } from 'langium';
 import { Diagnostic } from 'vscode-languageserver-protocol';
 import { isKDLDiagram, KDLAstType } from './generated/ast.js';
 import type { KDLServices } from './kdl-module.js';
 import { ID_PROPERTY, IdentifiableAstNode } from './kdl-naming.js';
-import { findDocument, isSemanticRoot } from './util/ast-util.js';
 
 export namespace KDLIssueCodes {
     export const FilenameNotMatching = 'filename-not-matching';
@@ -47,31 +45,6 @@ export class KDLValidator {
     checkNode(node: AstNode, accept: ValidationAcceptor): void {
         this.checkUniqueGlobalId(node, accept);
         this.checkUniqueNodeId(node, accept);
-        this.checkMatchingFilename(node, accept);
-    }
-
-    protected checkMatchingFilename(node: AstNode, accept: ValidationAcceptor): void {
-        if (!isSemanticRoot(node)) {
-            return;
-        }
-        if (!node.id) {
-            // diagrams may not have ids set and therefore are not required to match the filename
-            return;
-        }
-        const document = findDocument(node);
-        if (!document) {
-            return;
-        }
-        const basename = UriUtils.basename(document.uri);
-        const extname = ModelFileExtensions.getFileExtension(basename) ?? UriUtils.extname(document.uri);
-        const basenameWithoutExt = basename.slice(0, -extname.length);
-        if (basenameWithoutExt.toLowerCase() !== node.id.toLocaleLowerCase()) {
-            accept('warning', `Filename should match element id: ${node.id}`, {
-                node,
-                property: ID_PROPERTY,
-                data: { code: KDLIssueCodes.FilenameNotMatching }
-            });
-        }
     }
 
     protected checkUniqueGlobalId(node: AstNode, accept: ValidationAcceptor): void {

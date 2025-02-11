@@ -15,177 +15,142 @@ export const KDLRegex = {
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const KDLTerminals = {
+   STRING: /"[^"]*"|'[^']*'/,
+   NUMBER: /(-)?[0-9]+(\.[0-9]*)?/,
+   SL_COMMENT: /#[^\n\r]*/,
+   INDENT: /:synthetic-indent:/,
+   DEDENT: /:synthetic-dedent:/,
+   LIST_ITEM: /- /,
+   NEWLINE: /[/\r\n|\r|\n/]+/,
+   WS: /[ \t]+/,
+   ID: /[_a-zA-Z][\w_\-~$#@/\d]*/,
+};
+
 export type Reference<T> = string;
 
-export interface KDLElement {
-   readonly $type: string;
-}
 
-export interface Identifiable {
+export type NodeType = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
+
+export const NodeType = 'NodeType';
+
+export interface ClusterNode {
+   readonly $type: 'ClusterNode';
    id: string;
-   $globalId: string;
-}
-
-export interface WithCustomProperties {
-   customProperties?: Array<CustomProperty>;
-}
-
-export interface CustomProperty {
+   ingresses: Array<Reference<IngressNode>>;
    name: string;
-   value?: string;
+   pods: Array<Reference<PodNode>>;
+   services: Array<Reference<ServiceNode>>;
 }
+export const ClusterNode = 'ClusterNode';
 
-export interface KDLDocument<T = KDLRoot, D = ModelDiagnostic> {
-   uri: string;
-   root: T;
-   diagnostics: D[];
+export interface ContainerNode {
+   readonly $type: 'ContainerNode';
+   id: string;
+   links: Array<Reference<PortNode>>;
+   name: string;
 }
+export const ContainerNode = 'ContainerNode';
 
-export interface KDLRoot extends KDLElement {
-   // TODO: FIX ME
+export interface Diagram {
+   readonly $type: 'Diagram';
+   edgeAttributes: Array<EdgeAttribute>;
+   nodeAttributes: Array<NodeAttribute>;
+}
+export const Diagram = 'Diagram';
+
+export interface Dimensions {
+   readonly $type: 'Dimensions';
+   height: number;
+   width: number;
+   x: number;
+   y: number;
+}
+export const Dimensions = 'Dimensions';
+
+export interface EdgeAttribute {
+   readonly $type: 'EdgeAttribute';
+   id: string;
+   sourceID: Reference<NodeType>;
+   targetID: Reference<NodeType>;
+}
+export const EdgeAttribute = 'EdgeAttribute';
+
+export interface IngressNode{
+   readonly $type: 'IngressNode';
+   host: string;
+   id: string;
+   links: Array<Reference<PortNode>>;
+   name: string;
+}
+export const IngressNode = 'IngressNode';
+
+export interface KDLDiagram {
+   readonly $type: 'KDLDiagram';
+   diagram: Diagram;
+   id: string;
+   model: Model;
+   name: string;
+}
+export const KDLDiagram = 'KDLDiagram';
+
+export interface KDLRoot {
    readonly $type: 'KDLRoot';
-   entity?: Entity;
-   relationship?: Relationship;
-   mapping?: Mapping;
+   kdlDiagram?: KDLDiagram;
 }
+export const KDLRoot = 'KDLRoot';
 
-export function isKDLRoot(model?: any): model is KDLRoot {
-   return !!model && model.$type === 'KDLRoot';
+export interface Model {
+   readonly $type: 'Model';
+   clusters: Array<ClusterNode>;
+   containers: Array<ContainerNode>;
+   ingresses: Array<IngressNode>;
+   pods: Array<PodNode>;
+   services: Array<ServiceNode>;
 }
+export const Model = 'Model';
 
-export const EntityType = 'Entity';
-export interface Entity extends KDLElement, Identifiable, WithCustomProperties {
-   readonly $type: typeof EntityType;
-   attributes: Array<EntityAttribute>;
-   description?: string;
-   name?: string;
+export interface NodeAttribute {
+   readonly $type: 'NodeAttribute';
+   dimensions: Dimensions;
+   id: string;
+   nodeID: Reference<NodeType>;
 }
+export const NodeAttribute = 'NodeAttribute';
 
-export interface Attribute extends KDLElement, Identifiable {
-   datatype?: string;
-   description?: string;
-   name?: string;
+export interface PodNode{
+   readonly $type: 'PodNode';
+   containers: Array<Reference<ContainerNode>>;
+   id: string;
+   name: string;
+   ports: Array<PortNode>;
 }
+export const PodNode = 'PodNode';
 
-export const EntityAttributeType = 'EntityAttribute';
-export interface EntityAttribute extends Attribute, WithCustomProperties {
-   readonly $type: typeof EntityAttributeType;
-   identifier?: boolean;
+export interface Point{
+   readonly $type: 'Point';
+   x: number;
+   y: number;
 }
+export const Point = 'Point';
 
-export const RelationshipType = 'Relationship';
-export interface Relationship extends KDLElement, Identifiable, WithCustomProperties {
-   readonly $type: typeof RelationshipType;
-   attributes: Array<RelationshipAttribute>;
-   child?: Reference<Entity>;
-   description?: string;
-   name?: string;
-   parent?: Reference<Entity>;
-   type?: string;
+export interface PortNode {
+   readonly $type: 'PortNode';
+   id: string;
+   name: string;
+   number: number;
 }
+export const PortNode = 'PortNode';
 
-export const RelationshipAttributeType = 'RelationshipAttribute';
-export interface RelationshipAttribute extends KDLElement, WithCustomProperties {
-   readonly $type: typeof RelationshipAttributeType;
-   parent?: Reference<EntityAttribute>;
-   child?: Reference<EntityAttribute>;
+export interface ServiceNode {
+   readonly $type: 'ServiceNode';
+   id: string;
+   links: Array<Reference<PortNode>>;
+   name: string;
+   ports: Array<PortNode>;
 }
+export const ServiceNode = 'ServiceNode';
 
-export const MappingType = 'Mapping';
-export interface Mapping extends KDLElement, Identifiable, WithCustomProperties {
-   readonly $type: typeof MappingType;
-   sources: Array<SourceObject>;
-   target: TargetObject;
-}
-
-export const SourceObjectType = 'SourceObject';
-export type SourceObjectJoinType = 'from' | 'inner-join' | 'cross-join' | 'left-join' | 'apply';
-export interface SourceObject extends KDLElement, Identifiable, WithCustomProperties {
-   readonly $type: typeof SourceObjectType;
-   entity?: Reference<Entity>;
-   join?: SourceObjectJoinType;
-   dependencies: Array<SourceObjectDependency>;
-   conditions: Array<SourceObjectCondition>;
-}
-
-export const SourceObjectDependencyType = 'SourceObjectDependency';
-export interface SourceObjectDependency extends KDLElement {
-   readonly $type: typeof SourceObjectDependencyType;
-   source: Reference<SourceObject>;
-}
-
-export type SourceObjectCondition = JoinCondition;
-
-export const JoinConditionType = 'JoinCondition';
-export interface JoinCondition extends KDLElement {
-   readonly $type: typeof JoinConditionType;
-   expression: BinaryExpression;
-}
-
-export const BinaryExpressionType = 'BinaryExpression';
-export interface BinaryExpression extends KDLElement {
-   readonly $type: typeof BinaryExpressionType;
-   left: BooleanExpression;
-   op: '!=' | '<' | '<=' | '=' | '>' | '>=';
-   right: BooleanExpression;
-}
-
-export type BooleanExpression = NumberLiteral | SourceObjectAttributeReference | StringLiteral;
-
-export const NumberLiteralType = 'NumberLiteral';
-export interface NumberLiteral extends KDLElement {
-   readonly $type: typeof NumberLiteralType;
-   value: number;
-}
-
-export const StringLiteralType = 'StringLiteral';
-export interface StringLiteral extends KDLElement {
-   readonly $type: typeof StringLiteralType;
-   value: string;
-}
-
-export const SourceObjectAttributeReferenceType = 'SourceObjectAttributeReference';
-export interface SourceObjectAttributeReference extends KDLElement {
-   readonly $type: typeof SourceObjectAttributeReferenceType;
-   value: Reference<SourceObjectAttribute>;
-}
-
-export const TargetObjectType = 'TargetObject';
-export interface TargetObject extends KDLElement, WithCustomProperties {
-   readonly $type: typeof TargetObjectType;
-   entity?: Reference<Entity>;
-   mappings: Array<AttributeMapping>;
-}
-
-export const AttributeMappingType = 'AttributeMapping';
-export interface AttributeMapping extends KDLElement, WithCustomProperties {
-   readonly $type: typeof AttributeMappingType;
-   attribute?: AttributeMappingTarget;
-   sources: Array<AttributeMappingSource>;
-   expression?: string;
-}
-
-export const AttributeMappingTargetType = 'AttributeMappingTarget';
-export interface AttributeMappingTarget extends KDLElement {
-   readonly $type: typeof AttributeMappingTargetType;
-   value?: Reference<Attribute>;
-}
-
-export const TargetObjectAttributeType = 'TargetObjectAttribute';
-export interface TargetObjectAttribute extends Attribute, WithCustomProperties {
-   readonly $type: typeof TargetObjectAttributeType;
-}
-
-export const AttributeMappingSourceType = 'AttributeMappingSource';
-export interface AttributeMappingSource extends KDLElement {
-   readonly $type: typeof AttributeMappingSourceType;
-   value: Reference<Attribute>;
-}
-
-export const SourceObjectAttributeType = 'SourceObjectAttribute';
-export interface SourceObjectAttribute extends Attribute, WithCustomProperties {
-   readonly $type: typeof SourceObjectAttributeType;
-}
 
 export interface ClientModelArgs {
    uri: string;
@@ -226,6 +191,12 @@ export namespace ModelDiagnostic {
    }
 }
 
+export interface KDLDocument<T = KDLRoot, D = ModelDiagnostic> {
+   uri: string;
+   root: T;
+   diagnostics: D[];
+}
+ 
 export interface ModelUpdatedEvent<D = KDLDocument> {
    document: D;
    sourceClientId: string;
