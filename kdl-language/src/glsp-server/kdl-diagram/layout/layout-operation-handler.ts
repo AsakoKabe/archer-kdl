@@ -1,0 +1,37 @@
+import {
+    JsonOperationHandler,
+    LayoutOperation,
+    Command,
+    MaybePromise,
+    ModelState,
+    DiagramConfiguration,
+    ServerLayoutKind,
+} from '@eclipse-glsp/server';
+import { CrossModelCommand } from '../../common/cross-model-command.js';
+import { KDLModelState } from '../model/kdl-state.js';
+import { inject, injectable } from 'inversify';
+
+@injectable()
+export class KDLLayoutOperationHandler extends JsonOperationHandler {
+    override operationType = LayoutOperation.KIND;
+
+    @inject(DiagramConfiguration)
+    protected diagramConfiguration: DiagramConfiguration;
+
+    @inject(ModelState) protected override modelState!: KDLModelState;
+
+    override createCommand(operation: LayoutOperation): MaybePromise<Command | undefined> {
+        return new CrossModelCommand(this.modelState, async () => {
+            this.layout(operation);
+        });
+    }
+
+    private async layout(operation: LayoutOperation) {
+        if (operation.kind === LayoutOperation.KIND) {
+            if (this.diagramConfiguration.layoutKind === ServerLayoutKind.MANUAL) {
+                return;
+            }
+        }
+    }
+
+}

@@ -33,6 +33,7 @@
   "resolutions": {
     "string-width": "4.2.3",
     "vscode-jsonrpc": "8.2.0"
+    
   },
   "devDependencies": {
     "@eclipse-glsp/config": "2.3.0",

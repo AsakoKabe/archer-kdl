@@ -18,6 +18,11 @@ import { KDLLSPServices } from '../integration.js';
 import { KDLServices, KDLSharedServices } from '../language-server/kdl-module.js';
 import { KDLDiagramModule } from './kdl-diagram/kdl-diagram-module.js';
 
+// ReferenceError: g is not defined
+// https://github.com/kieler/elkjs/issues/181
+// (globalThis as any).g = undefined;
+// (globalThis as any).i = undefined;
+
 // export async function launch(argv?: string[]): Promise<void> {
 //     const options = createSocketCliParser().parse(argv);
 //     const appContainer = new Container();

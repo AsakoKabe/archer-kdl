@@ -20,9 +20,9 @@
         "clean": "rimraf out tsconfig.tsbuildinfo"
     },
     "dependencies": {
-        "@kdl/protocol": "0.0.0",
         "@eclipse-glsp/layout-elk": "2.3.0",
         "@eclipse-glsp/server": "2.3.0",
+        "@kdl/protocol": "0.0.0",
         "chalk": "~4.1.2",
         "chevrotain": "~11.0.3",
         "commander": "~10.0.0",
@@ -36,7 +36,7 @@
         "vscode-languageserver-protocol": "^3.17.5",
         "vscode-languageserver-textdocument": "^1.0.11",
         "vscode-uri": "^3.0.2"
-},
+    },
     "devDependencies": {
         "@types/jest": "^29.5.6",
         "@types/node": "~16.18.41",
@@ -71,7 +71,9 @@
                     "kdl",
                     "kdl"
                 ],
-                "extensions": [".kdl"],
+                "extensions": [
+                    ".kdl"
+                ],
                 "configuration": "./language-configuration.json"
             }
         ],

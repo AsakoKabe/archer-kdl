@@ -4,6 +4,7 @@
 import {
     ActionHandlerConstructor,
     BindingTarget,
+    CompoundOperationHandler,
     ContextActionsProvider,
     DiagramConfiguration,
     DiagramModule,
@@ -41,6 +42,7 @@ import { KDLDiagramCreateLinkOperationHandler } from './handler/create-link-oper
 import { KDLDiagramChangeRoutingPointsOperation } from './handler/change-routing-points-handler.js';
 import { KuberRecoverActionHandler } from './handler/kuber-recover-action.js';
 import { KuberClient } from '../../kuber/client.js';
+import { KDLLayoutOperationHandler } from './layout/layout-operation-handler.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -62,7 +64,10 @@ export class KDLDiagramModule extends DiagramModule {
     }
 
     protected override configureOperationHandlers(binding: InstanceMultiBinding<OperationHandlerConstructor>): void {
-        super.configureOperationHandlers(binding);
+        // super.configureOperationHandlers(binding);
+        binding.add(CompoundOperationHandler);
+        binding.add(KDLLayoutOperationHandler);
+
         binding.add(KDLDiagramChangeBoundsOperationHandler);
         binding.add(KDLDiagramDeleteOperationHandler);
         binding.add(KDLDiagramCreateClusterOperationHandler);
