@@ -54,7 +54,7 @@ Model:
                 (LIST_ITEM containers+=ContainerNode)+
             DEDENT
         )
-    )?
+    )
 ;
 
 Diagram:

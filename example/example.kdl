@@ -1,16 +1,3 @@
 kdlDiagram:
     id: example
     name: "example"
-    model:
-        clusters:
-          - id: Cluster0
-            name: "Cluster0"
-    diagram:
-        nodeAttributes:
-          - id: NodeAttribute0
-            nodeID: example.Cluster0
-            dimensions:
-                x: 0.1841167536804
-                y: 0.464527695772517
-                width: 100
-                height: 100

@@ -33,9 +33,9 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected createGraph(): GGraph | undefined {
         const diagramRoot = this.modelState.kdlDiagram;
-        if (!diagramRoot.model || !diagramRoot.diagram) {
-            return;
-        }
+        // if (!diagramRoot.model || !diagramRoot.diagram) {
+        //     return GGraph.builder().id(this.modelState.semanticUri).build();
+        // }
         const graphBuilder = GGraph.builder().id(this.modelState.semanticUri);
         this.addClustersToGraph(diagramRoot, graphBuilder);
         this.addLinksToGraph(diagramRoot, graphBuilder);     

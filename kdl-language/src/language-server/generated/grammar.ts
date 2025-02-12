@@ -462,8 +462,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               }
             ]
           }
-        ],
-        "cardinality": "?"
+        ]
       },
       "definesHiddenTokens": false,
       "entry": false,

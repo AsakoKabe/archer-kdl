@@ -1,4 +1,4 @@
-import { Point } from '@eclipse-glsp/server';
+import { Dimension, Point } from '@eclipse-glsp/server';
 import { AstNode } from 'langium';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { IdProvider } from '../../../../language-server/kdl-naming.js';
@@ -29,7 +29,8 @@ export function createNodeAttribute(
     kdlDiagram: ast.KDLDiagram,
     idProvider: IdProvider,
     node: KDLNode,
-    location?: Point
+    location?: Point,
+    dim?: Dimension,
 ): ast.NodeAttribute {
     const attribute: ast.NodeAttribute = {
         $type: ast.NodeAttribute,
@@ -45,8 +46,8 @@ export function createNodeAttribute(
     const dimensions: ast.Dimensions = {
         x: location ? location.x : Point.ORIGIN.x,
         y: location ? location.y : Point.ORIGIN.y,
-        width: 10,
-        height: 10,
+        width: dim? dim.width : 10,
+        height: dim? dim.height : 10,
         $container: attribute,
         $type: ast.Dimensions
     };

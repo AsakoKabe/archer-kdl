@@ -5,6 +5,8 @@ import { ChangeBoundsOperation, Command, JsonOperationHandler, ModelState } from
 import { inject, injectable } from 'inversify';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
+import { createNodeAttribute } from '../model/graph-extension/utils.js';
+import * as ast from '../../../language-server/generated/ast.js';
 
 @injectable()
 export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler {
@@ -18,14 +20,25 @@ export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler
     protected changeBounds(operation: ChangeBoundsOperation): void {
         operation.newBounds.forEach(elementAndBounds => {
             const node = this.modelState.index.findSemanticElement(elementAndBounds.elementId);
-            const nodeAttribute = 
-                this.modelState.kdlDiagram.diagram.nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.ref === node);
+            const nodeAttribute = this.modelState.kdlDiagram.diagram.nodeAttributes.find(
+                nodeAttribute => nodeAttribute.nodeID.ref === node
+            );
 
             if (nodeAttribute) {
                 nodeAttribute.dimensions.x = elementAndBounds.newPosition?.x || nodeAttribute.dimensions.x;
                 nodeAttribute.dimensions.y = elementAndBounds.newPosition?.y || nodeAttribute.dimensions.y;
                 nodeAttribute.dimensions.width = elementAndBounds.newSize.width;
                 nodeAttribute.dimensions.height = elementAndBounds.newSize.height;
+            } else if (ast.isNodeType(node)) {
+                this.modelState.kdlDiagram.diagram.nodeAttributes.push(
+                    createNodeAttribute(
+                        this.modelState.kdlDiagram,
+                        this.modelState.idProvider,
+                        node,
+                        elementAndBounds.newPosition,
+                        elementAndBounds.newSize
+                    )
+                );
             }
         });
     }
