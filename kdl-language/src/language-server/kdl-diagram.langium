@@ -11,14 +11,14 @@ KDLDiagram:
                 INDENT
                     model=Model
                 DEDENT
-            )
+            )?
 
             (
                 'diagram' ':' 
                 INDENT
                     diagram=Diagram
                 DEDENT
-            )
+            )?
         DEDENT
 ;
 

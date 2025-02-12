@@ -139,7 +139,8 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 },
                 "arguments": []
               }
-            ]
+            ],
+            "cardinality": "?"
           },
           {
             "$type": "Group",
@@ -178,7 +179,8 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 },
                 "arguments": []
               }
-            ]
+            ],
+            "cardinality": "?"
           },
           {
             "$type": "RuleCall",

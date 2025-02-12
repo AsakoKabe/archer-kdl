@@ -22,7 +22,7 @@ export function createEdgeID(sourceID: string, targetID: string): string {
 }
 
 export function addNodeAttribute(kdlDiagram: ast.KDLDiagram, idProvider: IdProvider, node: KDLNode, location?: Point) {
-    kdlDiagram.diagram.nodeAttributes.push(createNodeAttribute(kdlDiagram, idProvider, node, location));
+    kdlDiagram.diagram!.nodeAttributes.push(createNodeAttribute(kdlDiagram, idProvider, node, location));
 }
 
 export function createNodeAttribute(
@@ -34,8 +34,8 @@ export function createNodeAttribute(
 ): ast.NodeAttribute {
     const attribute: ast.NodeAttribute = {
         $type: ast.NodeAttribute,
-        $container: kdlDiagram.diagram,
-        id: ast.NodeAttribute + kdlDiagram.diagram.nodeAttributes.length,
+        $container: kdlDiagram.diagram!,
+        id: ast.NodeAttribute + kdlDiagram.diagram!.nodeAttributes.length,
         nodeID: {
             $refText: idProvider.getLocalId(node) || node.id || '',
             ref: node
@@ -63,8 +63,8 @@ export function addEdgeAttribute(
     sourceNode: ast.SourceNodeType,
     targetNode: ast.TargetNodeType
 ) {
-    kdlDiagram.diagram.edgeAttributes.push({
-        $container: kdlDiagram.diagram,
+    kdlDiagram.diagram!.edgeAttributes.push({
+        $container: kdlDiagram.diagram!,
         $type: ast.EdgeAttribute,
         id: createEdgeID(sourceID, targetID),
         sourceID: {
@@ -81,9 +81,9 @@ export function addEdgeAttribute(
 export function createClusterNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ClusterNode {
     return {
         $type: ast.ClusterNode,
-        $container: kdlDiagram.model,
-        id: 'ClusterNode' + kdlDiagram.model.clusters.length,
-        name: name ? name : 'ClusterNode' + kdlDiagram.model.clusters.length,
+        $container: kdlDiagram.model!,
+        id: 'ClusterNode' + kdlDiagram.model!.clusters.length,
+        name: name ? name : 'ClusterNode' + kdlDiagram.model!.clusters.length,
         ingresses: [],
         pods: [],
         services: []
@@ -93,9 +93,9 @@ export function createClusterNode(kdlDiagram: ast.KDLDiagram, name?: string): as
 export function createContainerNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ContainerNode {
     return {
         $type: ast.ContainerNode,
-        $container: kdlDiagram.model,
-        id: 'ContainerNode' + kdlDiagram.model.containers.length,
-        name: name ? name : 'ContainerNode' + kdlDiagram.model.containers.length,
+        $container: kdlDiagram.model!,
+        id: 'ContainerNode' + kdlDiagram.model!.containers.length,
+        name: name ? name : 'ContainerNode' + kdlDiagram.model!.containers.length,
         links: []
     };
 }
@@ -103,9 +103,9 @@ export function createContainerNode(kdlDiagram: ast.KDLDiagram, name?: string): 
 export function createIngressNode(kdlDiagram: ast.KDLDiagram, name?: string, host?: string): ast.IngressNode {
     return {
         $type: ast.IngressNode,
-        $container: kdlDiagram.model,
-        id: 'IngressNode' + kdlDiagram.model.ingresses.length,
-        name: name ? name : 'IngressNode' + kdlDiagram.model.ingresses.length,
+        $container: kdlDiagram.model!,
+        id: 'IngressNode' + kdlDiagram.model!.ingresses.length,
+        name: name ? name : 'IngressNode' + kdlDiagram.model!.ingresses.length,
         host: host ? host : 'localhost',
         links: []
     };
@@ -114,9 +114,9 @@ export function createIngressNode(kdlDiagram: ast.KDLDiagram, name?: string, hos
 export function createPodNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.PodNode {
     return {
         $type: ast.PodNode,
-        $container: kdlDiagram.model,
-        id: 'PodNode' + kdlDiagram.model.pods.length,
-        name: name ? name : 'PodNode' + kdlDiagram.model.pods.length,
+        $container: kdlDiagram.model!,
+        id: 'PodNode' + kdlDiagram.model!.pods.length,
+        name: name ? name : 'PodNode' + kdlDiagram.model!.pods.length,
         containers: [],
         ports: []
     };
@@ -135,9 +135,9 @@ export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?
 export function createServiceNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ServiceNode {
     return {
         $type: ast.ServiceNode,
-        $container: kdlDiagram.model,
-        id: 'ServiceNode' + kdlDiagram.model.services.length,
-        name: name ? name : 'ServiceNode' + kdlDiagram.model.services.length,
+        $container: kdlDiagram.model!,
+        id: 'ServiceNode' + kdlDiagram.model!.services.length,
+        name: name ? name : 'ServiceNode' + kdlDiagram.model!.services.length,
         ports: [],
         links: []
     };

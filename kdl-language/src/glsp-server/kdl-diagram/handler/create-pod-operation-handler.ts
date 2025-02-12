@@ -38,7 +38,7 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         const pod = createPodNode(kdlDiagram);
 
         addNodeAttribute(kdlDiagram, this.modelState.idProvider, pod, location);
-        kdlDiagram.model.pods.push(pod);
+        kdlDiagram.model!.pods.push(pod);
 
         const cluster = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isClusterNode(cluster)) {

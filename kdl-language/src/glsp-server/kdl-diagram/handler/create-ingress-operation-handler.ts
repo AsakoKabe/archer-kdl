@@ -39,7 +39,7 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
         const ingress = createIngressNode(kdlDiagram);
 
         addNodeAttribute(kdlDiagram, this.modelState.idProvider, ingress, location);
-        kdlDiagram.model.ingresses.push(ingress);
+        kdlDiagram.model!.ingresses.push(ingress);
 
         const cluster = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isClusterNode(cluster)) {

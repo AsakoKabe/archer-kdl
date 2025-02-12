@@ -39,7 +39,7 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
         const service = createServiceNode(kdlDiagram);
 
         addNodeAttribute(kdlDiagram, this.modelState.idProvider, service, location);
-        kdlDiagram.model.services.push(service);
+        kdlDiagram.model!.services.push(service);
 
         const cluster = this.modelState.index.findSemanticElement(operation.containerId);
         if (ast.isClusterNode(cluster)) {

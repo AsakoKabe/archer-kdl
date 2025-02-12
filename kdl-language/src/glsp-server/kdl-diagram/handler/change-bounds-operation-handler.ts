@@ -20,7 +20,7 @@ export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler
     protected changeBounds(operation: ChangeBoundsOperation): void {
         operation.newBounds.forEach(elementAndBounds => {
             const node = this.modelState.index.findSemanticElement(elementAndBounds.elementId);
-            const nodeAttribute = this.modelState.kdlDiagram.diagram.nodeAttributes.find(
+            const nodeAttribute = this.modelState.kdlDiagram.diagram!.nodeAttributes.find(
                 nodeAttribute => nodeAttribute.nodeID.ref === node
             );
 
@@ -30,7 +30,7 @@ export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler
                 nodeAttribute.dimensions.width = elementAndBounds.newSize.width;
                 nodeAttribute.dimensions.height = elementAndBounds.newSize.height;
             } else if (ast.isNodeType(node)) {
-                this.modelState.kdlDiagram.diagram.nodeAttributes.push(
+                this.modelState.kdlDiagram.diagram!.nodeAttributes.push(
                     createNodeAttribute(
                         this.modelState.kdlDiagram,
                         this.modelState.idProvider,

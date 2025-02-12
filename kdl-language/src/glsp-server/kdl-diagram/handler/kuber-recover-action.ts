@@ -93,7 +93,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
             const podsList = await this.kuberClient.getPods(cluster.name);
             for (const kuberPod of podsList.items) {
                 const pod = createPodNode(this.modelState.kdlDiagram, kuberPod.metadata?.name);
-                this.modelState.kdlDiagram.model.pods.push(pod);
+                this.modelState.kdlDiagram.model!.pods.push(pod);
                 cluster.pods.push({ ref: pod, $refText: this.modelState.idProvider.getLocalId(pod)! });
                 if (kuberPod.spec?.containers) {
                     this.recoverContainers(pod, kuberPod.spec.containers);
@@ -109,7 +109,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
     private recoverContainers(pod: ast.PodNode, kuberContainers: k8s.V1Container[]): void {
         kuberContainers?.map(kuberContainer => {
             const container = createContainerNode(this.modelState.kdlDiagram, kuberContainer.name);
-            this.modelState.kdlDiagram.model.containers.push(container);
+            this.modelState.kdlDiagram.model!.containers.push(container);
             pod.containers.push({ ref: container, $refText: this.modelState.idProvider.getLocalId(container)! });
             if (kuberContainer.ports) {
                 this.recoverPodPorts(pod, kuberContainer.ports, kuberContainers.length);
@@ -147,7 +147,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
             return selectorKeys.every(key => podLabels[key] === selector[key]);
         });
 
-        const targetPods = this.modelState.kdlDiagram.model.pods.filter(pod =>
+        const targetPods = this.modelState.kdlDiagram.model!.pods.filter(pod =>
             matchedKuberPods.some(kuberPod => kuberPod.metadata?.name === pod.name)
         );
         const targetPorts = targetPods
@@ -175,7 +175,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
             const serviceList = await this.kuberClient.getServices(cluster.name);
             for (const kuberService of serviceList.items) {
                 const service = createServiceNode(this.modelState.kdlDiagram, kuberService.metadata?.name);
-                this.modelState.kdlDiagram.model.services.push(service);
+                this.modelState.kdlDiagram.model!.services.push(service);
                 cluster.services.push({ ref: service, $refText: this.modelState.idProvider.getLocalId(service)! });
                 if (kuberService.spec?.ports) {
                     this.recoverServicePorts(service, kuberService.spec.ports);
@@ -235,7 +235,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
                 for (const rule of kuberIngress.spec?.rules || []) {
                     if (rule.host) {
                         const ingress = createIngressNode(this.modelState.kdlDiagram, ingressName, rule.host);
-                        this.modelState.kdlDiagram.model.ingresses.push(ingress);
+                        this.modelState.kdlDiagram.model!.ingresses.push(ingress);
                         cluster.ingresses.push({ ref: ingress, $refText: this.modelState.idProvider.getLocalId(ingress)! });
                         await this.recoverIngressToServiceLink(rule.http?.paths, cluster, ingress);
                         addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, ingress);
@@ -254,7 +254,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
             .filter(namespace => !namespace.startsWith('kube'))
             .map(namespace => {
                 const cluster = createClusterNode(this.modelState.kdlDiagram, namespace);
-                this.modelState.kdlDiagram.model.clusters.push(cluster);
+                this.modelState.kdlDiagram.model!.clusters.push(cluster);
                 clusters.push(cluster);
                 addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, cluster);
             });

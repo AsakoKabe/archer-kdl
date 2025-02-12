@@ -184,9 +184,9 @@ export function isIngressNode(item: unknown): item is IngressNode {
 export interface KDLDiagram extends AstNode {
     readonly $container: KDLRoot;
     readonly $type: 'KDLDiagram';
-    diagram: Diagram;
+    diagram?: Diagram;
     id: string;
-    model: Model;
+    model?: Model;
     name: string;
 }
 
