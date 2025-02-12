@@ -55,7 +55,13 @@ export function createNodeAttribute(
     return attribute;
 }
 
-export function addEdgeAttribute(kdlDiagram: ast.KDLDiagram, sourceID: string, targetID: string, sourceNode: KDLNode, targetNode: KDLNode) {
+export function addEdgeAttribute(
+    kdlDiagram: ast.KDLDiagram,
+    sourceID: string,
+    targetID: string,
+    sourceNode: ast.SourceNodeType,
+    targetNode: ast.TargetNodeType
+) {
     kdlDiagram.diagram.edgeAttributes.push({
         $container: kdlDiagram.diagram,
         $type: ast.EdgeAttribute,

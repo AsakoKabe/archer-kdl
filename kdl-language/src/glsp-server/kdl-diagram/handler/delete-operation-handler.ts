@@ -23,10 +23,31 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
 
     protected delete(elementId: string): void {
         const element = this.modelState.index.findSemanticElement(elementId);
-        this.deleteModelElement(element);
-    }
-    private deleteModelElement(modelElement: AstNode | undefined): void {
 
+        if (ast.isEdgeAttribute(element)){
+            this.deleteEdge(element);
+        } else {
+            this.deleteNode(element);
+        }
+    }
+    private deleteEdge(edge: ast.EdgeAttribute | undefined): void {
+        if (!edge){
+            return;
+        }
+        const sourceNode = edge.sourceID.ref;
+        const targetNode = edge.targetID.ref;
+        if (!sourceNode || !targetNode){
+            return;
+        }
+        sourceNode.links = sourceNode.links.filter(link => link.ref !== targetNode)
+
+        remove(this.modelState.kdlDiagram.diagram.edgeAttributes, edge);
+    }
+
+    private deleteNode(modelElement: AstNode | undefined): void {
+        if (!modelElement){
+            return;
+        }
         const nodeAttribute = this.modelState.kdlDiagram.diagram.nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(modelElement)!);
         remove(this.modelState.kdlDiagram.diagram.nodeAttributes, nodeAttribute);
 
@@ -57,10 +78,10 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
 
     private deletePod(pod: ast.PodNode): void {
         pod.containers.map(container => {
-            this.deleteModelElement(container.ref);
+            this.deleteNode(container.ref);
         });
         pod.ports.map(port => {
-            this.deleteModelElement(port);
+            this.deleteNode(port);
         });
         this.modelState.kdlDiagram.model.clusters.map(cluster => {
             cluster.pods = cluster.pods.filter(existedPod => existedPod.ref !== pod);
@@ -70,7 +91,7 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
 
     private deleteService(service: ast.ServiceNode): void {
         service.ports.map(port => {
-            this.deleteModelElement(port);
+            this.deleteNode(port);
         });
         this.modelState.kdlDiagram.model.clusters.map(cluster => {
             cluster.services = cluster.services.filter(existedService => existedService.ref !== service);
@@ -106,13 +127,13 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
 
     private deleteCluster(cluster: ast.ClusterNode): void {
         cluster.ingresses.map(ingress => {
-            this.deleteModelElement(ingress.ref);
+            this.deleteNode(ingress.ref);
         });
         cluster.pods.map(pod => {
-            this.deleteModelElement(pod.ref);
+            this.deleteNode(pod.ref);
         });
         cluster.services.map(service => {
-            this.deleteModelElement(service.ref);
+            this.deleteNode(service.ref);
         });
         remove(this.modelState.kdlDiagram.model.clusters, cluster);
     }

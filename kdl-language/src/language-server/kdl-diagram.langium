@@ -172,6 +172,14 @@ NodeType:
     ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode
 ;
 
+SourceNodeType:
+    IngressNode | ServiceNode | ContainerNode 
+;
+
+TargetNodeType:
+    PortNode
+;
+
 
 Dimensions:
     ('x' ':' x=NUMBER) &
@@ -198,7 +206,7 @@ Point:
 
 EdgeAttribute:
     'id' ':' id=ID
-    'sourceID' ':' sourceID=[NodeType:IDReference]
-    'targetID' ':' targetID=[NodeType:IDReference]
+    'sourceID' ':' sourceID=[SourceNodeType:IDReference]
+    'targetID' ':' targetID=[TargetNodeType:IDReference]
 ;
     

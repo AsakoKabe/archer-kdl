@@ -65,6 +65,22 @@ export function isNodeType(item: unknown): item is NodeType {
     return reflection.isInstance(item, NodeType);
 }
 
+export type SourceNodeType = ContainerNode | IngressNode | ServiceNode;
+
+export const SourceNodeType = 'SourceNodeType';
+
+export function isSourceNodeType(item: unknown): item is SourceNodeType {
+    return reflection.isInstance(item, SourceNodeType);
+}
+
+export type TargetNodeType = PortNode;
+
+export const TargetNodeType = 'TargetNodeType';
+
+export function isTargetNodeType(item: unknown): item is TargetNodeType {
+    return reflection.isInstance(item, TargetNodeType);
+}
+
 export interface ClusterNode extends AstNode {
     readonly $container: Model;
     readonly $type: 'ClusterNode';
@@ -140,8 +156,8 @@ export interface EdgeAttribute extends AstNode {
     readonly $container: Diagram;
     readonly $type: 'EdgeAttribute';
     id: string;
-    sourceID: Reference<NodeType>;
-    targetID: Reference<NodeType>;
+    sourceID: Reference<SourceNodeType>;
+    targetID: Reference<TargetNodeType>;
 }
 
 export const EdgeAttribute = 'EdgeAttribute';
@@ -305,24 +321,30 @@ export type KDLAstType = {
     Point: Point
     PortNode: PortNode
     ServiceNode: ServiceNode
+    SourceNodeType: SourceNodeType
+    TargetNodeType: TargetNodeType
     WithCustomProperties: WithCustomProperties
 }
 
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, Model, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, WithCustomProperties];
+        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, Model, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, SourceNodeType, TargetNodeType, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
             case ClusterNode:
+            case PodNode: {
+                return this.isSubtype(NodeType, supertype);
+            }
             case ContainerNode:
             case IngressNode:
-            case PodNode:
-            case PortNode:
             case ServiceNode: {
-                return this.isSubtype(NodeType, supertype);
+                return this.isSubtype(NodeType, supertype) || this.isSubtype(SourceNodeType, supertype);
+            }
+            case PortNode: {
+                return this.isSubtype(NodeType, supertype) || this.isSubtype(TargetNodeType, supertype);
             }
             default: {
                 return false;
@@ -347,8 +369,12 @@ export class KDLAstReflection extends AbstractAstReflection {
             case 'ServiceNode:links': {
                 return PortNode;
             }
-            case 'EdgeAttribute:sourceID':
-            case 'EdgeAttribute:targetID':
+            case 'EdgeAttribute:sourceID': {
+                return SourceNodeType;
+            }
+            case 'EdgeAttribute:targetID': {
+                return TargetNodeType;
+            }
             case 'NodeAttribute:nodeID': {
                 return NodeType;
             }
