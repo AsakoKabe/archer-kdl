@@ -7,9 +7,9 @@ KDLDiagram:
             'id' ':' id=ID
             ('name' ':'  name=STRING)
             (
-                'model' ':' 
+                'clusters' ':' 
                 INDENT
-                    model=Model
+                    (LIST_ITEM clusters+=ClusterNode)+
                 DEDENT
             )?
 
@@ -20,41 +20,6 @@ KDLDiagram:
                 DEDENT
             )?
         DEDENT
-;
-
-Model:
-    (
-        (
-            'clusters' ':'
-            INDENT 
-                (LIST_ITEM clusters+=ClusterNode)+
-            DEDENT
-        ) &
-        (
-            'ingresses' ':'
-            INDENT 
-                (LIST_ITEM ingresses+=IngressNode)+
-            DEDENT
-        ) &
-        (
-            'services' ':'
-            INDENT 
-                (LIST_ITEM services+=ServiceNode)+
-            DEDENT
-        ) &
-        (
-            'pods' ':'
-            INDENT 
-                (LIST_ITEM pods+=PodNode)+
-            DEDENT
-        ) & 
-        (
-            'containers' ':'
-            INDENT 
-                (LIST_ITEM containers+=ContainerNode)+
-            DEDENT
-        )
-    )
 ;
 
 Diagram:
@@ -79,19 +44,19 @@ ClusterNode:
         (
             'ingresses' ':'
             INDENT 
-                (LIST_ITEM ingresses+=[IngressNode:IDReference])+
+                (LIST_ITEM ingresses+=IngressNode)+
             DEDENT
         ) &
         (
             'services' ':'
             INDENT 
-                (LIST_ITEM services+=[ServiceNode:IDReference])+
+                (LIST_ITEM services+=ServiceNode)+
             DEDENT
         ) & 
         (
             'pods' ':'
             INDENT 
-                (LIST_ITEM pods+=[PodNode:IDReference])+
+                (LIST_ITEM pods+=PodNode)+
             DEDENT
         )
     )?
@@ -137,7 +102,7 @@ PodNode:
         (
             'containers' ':'
             INDENT 
-                (LIST_ITEM containers+=[ContainerNode:IDReference])+
+                (LIST_ITEM containers+=ContainerNode)+
             DEDENT
         ) &
         (

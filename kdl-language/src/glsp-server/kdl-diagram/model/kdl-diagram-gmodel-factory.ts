@@ -38,27 +38,27 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         // }
         const graphBuilder = GGraph.builder().id(this.modelState.semanticUri);
         this.addClustersToGraph(diagramRoot, graphBuilder);
-        this.addLinksToGraph(diagramRoot, graphBuilder);     
+        diagramRoot.clusters.forEach(cluster => this.addLinksToGraph(cluster, graphBuilder));
         return graphBuilder.build();
     }
 
     protected addClustersToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
-        diagramRoot.model!.clusters
-            .map(cluster => this.createClusterNode(cluster, graphBuilder))
-            .forEach(cluster => graphBuilder.add(cluster));
+        diagramRoot.clusters.map(cluster => this.createClusterNode(cluster, graphBuilder)).forEach(cluster => graphBuilder.add(cluster));
     }
 
-    protected addLinksToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
-        const links = this.collectLinks(diagramRoot);
+    protected addLinksToGraph(cluster: ast.ClusterNode, graphBuilder: GGraphBuilder): void {
+        const links = this.collectLinks(cluster);
         links.map(link => this.createEdge(link)).forEach(edge => graphBuilder.add(edge));
     }
 
-    protected collectLinks(diagramRoot: ast.KDLDiagram): { source: ast.SourceNodeType; target: ast.TargetNodeType }[] {
+    protected collectLinks(cluster: ast.ClusterNode): { source: ast.SourceNodeType; target: ast.TargetNodeType }[] {
         return [
-            ...diagramRoot.model!.ingresses.flatMap(ingress => ingress.links.map(link => ({ source: ingress, target: link.ref! }))),
-            ...diagramRoot.model!.services.flatMap(service => service.links.map(link => ({ source: service, target: link.ref! }))),
-            ...diagramRoot.model!.containers.flatMap(container => container.links.map(link => ({ source: container, target: link.ref! })))
-        ]
+            ...cluster.ingresses.flatMap(ingress => ingress.links.map(link => ({ source: ingress, target: link.ref! }))),
+            ...cluster.services.flatMap(service => service.links.map(link => ({ source: service, target: link.ref! }))),
+            ...cluster.pods.flatMap(pod =>
+                pod.containers.flatMap(container => container.links.map(link => ({ source: container, target: link.ref! })))
+            )
+        ];
     }
 
     protected createEdge(link: { source: ast.SourceNodeType; target: ast.TargetNodeType }): GEdge {
@@ -76,7 +76,12 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         );
     }
 
-    protected findOrCreateEdgeAttribute(source: ast.SourceNodeType, sourceID: string, target: ast.TargetNodeType, targetID: string): ast.EdgeAttribute {
+    protected findOrCreateEdgeAttribute(
+        source: ast.SourceNodeType,
+        sourceID: string,
+        target: ast.TargetNodeType,
+        targetID: string
+    ): ast.EdgeAttribute {
         const edgeAttributes = this.modelState.kdlDiagram.diagram!.edgeAttributes;
         let edgeAttribute = edgeAttributes.find(edgeAttribute => edgeAttribute.id === createEdgeID(sourceID, targetID));
         if (!edgeAttribute) {
@@ -94,7 +99,9 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected findOrCreateNodeAttribute(node: KDLNode): ast.NodeAttribute {
         const nodeAttributes = this.modelState.kdlDiagram.diagram!.nodeAttributes;
-        let nodeAttribute = nodeAttributes.find(nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(node));
+        let nodeAttribute = nodeAttributes.find(
+            nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(node)
+        );
         if (!nodeAttribute) {
             nodeAttribute = createNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, node);
             // this.modelState.kdlDiagram.diagram.nodeAttributes.push(nodeAttribute);
@@ -104,17 +111,14 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected createClusterNode(cluster: ast.ClusterNode, graphBuilder: GGraphBuilder): GCompartment {
         const ingressNodes = cluster.ingresses
-            .map(id => id.ref)
             .filter((e): e is ast.IngressNode => e !== undefined)
             .map(ingress => this.createIngressNode(ingress, graphBuilder));
 
         const podNodes = cluster.pods
-            .map(id => id.ref)
             .filter((e): e is ast.PodNode => e !== undefined)
             .map(pod => this.createPodNode(pod));
 
         const serviceNodes = cluster.services
-            .map(id => id.ref)
             .filter((e): e is ast.ServiceNode => e !== undefined)
             .map(service => this.createServiceNode(service));
 
@@ -159,7 +163,6 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected createPodNode(pod: ast.PodNode): GCompartment {
         const containerNodes = pod.containers
-            .map(id => id.ref)
             .filter((e): e is ast.ContainerNode => e !== undefined)
             .map(container => this.createContainerNode(container));
 

@@ -34,6 +34,6 @@ export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOpera
         const cluster = createClusterNode(kdlDiagram);
 
         addNodeAttribute(kdlDiagram, this.modelState.idProvider, cluster, location);
-        kdlDiagram.model!.clusters.push(cluster);
+        kdlDiagram.clusters.push(cluster);
     }
 }

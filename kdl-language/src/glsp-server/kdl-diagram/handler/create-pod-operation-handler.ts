@@ -33,16 +33,13 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         if (!operation.containerId) {
             throw new GLSPServerError("Pod can't be outside cluster");
         }
-        const kdlDiagram = this.modelState.kdlDiagram;
-        const location = relativeLocation ?? Point.ORIGIN;
-        const pod = createPodNode(kdlDiagram);
-
-        addNodeAttribute(kdlDiagram, this.modelState.idProvider, pod, location);
-        kdlDiagram.model!.pods.push(pod);
-
-        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isClusterNode(cluster)) {
-            cluster.pods.push({ ref: pod, $refText: this.modelState.idProvider.getLocalId(pod) || pod.id || '' });
+        const clusterNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isClusterNode);
+        if (!clusterNode) {
+            throw new GLSPServerError('Cluster node not found');
         }
+        const location = relativeLocation ?? Point.ORIGIN;
+        const pod = createPodNode(clusterNode);
+        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod, location);
+        clusterNode.pods.push(pod);
     }
 }

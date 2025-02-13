@@ -1,14 +1,12 @@
 import { AstNode } from 'langium';
 import { AbstractSemanticTokenProvider, SemanticTokenAcceptor } from 'langium/lsp';
 import { SemanticTokenTypes } from 'vscode-languageserver-protocol';
-import { isClusterNode, isContainerNode, isDiagram, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram, isModel, isNodeAttribute, isPodNode, isPortNode, isServiceNode } from './generated/ast.js';
+import { isClusterNode, isContainerNode, isDiagram, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram,  isNodeAttribute, isPodNode, isPortNode, isServiceNode } from './generated/ast.js';
 
 export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
     protected highlightElement(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         if (isKDLDiagram(node)) {
             this.highlightKDLDiagram(node, acceptor);
-        } else if (isModel(node)) {
-            this.highlightModelNode(node, acceptor);
         } else if (isDiagram(node)){
             this.highlightDiagramNode(node, acceptor);
         } else if (isClusterNode(node)) {
@@ -76,8 +74,8 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         });
         acceptor({
             node,
-            keyword: 'model',
-            type: SemanticTokenTypes.keyword
+            keyword: 'clusters',
+            type: SemanticTokenTypes.class
         });
         acceptor({
             node,
@@ -85,45 +83,6 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             type: SemanticTokenTypes.keyword
         });
     }
-
-    private highlightModelNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
-        acceptor({
-            node,
-            keyword: 'clusters',
-            type: SemanticTokenTypes.class
-        });
-        acceptor({
-            node,
-            keyword: 'ingresses',
-            type: SemanticTokenTypes.class
-        });
-        acceptor({
-            node,
-            keyword: 'services',
-            type: SemanticTokenTypes.class
-        });
-        acceptor({
-            node,
-            keyword: 'pods',
-            type: SemanticTokenTypes.class
-        });
-        acceptor({
-            node,
-            keyword: 'containers',
-            type: SemanticTokenTypes.class
-        });
-        acceptor({
-            node,
-            keyword: 'nodeAttributes',
-            type: SemanticTokenTypes.class
-        });
-        acceptor({
-            node,
-            keyword: 'edgeAttributes',
-            type: SemanticTokenTypes.class
-        });
-    }
-
 
     private highlightClusterNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         acceptor({
@@ -148,38 +107,18 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         });
         acceptor({
             node,
-            keyword: 'dimensions',
-            type: SemanticTokenTypes.keyword
-        });
-        acceptor({
-            node,
             keyword: 'ingresses',
-            type: SemanticTokenTypes.keyword
-        });
-        acceptor({
-            node,
-            property: 'ingresses',
-            type: SemanticTokenTypes.parameter
+            type: SemanticTokenTypes.class
         });
         acceptor({
             node,
             keyword: 'services',
-            type: SemanticTokenTypes.keyword
-        });
-        acceptor({
-            node,
-            property: 'services',
-            type: SemanticTokenTypes.parameter
+            type: SemanticTokenTypes.class
         });
         acceptor({
             node,
             keyword: 'pods',
-            type: SemanticTokenTypes.keyword
-        });
-        acceptor({
-            node,
-            property: 'pods',
-            type: SemanticTokenTypes.parameter
+            type: SemanticTokenTypes.class
         });
     }
 
@@ -216,11 +155,6 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         });
         acceptor({
             node,
-            keyword: 'dimensions',
-            type: SemanticTokenTypes.keyword
-        });
-        acceptor({
-            node,
             keyword: 'links',
             type: SemanticTokenTypes.keyword
         });
@@ -251,11 +185,6 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             node,
             property: 'name',
             type: SemanticTokenTypes.string
-        });
-        acceptor({
-            node,
-            keyword: 'dimensions',
-            type: SemanticTokenTypes.keyword
         });
         acceptor({
             node,
@@ -300,11 +229,6 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             property: 'number',
             type: SemanticTokenTypes.number
         });
-        acceptor({
-            node,
-            keyword: 'dimensions',
-            type: SemanticTokenTypes.keyword
-        });
     }
 
     private highlightPodNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
@@ -331,22 +255,12 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'containers',
-            type: SemanticTokenTypes.keyword
-        });
-        acceptor({
-            node,
-            property: 'containers',
-            type: SemanticTokenTypes.parameter
-        });
-        acceptor({
-            node,
-            keyword: 'dimensions',
-            type: SemanticTokenTypes.keyword
+            type: SemanticTokenTypes.class
         });
         acceptor({
             node,
             keyword: 'ports',
-            type: SemanticTokenTypes.keyword
+            type: SemanticTokenTypes.class
         });
     }
 
@@ -373,11 +287,6 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         });
         acceptor({
             node,
-            keyword: 'dimensions',
-            type: SemanticTokenTypes.keyword
-        });
-        acceptor({
-            node,
             keyword: 'links',
             type: SemanticTokenTypes.keyword
         });
@@ -389,7 +298,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'ports',
-            type: SemanticTokenTypes.keyword
+            type: SemanticTokenTypes.class
         });
     }
 

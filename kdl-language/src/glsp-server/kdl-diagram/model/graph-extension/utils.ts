@@ -81,42 +81,42 @@ export function addEdgeAttribute(
 export function createClusterNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ClusterNode {
     return {
         $type: ast.ClusterNode,
-        $container: kdlDiagram.model!,
-        id: 'ClusterNode' + kdlDiagram.model!.clusters.length,
-        name: name ? name : 'ClusterNode' + kdlDiagram.model!.clusters.length,
+        $container: kdlDiagram,
+        id: 'ClusterNode' + kdlDiagram.clusters.length,
+        name: name ? name : 'ClusterNode' + kdlDiagram.clusters.length,
         ingresses: [],
         pods: [],
         services: []
     };
 }
 
-export function createContainerNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ContainerNode {
+export function createContainerNode(pod: ast.PodNode, name?: string): ast.ContainerNode {
     return {
         $type: ast.ContainerNode,
-        $container: kdlDiagram.model!,
-        id: 'ContainerNode' + kdlDiagram.model!.containers.length,
-        name: name ? name : 'ContainerNode' + kdlDiagram.model!.containers.length,
+        $container: pod,
+        id: 'ContainerNode' + pod.containers.length,
+        name: name ? name : 'ContainerNode' + pod.containers.length,
         links: []
     };
 }
 
-export function createIngressNode(kdlDiagram: ast.KDLDiagram, name?: string, host?: string): ast.IngressNode {
+export function createIngressNode(clusterNode: ast.ClusterNode, name?: string, host?: string): ast.IngressNode {
     return {
         $type: ast.IngressNode,
-        $container: kdlDiagram.model!,
-        id: 'IngressNode' + kdlDiagram.model!.ingresses.length,
-        name: name ? name : 'IngressNode' + kdlDiagram.model!.ingresses.length,
+        $container: clusterNode,
+        id: 'IngressNode' + clusterNode.ingresses.length,
+        name: name ? name : 'IngressNode' + clusterNode.ingresses.length,
         host: host ? host : 'localhost',
         links: []
     };
 }
 
-export function createPodNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.PodNode {
+export function createPodNode(cluster: ast.ClusterNode, name?: string): ast.PodNode {
     return {
         $type: ast.PodNode,
-        $container: kdlDiagram.model!,
-        id: 'PodNode' + kdlDiagram.model!.pods.length,
-        name: name ? name : 'PodNode' + kdlDiagram.model!.pods.length,
+        $container: cluster,
+        id: 'PodNode' + cluster.pods.length,
+        name: name ? name : 'PodNode' + cluster.pods.length,
         containers: [],
         ports: []
     };
@@ -132,12 +132,12 @@ export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?
     };
 }
 
-export function createServiceNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ServiceNode {
+export function createServiceNode(cluster: ast.ClusterNode, name?: string): ast.ServiceNode {
     return {
         $type: ast.ServiceNode,
-        $container: kdlDiagram.model!,
-        id: 'ServiceNode' + kdlDiagram.model!.services.length,
-        name: name ? name : 'ServiceNode' + kdlDiagram.model!.services.length,
+        $container: cluster,
+        id: 'ServiceNode' + cluster.services.length,
+        name: name ? name : 'ServiceNode' + cluster.services.length,
         ports: [],
         links: []
     };

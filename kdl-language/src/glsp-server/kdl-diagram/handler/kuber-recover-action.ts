@@ -79,28 +79,39 @@ export class KuberRecoverActionHandler implements ActionHandler {
             .getNamespaces()
             .then(namespaces => this.recoverCluster(namespaces))
             .then(() => {
-                // this.modelState.updateSourceModel(this.modelState.sourceModel);
                 return [];
             });
-        // .then(() => {
-        //     const result = this.modelSubmissionHandler.submitModel('external');
-        //     return result;
-        // });
+    }
+
+    private async recoverCluster(namespaces: string[]): Promise<void> {
+        const clusters: ast.ClusterNode[] = [];
+        namespaces
+            .filter(namespace => !namespace.startsWith('kube'))
+            .map(namespace => {
+                const cluster = createClusterNode(this.modelState.kdlDiagram, namespace);
+                this.modelState.kdlDiagram.clusters.push(cluster);
+                clusters.push(cluster);
+                addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, cluster);
+            });
+
+        await Promise.all(clusters.map(cluster => this.recoverPods(cluster)));
+        await Promise.all(clusters.map(cluster => this.recoverServices(cluster)));
+        await Promise.all(clusters.map(cluster => this.recoverIngresses(cluster)));
+
+        await this.modelState.updateSourceModel(this.modelState.sourceModel);
     }
 
     private async recoverPods(cluster: ast.ClusterNode): Promise<void> {
         try {
             const podsList = await this.kuberClient.getPods(cluster.name);
             for (const kuberPod of podsList.items) {
-                const pod = createPodNode(this.modelState.kdlDiagram, kuberPod.metadata?.name);
-                this.modelState.kdlDiagram.model!.pods.push(pod);
-                cluster.pods.push({ ref: pod, $refText: this.modelState.idProvider.getLocalId(pod)! });
+                const pod = createPodNode(cluster, kuberPod.metadata?.name);
+                cluster.pods.push(pod);
                 if (kuberPod.spec?.containers) {
                     this.recoverContainers(pod, kuberPod.spec.containers);
                 }
                 addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod);
             }
-            // await this.modelState.updateSourceModel(this.modelState.sourceModel);
         } catch (error) {
             throw new GLSPServerError('Error to send k8s request to get pods');
         }
@@ -108,9 +119,8 @@ export class KuberRecoverActionHandler implements ActionHandler {
 
     private recoverContainers(pod: ast.PodNode, kuberContainers: k8s.V1Container[]): void {
         kuberContainers?.map(kuberContainer => {
-            const container = createContainerNode(this.modelState.kdlDiagram, kuberContainer.name);
-            this.modelState.kdlDiagram.model!.containers.push(container);
-            pod.containers.push({ ref: container, $refText: this.modelState.idProvider.getLocalId(container)! });
+            const container = createContainerNode(pod, kuberContainer.name);
+            pod.containers.push(container);
             if (kuberContainer.ports) {
                 this.recoverPodPorts(pod, kuberContainer.ports, kuberContainers.length);
             }
@@ -126,6 +136,23 @@ export class KuberRecoverActionHandler implements ActionHandler {
         });
     }
 
+    private async recoverServices(cluster: ast.ClusterNode): Promise<void> {
+        try {
+            const serviceList = await this.kuberClient.getServices(cluster.name);
+            for (const kuberService of serviceList.items) {
+                const service = createServiceNode(cluster, kuberService.metadata?.name);
+                cluster.services.push(service);
+                if (kuberService.spec?.ports) {
+                    this.recoverServicePorts(service, kuberService.spec.ports);
+                    await this.recoverServiceToPodLinks(cluster.name, cluster, service, kuberService, kuberService.spec.ports);
+                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service);
+                }
+            }
+        } catch (error) {
+            throw new GLSPServerError('Error to send k8s request to get services');
+        }
+    }
+
     private recoverServicePorts(service: ast.ServiceNode, kuberPorts: k8s.V1ServicePort[]): void {
         kuberPorts?.map(kuberPort => {
             const port = createPortNode(service, kuberPort.port, kuberPort.name);
@@ -136,6 +163,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
 
     private async recoverServiceToPodLinks(
         namespace: string,
+        cluster: ast.ClusterNode,
         service: ast.ServiceNode,
         kuberService: k8s.V1Service,
         kuberPorts: k8s.V1ServicePort[]
@@ -147,7 +175,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
             return selectorKeys.every(key => podLabels[key] === selector[key]);
         });
 
-        const targetPods = this.modelState.kdlDiagram.model!.pods.filter(pod =>
+        const targetPods = cluster.pods.filter(pod =>
             matchedKuberPods.some(kuberPod => kuberPod.metadata?.name === pod.name)
         );
         const targetPorts = targetPods
@@ -170,20 +198,20 @@ export class KuberRecoverActionHandler implements ActionHandler {
         });
     }
 
-    private async recoverServices(cluster: ast.ClusterNode): Promise<void> {
+    private async recoverIngresses(cluster: ast.ClusterNode): Promise<void> {
         try {
-            const serviceList = await this.kuberClient.getServices(cluster.name);
-            for (const kuberService of serviceList.items) {
-                const service = createServiceNode(this.modelState.kdlDiagram, kuberService.metadata?.name);
-                this.modelState.kdlDiagram.model!.services.push(service);
-                cluster.services.push({ ref: service, $refText: this.modelState.idProvider.getLocalId(service)! });
-                if (kuberService.spec?.ports) {
-                    this.recoverServicePorts(service, kuberService.spec.ports);
-                    await this.recoverServiceToPodLinks(cluster.name, service, kuberService, kuberService.spec.ports);
-                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service);
+            const ingressList = await this.kuberClient.getIngresses(cluster.name);
+            for (const kuberIngress of ingressList.items) {
+                const ingressName = kuberIngress.metadata?.name;
+                for (const rule of kuberIngress.spec?.rules || []) {
+                    if (rule.host) {
+                        const ingress = createIngressNode(cluster, ingressName, rule.host);
+                        cluster.ingresses.push(ingress);
+                        await this.recoverIngressToServiceLink(rule.http?.paths, cluster, ingress);
+                        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, ingress);
+                    }
                 }
             }
-            // await this.modelState.updateSourceModel(this.modelState.sourceModel);
         } catch (error) {
             throw new GLSPServerError('Error to send k8s request to get services');
         }
@@ -203,7 +231,6 @@ export class KuberRecoverActionHandler implements ActionHandler {
             const servicePortName = path.backend?.service?.port?.name;
 
             const targetService = cluster.services
-                .map(service => service.ref)
                 .filter((service): service is ast.ServiceNode => service !== undefined && service.name === serviceName)
                 .at(0);
             if (!targetService) {
@@ -225,44 +252,5 @@ export class KuberRecoverActionHandler implements ActionHandler {
                 );
             });
         }
-    }
-
-    private async recoverIngresses(cluster: ast.ClusterNode): Promise<void> {
-        try {
-            const ingressList = await this.kuberClient.getIngresses(cluster.name);
-            for (const kuberIngress of ingressList.items) {
-                const ingressName = kuberIngress.metadata?.name;
-                for (const rule of kuberIngress.spec?.rules || []) {
-                    if (rule.host) {
-                        const ingress = createIngressNode(this.modelState.kdlDiagram, ingressName, rule.host);
-                        this.modelState.kdlDiagram.model!.ingresses.push(ingress);
-                        cluster.ingresses.push({ ref: ingress, $refText: this.modelState.idProvider.getLocalId(ingress)! });
-                        await this.recoverIngressToServiceLink(rule.http?.paths, cluster, ingress);
-                        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, ingress);
-                    }
-                }
-            }
-            // await this.modelState.updateSourceModel(this.modelState.sourceModel);
-        } catch (error) {
-            throw new GLSPServerError('Error to send k8s request to get services');
-        }
-    }
-
-    private async recoverCluster(namespaces: string[]): Promise<void> {
-        const clusters: ast.ClusterNode[] = [];
-        namespaces
-            .filter(namespace => !namespace.startsWith('kube'))
-            .map(namespace => {
-                const cluster = createClusterNode(this.modelState.kdlDiagram, namespace);
-                this.modelState.kdlDiagram.model!.clusters.push(cluster);
-                clusters.push(cluster);
-                addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, cluster);
-            });
-
-        await Promise.all(clusters.map(cluster => this.recoverPods(cluster)));
-        await Promise.all(clusters.map(cluster => this.recoverServices(cluster)));
-        await Promise.all(clusters.map(cluster => this.recoverIngresses(cluster)));
-
-        await this.modelState.updateSourceModel(this.modelState.sourceModel);
     }
 }

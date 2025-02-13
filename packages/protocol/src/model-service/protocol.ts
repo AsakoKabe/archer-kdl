@@ -34,13 +34,14 @@ export type NodeType = ClusterNode | ContainerNode | IngressNode | PodNode | Por
 
 export const NodeType = 'NodeType';
 
+// Updated ClusterNode interface
 export interface ClusterNode {
    readonly $type: 'ClusterNode';
    id: string;
-   ingresses: Array<Reference<IngressNode>>;
+   ingresses: Array<IngressNode>;
    name: string;
-   pods: Array<Reference<PodNode>>;
-   services: Array<Reference<ServiceNode>>;
+   pods: Array<PodNode>;
+   services: Array<ServiceNode>;
 }
 export const ClusterNode = 'ClusterNode';
 
@@ -85,11 +86,12 @@ export interface IngressNode{
 }
 export const IngressNode = 'IngressNode';
 
+// Updated KDLDiagram interface
 export interface KDLDiagram {
    readonly $type: 'KDLDiagram';
-   diagram: Diagram;
+   diagram?: Diagram;
    id: string;
-   model: Model;
+   clusters: Array<ClusterNode>;
    name: string;
 }
 export const KDLDiagram = 'KDLDiagram';
@@ -100,16 +102,6 @@ export interface KDLRoot {
 }
 export const KDLRoot = 'KDLRoot';
 
-export interface Model {
-   readonly $type: 'Model';
-   clusters: Array<ClusterNode>;
-   containers: Array<ContainerNode>;
-   ingresses: Array<IngressNode>;
-   pods: Array<PodNode>;
-   services: Array<ServiceNode>;
-}
-export const Model = 'Model';
-
 export interface NodeAttribute {
    readonly $type: 'NodeAttribute';
    dimensions: Dimensions;
@@ -118,9 +110,10 @@ export interface NodeAttribute {
 }
 export const NodeAttribute = 'NodeAttribute';
 
+// Updated PodNode interface
 export interface PodNode{
    readonly $type: 'PodNode';
-   containers: Array<Reference<ContainerNode>>;
+   containers: Array<ContainerNode>;
    id: string;
    name: string;
    ports: Array<PortNode>;

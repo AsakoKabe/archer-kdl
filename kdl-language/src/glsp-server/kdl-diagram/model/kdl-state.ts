@@ -22,17 +22,6 @@ export class KDLModelState extends CrossModelState {
                 nodeAttributes: []
             };
         }
-        if (!kdlDiagram.model){
-            kdlDiagram.model = {
-                $container: kdlDiagram,
-                $type: ast.Model,
-                clusters: [],
-                services: [],
-                ingresses: [],
-                pods: [],
-                containers: [],
-            };
-        }
         return kdlDiagram;
     }
 }

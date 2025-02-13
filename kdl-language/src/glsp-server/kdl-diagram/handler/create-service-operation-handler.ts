@@ -34,16 +34,13 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
         if (!operation.containerId) {
             throw new GLSPServerError("Service can't be outside cluster");
         }
-        const kdlDiagram = this.modelState.kdlDiagram;
-        const location = relativeLocation ?? Point.ORIGIN;
-        const service = createServiceNode(kdlDiagram);
-
-        addNodeAttribute(kdlDiagram, this.modelState.idProvider, service, location);
-        kdlDiagram.model!.services.push(service);
-
-        const cluster = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isClusterNode(cluster)) {
-            cluster.services.push({ ref: service, $refText: this.modelState.idProvider.getLocalId(service) || service.id || '' });
+        const clusterNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isClusterNode);
+        if (!clusterNode) {
+            throw new GLSPServerError('Cluster node not found');
         }
+        const location = relativeLocation ?? Point.ORIGIN;
+        const service = createServiceNode(clusterNode);
+        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service, location);
+        clusterNode.services.push(service);
     }
 }

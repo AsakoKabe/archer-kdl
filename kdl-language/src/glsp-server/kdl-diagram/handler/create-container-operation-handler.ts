@@ -32,18 +32,15 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
 
     protected async createContainer(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
         if (!operation.containerId) {
-            throw new GLSPServerError("Container can't be outside cluster");
+            throw new GLSPServerError("Container can't be outside pod");
         }
-        const kdlDiagram = this.modelState.kdlDiagram;
+        const podNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isPodNode);
+        if (!podNode) {
+            throw new GLSPServerError('Pod node not found');
+        }
         const location = relativeLocation ?? Point.ORIGIN;
-        const containerNode = createContainerNode(kdlDiagram);
-
-        addNodeAttribute(kdlDiagram, this.modelState.idProvider, containerNode, location);
-        kdlDiagram.model!.containers.push(containerNode);
-
-        const pod = this.modelState.index.findSemanticElement(operation.containerId);
-        if (ast.isPodNode(pod)) {
-            pod.containers.push({ ref: containerNode, $refText: this.modelState.idProvider.getLocalId(containerNode) || pod.id || '' });
-        }
+        const containerNode = createContainerNode(podNode);
+        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, containerNode, location);
+        podNode.containers.push(containerNode);
     }
 }

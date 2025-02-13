@@ -35,7 +35,6 @@ export type KDLKeywordNames =
     | "ingresses"
     | "kdlDiagram"
     | "links"
-    | "model"
     | "name"
     | "nodeAttributes"
     | "nodeID"
@@ -82,13 +81,13 @@ export function isTargetNodeType(item: unknown): item is TargetNodeType {
 }
 
 export interface ClusterNode extends AstNode {
-    readonly $container: Model;
+    readonly $container: KDLDiagram;
     readonly $type: 'ClusterNode';
     id: string;
-    ingresses: Array<Reference<IngressNode>>;
+    ingresses: Array<IngressNode>;
     name: string;
-    pods: Array<Reference<PodNode>>;
-    services: Array<Reference<ServiceNode>>;
+    pods: Array<PodNode>;
+    services: Array<ServiceNode>;
 }
 
 export const ClusterNode = 'ClusterNode';
@@ -98,7 +97,7 @@ export function isClusterNode(item: unknown): item is ClusterNode {
 }
 
 export interface ContainerNode extends AstNode {
-    readonly $container: Model;
+    readonly $container: PodNode;
     readonly $type: 'ContainerNode';
     id: string;
     links: Array<Reference<PortNode>>;
@@ -167,7 +166,7 @@ export function isEdgeAttribute(item: unknown): item is EdgeAttribute {
 }
 
 export interface IngressNode extends AstNode {
-    readonly $container: Model;
+    readonly $container: ClusterNode;
     readonly $type: 'IngressNode';
     host: string;
     id: string;
@@ -184,9 +183,9 @@ export function isIngressNode(item: unknown): item is IngressNode {
 export interface KDLDiagram extends AstNode {
     readonly $container: KDLRoot;
     readonly $type: 'KDLDiagram';
+    clusters: Array<ClusterNode>;
     diagram?: Diagram;
     id: string;
-    model?: Model;
     name: string;
 }
 
@@ -207,22 +206,6 @@ export function isKDLRoot(item: unknown): item is KDLRoot {
     return reflection.isInstance(item, KDLRoot);
 }
 
-export interface Model extends AstNode {
-    readonly $container: KDLDiagram;
-    readonly $type: 'Model';
-    clusters: Array<ClusterNode>;
-    containers: Array<ContainerNode>;
-    ingresses: Array<IngressNode>;
-    pods: Array<PodNode>;
-    services: Array<ServiceNode>;
-}
-
-export const Model = 'Model';
-
-export function isModel(item: unknown): item is Model {
-    return reflection.isInstance(item, Model);
-}
-
 export interface NodeAttribute extends AstNode {
     readonly $container: Diagram;
     readonly $type: 'NodeAttribute';
@@ -238,9 +221,9 @@ export function isNodeAttribute(item: unknown): item is NodeAttribute {
 }
 
 export interface PodNode extends AstNode {
-    readonly $container: Model;
+    readonly $container: ClusterNode;
     readonly $type: 'PodNode';
-    containers: Array<Reference<ContainerNode>>;
+    containers: Array<ContainerNode>;
     id: string;
     name: string;
     ports: Array<PortNode>;
@@ -279,7 +262,7 @@ export function isPortNode(item: unknown): item is PortNode {
 }
 
 export interface ServiceNode extends AstNode {
-    readonly $container: Model;
+    readonly $container: ClusterNode;
     readonly $type: 'ServiceNode';
     id: string;
     links: Array<Reference<PortNode>>;
@@ -314,7 +297,6 @@ export type KDLAstType = {
     IngressNode: IngressNode
     KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
-    Model: Model
     NodeAttribute: NodeAttribute
     NodeType: NodeType
     PodNode: PodNode
@@ -329,7 +311,7 @@ export type KDLAstType = {
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, Model, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, SourceNodeType, TargetNodeType, WithCustomProperties];
+        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, SourceNodeType, TargetNodeType, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -355,15 +337,6 @@ export class KDLAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
-            case 'ClusterNode:ingresses': {
-                return IngressNode;
-            }
-            case 'ClusterNode:pods': {
-                return PodNode;
-            }
-            case 'ClusterNode:services': {
-                return ServiceNode;
-            }
             case 'ContainerNode:links':
             case 'IngressNode:links':
             case 'ServiceNode:links': {
@@ -377,9 +350,6 @@ export class KDLAstReflection extends AbstractAstReflection {
             }
             case 'NodeAttribute:nodeID': {
                 return NodeType;
-            }
-            case 'PodNode:containers': {
-                return ContainerNode;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
@@ -465,9 +435,9 @@ export class KDLAstReflection extends AbstractAstReflection {
                 return {
                     name: KDLDiagram,
                     properties: [
+                        { name: 'clusters', defaultValue: [] },
                         { name: 'diagram' },
                         { name: 'id' },
-                        { name: 'model' },
                         { name: 'name' }
                     ]
                 };
@@ -477,18 +447,6 @@ export class KDLAstReflection extends AbstractAstReflection {
                     name: KDLRoot,
                     properties: [
                         { name: 'kdlDiagram' }
-                    ]
-                };
-            }
-            case Model: {
-                return {
-                    name: Model,
-                    properties: [
-                        { name: 'clusters', defaultValue: [] },
-                        { name: 'containers', defaultValue: [] },
-                        { name: 'ingresses', defaultValue: [] },
-                        { name: 'pods', defaultValue: [] },
-                        { name: 'services', defaultValue: [] }
                     ]
                 };
             }

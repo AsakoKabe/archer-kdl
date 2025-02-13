@@ -53,7 +53,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@23"
+              "$ref": "#/rules@22"
             },
             "arguments": []
           },
@@ -72,7 +72,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -95,7 +95,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@20"
+                    "$ref": "#/rules@19"
                   },
                   "arguments": []
                 }
@@ -107,7 +107,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "elements": [
               {
                 "$type": "Keyword",
-                "value": "model"
+                "value": "clusters"
               },
               {
                 "$type": "Keyword",
@@ -116,26 +116,39 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@23"
+                  "$ref": "#/rules@22"
                 },
                 "arguments": []
               },
               {
-                "$type": "Assignment",
-                "feature": "model",
-                "operator": "=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@2"
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "RuleCall",
+                    "rule": {
+                      "$ref": "#/rules@24"
+                    },
+                    "arguments": []
                   },
-                  "arguments": []
-                }
+                  {
+                    "$type": "Assignment",
+                    "feature": "clusters",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@3"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "+"
               },
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@24"
+                  "$ref": "#/rules@23"
                 },
                 "arguments": []
               }
@@ -156,7 +169,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@23"
+                  "$ref": "#/rules@22"
                 },
                 "arguments": []
               },
@@ -167,7 +180,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@3"
+                    "$ref": "#/rules@2"
                   },
                   "arguments": []
                 }
@@ -175,7 +188,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@24"
+                  "$ref": "#/rules@23"
                 },
                 "arguments": []
               }
@@ -185,284 +198,9 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@24"
+              "$ref": "#/rules@23"
             },
             "arguments": []
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "Model",
-      "definition": {
-        "$type": "UnorderedGroup",
-        "elements": [
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "clusters"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@23"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@25"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "clusters",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@4"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@24"
-                },
-                "arguments": []
-              }
-            ]
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "ingresses"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@23"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@25"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "ingresses",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@5"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@24"
-                },
-                "arguments": []
-              }
-            ]
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "services"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@23"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@25"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "services",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@9"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@24"
-                },
-                "arguments": []
-              }
-            ]
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "pods"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@23"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@25"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "pods",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@8"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@24"
-                },
-                "arguments": []
-              }
-            ]
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "containers"
-              },
-              {
-                "$type": "Keyword",
-                "value": ":"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@23"
-                },
-                "arguments": []
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "RuleCall",
-                    "rule": {
-                      "$ref": "#/rules@25"
-                    },
-                    "arguments": []
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "containers",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@6"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "+"
-              },
-              {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@24"
-                },
-                "arguments": []
-              }
-            ]
           }
         ]
       },
@@ -493,7 +231,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@23"
+                  "$ref": "#/rules@22"
                 },
                 "arguments": []
               },
@@ -503,7 +241,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@25"
+                      "$ref": "#/rules@24"
                     },
                     "arguments": []
                   },
@@ -514,7 +252,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@14"
+                        "$ref": "#/rules@13"
                       },
                       "arguments": []
                     }
@@ -525,7 +263,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@24"
+                  "$ref": "#/rules@23"
                 },
                 "arguments": []
               }
@@ -546,7 +284,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@23"
+                  "$ref": "#/rules@22"
                 },
                 "arguments": []
               },
@@ -556,7 +294,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@25"
+                      "$ref": "#/rules@24"
                     },
                     "arguments": []
                   },
@@ -567,7 +305,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@16"
+                        "$ref": "#/rules@15"
                       },
                       "arguments": []
                     }
@@ -578,7 +316,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@24"
+                  "$ref": "#/rules@23"
                 },
                 "arguments": []
               }
@@ -615,7 +353,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -635,7 +373,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -657,7 +395,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@23"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   },
@@ -667,7 +405,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@25"
+                          "$ref": "#/rules@24"
                         },
                         "arguments": []
                       },
@@ -676,18 +414,11 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                         "feature": "ingresses",
                         "operator": "+=",
                         "terminal": {
-                          "$type": "CrossReference",
-                          "type": {
-                            "$ref": "#/rules@5"
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@4"
                           },
-                          "terminal": {
-                            "$type": "RuleCall",
-                            "rule": {
-                              "$ref": "#/rules@17"
-                            },
-                            "arguments": []
-                          },
-                          "deprecatedSyntax": false
+                          "arguments": []
                         }
                       }
                     ],
@@ -696,7 +427,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@24"
+                      "$ref": "#/rules@23"
                     },
                     "arguments": []
                   }
@@ -716,7 +447,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@23"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   },
@@ -726,7 +457,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@25"
+                          "$ref": "#/rules@24"
                         },
                         "arguments": []
                       },
@@ -735,18 +466,11 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                         "feature": "services",
                         "operator": "+=",
                         "terminal": {
-                          "$type": "CrossReference",
-                          "type": {
-                            "$ref": "#/rules@9"
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@8"
                           },
-                          "terminal": {
-                            "$type": "RuleCall",
-                            "rule": {
-                              "$ref": "#/rules@17"
-                            },
-                            "arguments": []
-                          },
-                          "deprecatedSyntax": false
+                          "arguments": []
                         }
                       }
                     ],
@@ -755,7 +479,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@24"
+                      "$ref": "#/rules@23"
                     },
                     "arguments": []
                   }
@@ -775,7 +499,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@23"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   },
@@ -785,7 +509,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@25"
+                          "$ref": "#/rules@24"
                         },
                         "arguments": []
                       },
@@ -794,18 +518,11 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                         "feature": "pods",
                         "operator": "+=",
                         "terminal": {
-                          "$type": "CrossReference",
-                          "type": {
-                            "$ref": "#/rules@8"
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@7"
                           },
-                          "terminal": {
-                            "$type": "RuleCall",
-                            "rule": {
-                              "$ref": "#/rules@17"
-                            },
-                            "arguments": []
-                          },
-                          "deprecatedSyntax": false
+                          "arguments": []
                         }
                       }
                     ],
@@ -814,7 +531,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@24"
+                      "$ref": "#/rules@23"
                     },
                     "arguments": []
                   }
@@ -853,7 +570,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -873,7 +590,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -893,7 +610,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -912,7 +629,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@23"
+                  "$ref": "#/rules@22"
                 },
                 "arguments": []
               },
@@ -922,7 +639,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@25"
+                      "$ref": "#/rules@24"
                     },
                     "arguments": []
                   },
@@ -933,12 +650,12 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                     "terminal": {
                       "$type": "CrossReference",
                       "type": {
-                        "$ref": "#/rules@7"
+                        "$ref": "#/rules@6"
                       },
                       "terminal": {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@17"
+                          "$ref": "#/rules@16"
                         },
                         "arguments": []
                       },
@@ -951,7 +668,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@24"
+                  "$ref": "#/rules@23"
                 },
                 "arguments": []
               }
@@ -988,7 +705,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -1008,7 +725,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -1027,7 +744,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@23"
+                  "$ref": "#/rules@22"
                 },
                 "arguments": []
               },
@@ -1037,7 +754,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@25"
+                      "$ref": "#/rules@24"
                     },
                     "arguments": []
                   },
@@ -1048,12 +765,12 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                     "terminal": {
                       "$type": "CrossReference",
                       "type": {
-                        "$ref": "#/rules@7"
+                        "$ref": "#/rules@6"
                       },
                       "terminal": {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@17"
+                          "$ref": "#/rules@16"
                         },
                         "arguments": []
                       },
@@ -1066,7 +783,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@24"
+                  "$ref": "#/rules@23"
                 },
                 "arguments": []
               }
@@ -1103,7 +820,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -1123,7 +840,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -1143,7 +860,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@21"
+                "$ref": "#/rules@20"
               },
               "arguments": []
             }
@@ -1178,7 +895,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -1198,7 +915,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -1220,7 +937,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@23"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   },
@@ -1230,7 +947,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@25"
+                          "$ref": "#/rules@24"
                         },
                         "arguments": []
                       },
@@ -1239,18 +956,11 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                         "feature": "containers",
                         "operator": "+=",
                         "terminal": {
-                          "$type": "CrossReference",
-                          "type": {
-                            "$ref": "#/rules@6"
+                          "$type": "RuleCall",
+                          "rule": {
+                            "$ref": "#/rules@5"
                           },
-                          "terminal": {
-                            "$type": "RuleCall",
-                            "rule": {
-                              "$ref": "#/rules@17"
-                            },
-                            "arguments": []
-                          },
-                          "deprecatedSyntax": false
+                          "arguments": []
                         }
                       }
                     ],
@@ -1259,7 +969,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@24"
+                      "$ref": "#/rules@23"
                     },
                     "arguments": []
                   }
@@ -1279,7 +989,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@23"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   },
@@ -1289,7 +999,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@25"
+                          "$ref": "#/rules@24"
                         },
                         "arguments": []
                       },
@@ -1300,7 +1010,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@7"
+                            "$ref": "#/rules@6"
                           },
                           "arguments": []
                         }
@@ -1311,7 +1021,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@24"
+                      "$ref": "#/rules@23"
                     },
                     "arguments": []
                   }
@@ -1350,7 +1060,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -1370,7 +1080,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@20"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -1392,7 +1102,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@23"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   },
@@ -1402,7 +1112,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@25"
+                          "$ref": "#/rules@24"
                         },
                         "arguments": []
                       },
@@ -1413,7 +1123,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@7"
+                            "$ref": "#/rules@6"
                           },
                           "arguments": []
                         }
@@ -1424,7 +1134,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@24"
+                      "$ref": "#/rules@23"
                     },
                     "arguments": []
                   }
@@ -1444,7 +1154,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@23"
+                      "$ref": "#/rules@22"
                     },
                     "arguments": []
                   },
@@ -1454,7 +1164,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                       {
                         "$type": "RuleCall",
                         "rule": {
-                          "$ref": "#/rules@25"
+                          "$ref": "#/rules@24"
                         },
                         "arguments": []
                       },
@@ -1465,12 +1175,12 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                         "terminal": {
                           "$type": "CrossReference",
                           "type": {
-                            "$ref": "#/rules@7"
+                            "$ref": "#/rules@6"
                           },
                           "terminal": {
                             "$type": "RuleCall",
                             "rule": {
-                              "$ref": "#/rules@17"
+                              "$ref": "#/rules@16"
                             },
                             "arguments": []
                           },
@@ -1483,7 +1193,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@24"
+                      "$ref": "#/rules@23"
                     },
                     "arguments": []
                   }
@@ -1510,21 +1220,14 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
+              "$ref": "#/rules@3"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
               "$ref": "#/rules@4"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@5"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@9"
             },
             "arguments": []
           },
@@ -1538,14 +1241,21 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@6"
+              "$ref": "#/rules@7"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@7"
+              "$ref": "#/rules@5"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@6"
             },
             "arguments": []
           }
@@ -1567,21 +1277,21 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
+              "$ref": "#/rules@4"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@8"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
               "$ref": "#/rules@5"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@9"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@6"
             },
             "arguments": []
           }
@@ -1600,7 +1310,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
       "definition": {
         "$type": "RuleCall",
         "rule": {
-          "$ref": "#/rules@7"
+          "$ref": "#/rules@6"
         },
         "arguments": []
       },
@@ -1635,7 +1345,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@21"
+                    "$ref": "#/rules@20"
                   },
                   "arguments": []
                 }
@@ -1660,7 +1370,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@21"
+                    "$ref": "#/rules@20"
                   },
                   "arguments": []
                 }
@@ -1685,7 +1395,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@21"
+                    "$ref": "#/rules@20"
                   },
                   "arguments": []
                 }
@@ -1710,7 +1420,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@21"
+                    "$ref": "#/rules@20"
                   },
                   "arguments": []
                 }
@@ -1747,7 +1457,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -1767,12 +1477,12 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@9"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@17"
+                  "$ref": "#/rules@16"
                 },
                 "arguments": []
               },
@@ -1793,7 +1503,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@23"
+                  "$ref": "#/rules@22"
                 },
                 "arguments": []
               },
@@ -1804,7 +1514,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@13"
+                    "$ref": "#/rules@12"
                   },
                   "arguments": []
                 }
@@ -1812,7 +1522,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@24"
+                  "$ref": "#/rules@23"
                 },
                 "arguments": []
               }
@@ -1848,7 +1558,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@21"
+                "$ref": "#/rules@20"
               },
               "arguments": []
             }
@@ -1868,7 +1578,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@21"
+                "$ref": "#/rules@20"
               },
               "arguments": []
             }
@@ -1903,7 +1613,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -1923,12 +1633,12 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@11"
+                "$ref": "#/rules@10"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@17"
+                  "$ref": "#/rules@16"
                 },
                 "arguments": []
               },
@@ -1950,12 +1660,12 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@12"
+                "$ref": "#/rules@11"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@17"
+                  "$ref": "#/rules@16"
                 },
                 "arguments": []
               },
@@ -1981,7 +1691,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@28"
+              "$ref": "#/rules@27"
             },
             "arguments": []
           },
@@ -1995,7 +1705,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@28"
+                  "$ref": "#/rules@27"
                 },
                 "arguments": []
               }
@@ -2029,7 +1739,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@23"
+              "$ref": "#/rules@22"
             },
             "arguments": []
           },
@@ -2039,7 +1749,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@25"
+                  "$ref": "#/rules@24"
                 },
                 "arguments": []
               },
@@ -2050,7 +1760,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@19"
+                    "$ref": "#/rules@18"
                   },
                   "arguments": []
                 }
@@ -2061,7 +1771,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@24"
+              "$ref": "#/rules@23"
             },
             "arguments": []
           }
@@ -2094,7 +1804,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@28"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -2117,7 +1827,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@20"
+                    "$ref": "#/rules@19"
                   },
                   "arguments": []
                 }
@@ -2253,7 +1963,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "elementType": {
               "$type": "SimpleType",
               "typeRef": {
-                "$ref": "#/rules@19"
+                "$ref": "#/rules@18"
               }
             }
           },
