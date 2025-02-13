@@ -44,6 +44,7 @@ export type KDLKeywordNames =
     | "services"
     | "sourceID"
     | "targetID"
+    | "type"
     | "width"
     | "x"
     | "y";
@@ -56,7 +57,15 @@ export function isIDReference(item: unknown): item is IDReference {
     return typeof item === 'string';
 }
 
-export type NodeType = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
+export type NameNode = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
+
+export const NameNode = 'NameNode';
+
+export function isNameNode(item: unknown): item is NameNode {
+    return reflection.isInstance(item, NameNode);
+}
+
+export type NodeType = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode | ServiceTypeNode;
 
 export const NodeType = 'NodeType';
 
@@ -268,12 +277,26 @@ export interface ServiceNode extends AstNode {
     links: Array<Reference<PortNode>>;
     name: string;
     ports: Array<PortNode>;
+    type: ServiceTypeNode;
 }
 
 export const ServiceNode = 'ServiceNode';
 
 export function isServiceNode(item: unknown): item is ServiceNode {
     return reflection.isInstance(item, ServiceNode);
+}
+
+export interface ServiceTypeNode extends AstNode {
+    readonly $container: ServiceNode;
+    readonly $type: 'ServiceTypeNode';
+    id: string;
+    name: string;
+}
+
+export const ServiceTypeNode = 'ServiceTypeNode';
+
+export function isServiceTypeNode(item: unknown): item is ServiceTypeNode {
+    return reflection.isInstance(item, ServiceTypeNode);
 }
 
 export interface WithCustomProperties extends AstNode {
@@ -297,12 +320,14 @@ export type KDLAstType = {
     IngressNode: IngressNode
     KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
+    NameNode: NameNode
     NodeAttribute: NodeAttribute
     NodeType: NodeType
     PodNode: PodNode
     Point: Point
     PortNode: PortNode
     ServiceNode: ServiceNode
+    ServiceTypeNode: ServiceTypeNode
     SourceNodeType: SourceNodeType
     TargetNodeType: TargetNodeType
     WithCustomProperties: WithCustomProperties
@@ -311,22 +336,25 @@ export type KDLAstType = {
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, SourceNodeType, TargetNodeType, WithCustomProperties];
+        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, NameNode, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, ServiceTypeNode, SourceNodeType, TargetNodeType, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
             case ClusterNode:
             case PodNode: {
-                return this.isSubtype(NodeType, supertype);
+                return this.isSubtype(NameNode, supertype) || this.isSubtype(NodeType, supertype);
             }
             case ContainerNode:
             case IngressNode:
             case ServiceNode: {
-                return this.isSubtype(NodeType, supertype) || this.isSubtype(SourceNodeType, supertype);
+                return this.isSubtype(NameNode, supertype) || this.isSubtype(NodeType, supertype) || this.isSubtype(SourceNodeType, supertype);
             }
             case PortNode: {
-                return this.isSubtype(NodeType, supertype) || this.isSubtype(TargetNodeType, supertype);
+                return this.isSubtype(NameNode, supertype) || this.isSubtype(NodeType, supertype) || this.isSubtype(TargetNodeType, supertype);
+            }
+            case ServiceTypeNode: {
+                return this.isSubtype(NodeType, supertype);
             }
             default: {
                 return false;
@@ -497,7 +525,17 @@ export class KDLAstReflection extends AbstractAstReflection {
                         { name: 'id' },
                         { name: 'links', defaultValue: [] },
                         { name: 'name' },
-                        { name: 'ports', defaultValue: [] }
+                        { name: 'ports', defaultValue: [] },
+                        { name: 'type' }
+                    ]
+                };
+            }
+            case ServiceTypeNode: {
+                return {
+                    name: ServiceTypeNode,
+                    properties: [
+                        { name: 'id' },
+                        { name: 'name' }
                     ]
                 };
             }

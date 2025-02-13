@@ -6,13 +6,14 @@ import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { ClusterNode } from './graph-extension/cluster-node.js';
-import { KDLModelState } from './kdl-state.js';
+import { ContainerNode } from './graph-extension/container-node.js';
 import { IngressNode } from './graph-extension/ingress-node.js';
 import { PodNode } from './graph-extension/pod-node.js';
-import { ServiceNode } from './graph-extension/service-node.js';
-import { ContainerNode } from './graph-extension/container-node.js';
 import { PortNode } from './graph-extension/port-node.js';
-import { createEdgeID, createNodeAttribute, KDLNode } from './graph-extension/utils.js';
+import { ServiceNode } from './graph-extension/service-node.js';
+import { ServiceTypeNode } from './graph-extension/service-type-node.js';
+import { KDLModelState } from './kdl-state.js';
+import { createEdgeID, createNodeAttribute } from './utils.js';
 
 /**
  * Custom factory that translates the semantic diagram root from Langium to a GLSP graph.
@@ -97,7 +98,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         return edgeAttribute;
     }
 
-    protected findOrCreateNodeAttribute(node: KDLNode): ast.NodeAttribute {
+    protected findOrCreateNodeAttribute(node: ast.NodeType): ast.NodeAttribute {
         const nodeAttributes = this.modelState.kdlDiagram.diagram!.nodeAttributes;
         let nodeAttribute = nodeAttributes.find(
             nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(node)
@@ -114,9 +115,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .filter((e): e is ast.IngressNode => e !== undefined)
             .map(ingress => this.createIngressNode(ingress, graphBuilder));
 
-        const podNodes = cluster.pods
-            .filter((e): e is ast.PodNode => e !== undefined)
-            .map(pod => this.createPodNode(pod));
+        const podNodes = cluster.pods.filter((e): e is ast.PodNode => e !== undefined).map(pod => this.createPodNode(pod));
 
         const serviceNodes = cluster.services
             .filter((e): e is ast.ServiceNode => e !== undefined)
@@ -191,11 +190,12 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected createServiceNode(service: ast.ServiceNode): GCompartment {
         const portNodes = service.ports.map(port => this.createPortNode(port));
+        const serviceID = this.modelState.idProvider.getLocalId(service)!;
         const serviceAttributes = this.findOrCreateNodeAttribute(service);
         const builder = ServiceNode.builder()
             .type(ModelTypes.SERVICE)
             .name(service.name)
-            .id(this.modelState.idProvider.getLocalId(service)!)
+            .id(serviceID)
             .addArgs(ArgsUtil.cornerRadius(50))
             .position({
                 x: serviceAttributes.dimensions.x,
@@ -208,6 +208,29 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .children()
             .addPortNodes(portNodes);
 
+        if (service.type) {
+            builder.addTypeNode(this.createServiceTypeNode(service.type));
+        }
+
+        return builder.build();
+    }
+
+    private createServiceTypeNode(typeNode: ast.ServiceTypeNode): GCompartment {
+        const serviceTypeAttribute = this.findOrCreateNodeAttribute(typeNode);
+        const builder = ServiceTypeNode.builder()
+            .type(ModelTypes.SERVICE_TYPE)
+            .name(typeNode.name)
+            .id(this.modelState.idProvider.getLocalId(typeNode)!)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: serviceTypeAttribute.dimensions.x,
+                y: serviceTypeAttribute.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: serviceTypeAttribute.dimensions.width,
+                prefHeight: serviceTypeAttribute.dimensions.height
+            })
+            .children();
         return builder.build();
     }
 

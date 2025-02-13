@@ -4,11 +4,10 @@
 
 import { ApplyLabelEditOperation, Command, getOrThrow, GLSPServerError, JsonOperationHandler, ModelState } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { ClusterNode, KDLRoot } from '../../../language-server/generated/ast.js';
+import { KDLRoot } from '../../../language-server/generated/ast.js';
 import { findDocument } from '../../../language-server/util/ast-util.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { isKDLNode, KDLNode } from '../model/graph-extension/utils.js';
 import * as ast from '../../../language-server/generated/ast.js';
 
 @injectable()
@@ -19,27 +18,15 @@ export class KDLDiagramApplyLabelEditOperationHandler extends JsonOperationHandl
     createCommand(operation: ApplyLabelEditOperation): Command {
         const nodeID = operation.labelId.split('_')[0];
         const labelField = operation.labelId.split('_')[1];
-        const node = getOrThrow(this.modelState.index.findSemanticElement(nodeID, isKDLNode), 'Node not found');
-        const oldName = node.name;
+        const node = getOrThrow(this.modelState.index.findSemanticElement(nodeID, ast.isNodeType), 'Node not found');
 
         return new CrossModelCommand(
             this.modelState,
-            () => this.renameEntity(node, operation.text, labelField),
-            () =>
-                this.renameEntity(
-                    node,
-                    oldName ?? this.modelState.idProvider.findNextId(ClusterNode, 'NewClusterNode'), labelField
-                ),
-            () =>
-                this.renameEntity(
-                    node,
-                    operation.text,
-                    labelField
-                )
+            () => this.renameEntity(node, operation.text, labelField)
         );
     }
 
-    protected async renameEntity(node: KDLNode, newValue: string, labelField: string): Promise<void> {
+    protected async renameEntity(node: ast.NodeType, newValue: string, labelField: string): Promise<void> {
         if (node) {
             if (ast.isClusterNode(node)) {
                 node.name = newValue;
@@ -63,6 +50,10 @@ export class KDLDiagramApplyLabelEditOperationHandler extends JsonOperationHandl
                         throw new GLSPServerError('Port number must be a number');
                     }
                     node.number = Number(newValue);
+                }
+            } else if (ast.isServiceTypeNode(node)) {
+                if (labelField === 'name') {
+                    node.name = newValue;
                 }
             }
         }

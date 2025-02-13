@@ -3,10 +3,10 @@
  ********************************************************************************/
 import { ChangeBoundsOperation, Command, JsonOperationHandler, ModelState } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { createNodeAttribute } from '../model/graph-extension/utils.js';
-import * as ast from '../../../language-server/generated/ast.js';
+import { createNodeAttribute } from '../model/utils.js';
 
 @injectable()
 export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler {

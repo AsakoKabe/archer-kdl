@@ -19,7 +19,7 @@ export class KDLModelState extends CrossModelState {
                 $container: kdlDiagram,
                 $type: ast.Diagram,
                 edgeAttributes: [],
-                nodeAttributes: []
+                nodeAttributes: [],
             };
         }
         return kdlDiagram;

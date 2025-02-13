@@ -1,7 +1,7 @@
 import { AstNode } from 'langium';
 import { AbstractSemanticTokenProvider, SemanticTokenAcceptor } from 'langium/lsp';
 import { SemanticTokenTypes } from 'vscode-languageserver-protocol';
-import { isClusterNode, isContainerNode, isDiagram, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram,  isNodeAttribute, isPodNode, isPortNode, isServiceNode } from './generated/ast.js';
+import { isClusterNode, isContainerNode, isDiagram, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram,  isNodeAttribute, isPodNode, isPortNode, isServiceNode, isServiceTypeNode } from './generated/ast.js';
 
 export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
     protected highlightElement(node: AstNode, acceptor: SemanticTokenAcceptor): void {
@@ -27,6 +27,8 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             this.highlightNodeAttribute(node, acceptor);
         } else if (isEdgeAttribute(node)) {
             this.highlightEdgeAttribute(node, acceptor);
+        } else if (isServiceTypeNode(node)) {
+            this.highlightServiceTypeNode(node, acceptor);
         }
     }
     private highlightDiagramNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
@@ -287,6 +289,11 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         });
         acceptor({
             node,
+            keyword: 'type',
+            type: SemanticTokenTypes.class
+        });
+        acceptor({
+            node,
             keyword: 'links',
             type: SemanticTokenTypes.keyword
         });
@@ -413,6 +420,29 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             node,
             property: 'targetID',
             type: SemanticTokenTypes.parameter
+        });
+    }
+
+    private highlightServiceTypeNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
+        acceptor({
+            node,
+            keyword: 'id',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'id',
+            type: SemanticTokenTypes.string
+        });
+        acceptor({
+            node,
+            keyword: 'name',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'name',
+            type: SemanticTokenTypes.string
         });
     }
 }

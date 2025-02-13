@@ -35,6 +35,11 @@ export class ServiceNodeBuilder<T extends ServiceNode = ServiceNode> extends GNo
         return this;
     }
 
+    addTypeNode(serviceTypeNode: GCompartment): this {
+        (this.proxy.children.at(-1) as GCompartment).children.push(serviceTypeNode);
+        return this;
+    }
+
     protected createLabelCompartment(): GCompartment {
         const layoutOptions: Args = { vGrab: true, vAlign: 'center'};
         const builder = new GCompartmentBuilder(GCompartment)

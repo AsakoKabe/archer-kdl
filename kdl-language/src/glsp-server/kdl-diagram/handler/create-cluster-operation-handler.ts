@@ -13,8 +13,8 @@ import {
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { addNodeAttribute, createClusterNode } from '../model/graph-extension/utils.js';
 import { KDLModelState } from '../model/kdl-state.js';
+import { addNodeAttribute, createClusterNode } from '../model/utils.js';
 
 @injectable()
 export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOperationHandler {

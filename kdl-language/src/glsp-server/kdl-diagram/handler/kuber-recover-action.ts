@@ -11,6 +11,7 @@ import * as k8s from '@kubernetes/client-node';
 import { inject, injectable } from 'inversify';
 import { KuberClient } from '../../../kuber/client.js';
 import * as ast from '../../../language-server/generated/ast.js';
+import { KDLModelState } from '../model/kdl-state.js';
 import {
     addEdgeAttribute,
     addNodeAttribute,
@@ -20,8 +21,7 @@ import {
     createPodNode,
     createPortNode,
     createServiceNode
-} from '../model/graph-extension/utils.js';
-import { KDLModelState } from '../model/kdl-state.js';
+} from '../model/utils.js';
 
 export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverResponseAction> {
     kind: typeof KuberRecoverRequestAction.KIND;
@@ -175,9 +175,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
             return selectorKeys.every(key => podLabels[key] === selector[key]);
         });
 
-        const targetPods = cluster.pods.filter(pod =>
-            matchedKuberPods.some(kuberPod => kuberPod.metadata?.name === pod.name)
-        );
+        const targetPods = cluster.pods.filter(pod => matchedKuberPods.some(kuberPod => kuberPod.metadata?.name === pod.name));
         const targetPorts = targetPods
             .flatMap(pod => pod.ports)
             .filter(

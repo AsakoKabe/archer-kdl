@@ -59,6 +59,25 @@
     fill: #FEE897;
 }
 
+.service .sprotty-label.heading {
+    font-size: 120%;
+}
+
+.serviceType{
+    fill: #FEE897;
+}
+
+.serviceType .sprotty-label.heading {
+    font-size: 100%;
+}
+
+.service .serviceType > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
+}
+
+
+
 .cluster .service > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;

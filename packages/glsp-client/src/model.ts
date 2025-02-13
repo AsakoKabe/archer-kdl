@@ -123,6 +123,32 @@ export class ServiceNode extends RectangularNode implements Nameable, WithEditab
     }
 }
 
+export class ServiceTypeNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
+    static override readonly DEFAULT_FEATURES = [
+        selectFeature,
+        boundsFeature,
+        moveFeature,
+        layoutContainerFeature,
+        fadeFeature,
+        hoverFeedbackFeature,
+        popupFeature,
+        nameFeature,
+        withEditLabelFeature,
+        layoutableChildFeature
+    ];
+
+    name = '';
+
+    get editableLabel(): (GChildElement & EditableLabel) | undefined {
+        const label = this.children.find(element => element.type === 'label:heading');
+        if (label && isEditableLabel(label)) {
+            return label;
+        }
+        return undefined;
+    }
+}
+
+
 export class ContainerNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
     static override readonly DEFAULT_FEATURES = [
         deletableFeature,

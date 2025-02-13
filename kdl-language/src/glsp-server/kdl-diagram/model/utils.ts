@@ -1,36 +1,21 @@
 import { Dimension, Point } from '@eclipse-glsp/server';
-import { AstNode } from 'langium';
-import * as ast from '../../../../language-server/generated/ast.js';
-import { IdProvider } from '../../../../language-server/kdl-naming.js';
+import * as ast from '../../../language-server/generated/ast.js';
+import { IdProvider } from '../../../language-server/kdl-naming.js';
 
-export function isKDLNode(
-    node: AstNode | unknown
-): node is ast.ClusterNode | ast.PodNode | ast.ServiceNode | ast.IngressNode | ast.PortNode | ast.ContainerNode {
-    return (
-        ast.isClusterNode(node) ||
-        ast.isPodNode(node) ||
-        ast.isServiceNode(node) ||
-        ast.isIngressNode(node) ||
-        ast.isPortNode(node) ||
-        ast.isContainerNode(node)
-    );
-}
-
-export type KDLNode = ast.ClusterNode | ast.PodNode | ast.ServiceNode | ast.IngressNode | ast.PortNode | ast.ContainerNode;
 export function createEdgeID(sourceID: string, targetID: string): string {
     return `${sourceID}-${targetID}`.replaceAll('.', '_');
 }
 
-export function addNodeAttribute(kdlDiagram: ast.KDLDiagram, idProvider: IdProvider, node: KDLNode, location?: Point) {
+export function addNodeAttribute(kdlDiagram: ast.KDLDiagram, idProvider: IdProvider, node: ast.NodeType, location?: Point) {
     kdlDiagram.diagram!.nodeAttributes.push(createNodeAttribute(kdlDiagram, idProvider, node, location));
 }
 
 export function createNodeAttribute(
     kdlDiagram: ast.KDLDiagram,
     idProvider: IdProvider,
-    node: KDLNode,
+    node: ast.NodeType,
     location?: Point,
-    dim?: Dimension,
+    dim?: Dimension
 ): ast.NodeAttribute {
     const attribute: ast.NodeAttribute = {
         $type: ast.NodeAttribute,
@@ -46,8 +31,8 @@ export function createNodeAttribute(
     const dimensions: ast.Dimensions = {
         x: location ? location.x : Point.ORIGIN.x,
         y: location ? location.y : Point.ORIGIN.y,
-        width: dim? dim.width : 10,
-        height: dim? dim.height : 10,
+        width: dim ? dim.width : 10,
+        height: dim ? dim.height : 10,
         $container: attribute,
         $type: ast.Dimensions
     };
@@ -132,13 +117,31 @@ export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?
     };
 }
 
-export function createServiceNode(cluster: ast.ClusterNode, name?: string): ast.ServiceNode {
-    return {
+export function createServiceNode(
+    cluster: ast.ClusterNode,
+    name?: string,
+    type?: ast.ServiceTypeNode
+): ast.ServiceNode {
+    const service: ast.ServiceNode =  {
         $type: ast.ServiceNode,
         $container: cluster,
         id: 'ServiceNode' + cluster.services.length,
         name: name ? name : 'ServiceNode' + cluster.services.length,
+        type: type ? type : {} as ast.ServiceTypeNode,
         ports: [],
         links: []
     };
+    const serviceType: ast.ServiceTypeNode = {
+        $container: service,
+        $type: ast.ServiceTypeNode,
+        id: 'ServiceType',
+        name: 'CIP'
+    }
+    service.type = serviceType;
+    return service;
+}
+
+export function getNodeDimensions(node: ast.NodeType, kdlDiagram: ast.KDLDiagram): ast.Dimensions | undefined {
+    const nodeAttribute = kdlDiagram.diagram?.nodeAttributes.find(nodeAttribute => nodeAttribute?.nodeID.ref == node);
+    return nodeAttribute?.dimensions;
 }

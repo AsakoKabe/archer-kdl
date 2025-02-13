@@ -15,8 +15,8 @@ import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { addNodeAttribute, createPodNode } from '../model/graph-extension/utils.js';
 import { KDLModelState } from '../model/kdl-state.js';
+import { addNodeAttribute, createPodNode } from '../model/utils.js';
 
 @injectable()
 export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperationHandler {

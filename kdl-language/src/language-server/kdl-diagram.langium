@@ -29,7 +29,8 @@ Diagram:
             (LIST_ITEM nodeAttributes+=NodeAttribute)+
         DEDENT
     )?
-    ('edgeAttributes' ':' 
+    (
+        'edgeAttributes' ':' 
         INDENT
             (LIST_ITEM edgeAttributes+=EdgeAttribute)+
         DEDENT
@@ -118,6 +119,12 @@ ServiceNode:
     'id' ':' id=ID
     'name' ':' name=STRING 
     (
+        'type' ':' 
+        INDENT
+            type=ServiceTypeNode
+        DEDENT
+    )
+    (
         (
             'ports' ':'
             INDENT 
@@ -133,8 +140,17 @@ ServiceNode:
     )?
 ;
 
-NodeType:
+ServiceTypeNode:
+    'id' ':' id=ID
+    'name' ':' name=STRING
+;
+
+NameNode:
     ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode
+;
+
+NodeType:
+    ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode | ServiceTypeNode
 ;
 
 SourceNodeType:
