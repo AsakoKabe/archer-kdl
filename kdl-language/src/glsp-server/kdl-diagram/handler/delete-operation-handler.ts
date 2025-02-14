@@ -75,6 +75,8 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
             this.deleteContainer(modelElement);
         } else if (ast.isPortNode(modelElement)) {
             this.deletePort(modelElement);
+        } else if (ast.isVolumeNode(modelElement)) {
+            this.deleteVolume(modelElement);
         }
     }
 
@@ -95,6 +97,9 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         if (pod.cardinality) {
             this.deleteNode(pod.cardinality);
         }
+        pod.volumes.slice().forEach(volume => {
+            this.deleteNode(volume);
+        });
         remove(pod.$container.pods, pod);
     }
 
@@ -152,5 +157,9 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
             this.deleteNode(service);
         });
         remove(this.modelState.kdlDiagram.clusters, cluster);
+    }
+
+    private deleteVolume(volume: ast.VolumeNode): void {
+        remove(volume.$container.volumes, volume);
     }
 }
