@@ -111,6 +111,12 @@ export class KuberRecoverActionHandler implements ActionHandler {
                     this.recoverContainers(pod, kuberPod.spec.containers);
                 }
                 addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod);
+                if (pod.cardinality) {
+                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod.cardinality);
+                }
+                if (pod.controller) {
+                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod.controller);
+                }
             }
         } catch (error) {
             throw new GLSPServerError('Error to send k8s request to get pods');
@@ -146,6 +152,9 @@ export class KuberRecoverActionHandler implements ActionHandler {
                     this.recoverServicePorts(service, kuberService.spec.ports);
                     await this.recoverServiceToPodLinks(cluster.name, cluster, service, kuberService, kuberService.spec.ports);
                     addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service);
+                    if (service.type) {
+                        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service.type);
+                    }
                 }
             }
         } catch (error) {

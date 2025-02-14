@@ -31,49 +31,56 @@ kdlDiagram:
           - id: NodeAttribute0
             nodeID: example.ClusterNode0
             dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute2
+                x: 69
+                y: 53
+                width: 172.3828125
+                height: 115
+          - id: NodeAttribute12
             nodeID: example.ClusterNode0.PodNode0.ContainerNode0
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
-          - id: NodeAttribute3
+          - id: NodeAttribute13
             nodeID: example.ClusterNode0.PodNode0
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
-          - id: NodeAttribute10
-            nodeID: example.ClusterNode0.ServiceNode0.kubernetesPort0
+          - id: NodeAttribute14
+            nodeID: example.ClusterNode0.PodNode0.PodCardinality
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
-          - id: NodeAttribute12
-            nodeID: example.ClusterNode0.ServiceNode0
+          - id: NodeAttribute15
+            nodeID: example.ClusterNode0.PodNode0.PodController
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
           - id: NodeAttribute17
-            nodeID: example.ClusterNode1
+            nodeID: example.ClusterNode0.ServiceNode0.kubernetesPort0
             dimensions:
-                x: 66
-                y: 308
-                width: 165.703125
-                height: 116
-          - id: NodeAttribute18
-            nodeID: example.ClusterNode1.ServiceNode1
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute21
+            nodeID: example.ClusterNode0.ServiceNode0
             dimensions:
-                x: 154
-                y: 141
-                width: 63.375
-                height: 79
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute22
+            nodeID: example.ClusterNode0.ServiceNode0.ServiceType
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10

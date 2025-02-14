@@ -3,10 +3,8 @@
  ********************************************************************************/
 import { ChangeBoundsOperation, Command, JsonOperationHandler, ModelState } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { createNodeAttribute } from '../model/utils.js';
 
 @injectable()
 export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler {
@@ -29,16 +27,6 @@ export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler
                 nodeAttribute.dimensions.y = elementAndBounds.newPosition?.y || nodeAttribute.dimensions.y;
                 nodeAttribute.dimensions.width = elementAndBounds.newSize.width;
                 nodeAttribute.dimensions.height = elementAndBounds.newSize.height;
-            } else if (ast.isNodeType(node)) {
-                this.modelState.kdlDiagram.diagram!.nodeAttributes.push(
-                    createNodeAttribute(
-                        this.modelState.kdlDiagram,
-                        this.modelState.idProvider,
-                        node,
-                        elementAndBounds.newPosition,
-                        elementAndBounds.newSize
-                    )
-                );
             }
         });
     }
