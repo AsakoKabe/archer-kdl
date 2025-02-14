@@ -3,7 +3,7 @@ import { ModelTypes } from '@kdl/protocol';
 
 export class ClusterNode extends GNode {
     name: string;
-    nodeType: string;
+    nodeType: string = ModelTypes.CLUSTER;
     container: GCompartment;
 
     static override builder(): ClusterNodeBuilder {
@@ -25,10 +25,7 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
         this.proxy.children.push(this.createStructCompartment());
         return this;
     }
-    nodeType(nodeType: string): this {
-        this.proxy.nodeType = nodeType;
-        return this;
-    }
+    
     addIngressNodes(ingressNodes: GCompartment[]): this {
         // const builder = new GCompartmentBuilder(GCompartment)
         //     .type(ModelTypes.STRUCTURE)

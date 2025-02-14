@@ -3,7 +3,7 @@ import { ModelTypes } from '@kdl/protocol';
 
 export class PodNode extends GNode {
     name: string;
-    nodeType: string;
+    nodeType: string = ModelTypes.POD;
 
     static override builder(): PodNodeBuilder {
         return new PodNodeBuilder(PodNode)
@@ -23,10 +23,6 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
     children(): this {
         this.proxy.children.push(this.createLabelCompartment());
         this.proxy.children.push(this.createStructCompartment());
-        return this;
-    }
-    nodeType(nodeType: string): this {
-        this.proxy.nodeType = nodeType;
         return this;
     }
 

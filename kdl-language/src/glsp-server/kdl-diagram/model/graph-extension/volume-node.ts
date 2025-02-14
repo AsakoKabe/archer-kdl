@@ -3,7 +3,7 @@ import { ModelTypes } from '@kdl/protocol';
 
 export class VolumeNode extends GNode {
     name: string;
-    nodeType: string;
+    nodeType: string = ModelTypes.VOLUME;
     volumeType: string;
 
     static override builder(): VolumeNodeBuilder {
@@ -20,13 +20,8 @@ export class VolumeNodeBuilder<T extends VolumeNode = VolumeNode> extends GNodeB
         this.proxy.name = name;
         return this;
     }
-
     children(): this {
         this.proxy.children.push(this.addData());
-        return this;
-    }
-    nodeType(nodeType: string): this {
-        this.proxy.nodeType = nodeType;
         return this;
     }
     volumeType(volumeType: string): this {

@@ -3,7 +3,7 @@ import { ModelTypes } from '@kdl/protocol';
 
 export class ServiceTypeNode extends GNode {
     name: string;
-    nodeType: string;
+    nodeType: string = ModelTypes.SERVICE_TYPE;
 
     static override builder(): ServiceTypeNodeBuilder {
         return new ServiceTypeNodeBuilder(ServiceTypeNode)
@@ -19,13 +19,8 @@ export class ServiceTypeNodeBuilder<T extends ServiceTypeNode = ServiceTypeNode>
         this.proxy.name = name;
         return this;
     }
-
     children(): this {
         this.proxy.children.push(this.addData());
-        return this;
-    }
-    nodeType(nodeType: string): this {
-        this.proxy.nodeType = nodeType;
         return this;
     }
 

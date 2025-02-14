@@ -4,7 +4,7 @@ import { ModelTypes } from '@kdl/protocol';
 export class PortNode extends GNode {
     name: string;
     number: string;
-    nodeType: string;
+    nodeType: string = ModelTypes.PORT;
 
     static override builder(): PortNodeBuilder {
         return new PortNodeBuilder(PortNode)
@@ -23,10 +23,6 @@ export class PortNodeBuilder<T extends PortNode = PortNode> extends GNodeBuilder
 
     children(): this {
         this.proxy.children.push(this.addData());
-        return this;
-    }
-    nodeType(nodeType: string): this {
-        this.proxy.nodeType = nodeType;
         return this;
     }
     number(number: string): this {

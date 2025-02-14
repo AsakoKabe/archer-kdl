@@ -3,7 +3,7 @@ import { ModelTypes } from '@kdl/protocol';
 
 export class IngressNode extends GNode {
     name: string;
-    nodeType: string;
+    nodeType: string = ModelTypes.INGRESS;
     host: string;
 
     static override builder(): IngressNodeBuilder {
@@ -23,10 +23,6 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
 
     children(): this {
         this.proxy.children.push(this.addData());
-        return this;
-    }
-    nodeType(nodeType: string): this {
-        this.proxy.nodeType = nodeType;
         return this;
     }
     host(host: string): this {
