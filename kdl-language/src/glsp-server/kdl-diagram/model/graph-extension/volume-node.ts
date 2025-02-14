@@ -1,20 +1,21 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 
-export class ServiceTypeNode extends GNode {
+export class VolumeNode extends GNode {
     name: string;
     nodeType: string;
+    volumeType: string;
 
-    static override builder(): ServiceTypeNodeBuilder {
-        return new ServiceTypeNodeBuilder(ServiceTypeNode)
+    static override builder(): VolumeNodeBuilder {
+        return new VolumeNodeBuilder(VolumeNode)
             .layout('hbox')
-            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
-            .addCssClass('service-type')
+            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false })
+            .addCssClass('pod-volume')
             .resizeLocations(GResizeLocation.CORNERS);
     }
 }
 
-export class ServiceTypeNodeBuilder<T extends ServiceTypeNode = ServiceTypeNode> extends GNodeBuilder<T> {
+export class VolumeNodeBuilder<T extends VolumeNode = VolumeNode> extends GNodeBuilder<T> {
     name(name: string): this {
         this.proxy.name = name;
         return this;
@@ -26,6 +27,10 @@ export class ServiceTypeNodeBuilder<T extends ServiceTypeNode = ServiceTypeNode>
     }
     nodeType(nodeType: string): this {
         this.proxy.nodeType = nodeType;
+        return this;
+    }
+    volumeType(volumeType: string): this {
+        this.proxy.volumeType = volumeType;
         return this;
     }
 
@@ -42,6 +47,13 @@ export class ServiceTypeNodeBuilder<T extends ServiceTypeNode = ServiceTypeNode>
                 .type(ModelTypes.LABEL_HEADING)
                 .id(this.proxy.id + '_name')
                 .text(this.proxy.name)
+                .build()
+        );
+        builder.add(
+            new GLabelBuilder(GLabel)
+                .type(ModelTypes.LABEL_HEADING)
+                .id(this.proxy.id + '_type')
+                .text(this.proxy.volumeType)
                 .build()
         );
         return builder.build();

@@ -45,38 +45,19 @@ export namespace RenderProps {
 }
 
 export namespace ModelTypes {
-    export const CLUSTER = 'cluster';
-    export const INGRESS = 'ingress';
-    export const LABEL_HEADING = 'label:heading';
     export const LABEL_TEXT = 'label:text';
+    export const LABEL_HEADING = 'label:heading';
     export const COMP_HEADER = 'comp:header';
     export const COMP_COMP = 'comp:comp';
     export const STRUCTURE = 'struct';
-    export const INGRESS_BODY = 'ingress:body';
+    export const CLUSTER = 'cluster';
+    export const INGRESS = 'ingress';
     export const POD = 'pod';
+    export const POD_CONTROLLER = 'pod:controller';
+    export const POD_CARDINALITY = 'pod:cardinality';
+    export const VOLUME = 'volume';
     export const SERVICE = 'service';
     export const SERVICE_TYPE = 'service:type';
     export const CONTAINER = 'container';
     export const PORT = 'port';
-
-    export function toNodeType(type: string): string {
-        switch (type) {
-            case CLUSTER:
-                return 'cluster';
-            case INGRESS:
-                return 'ingress';
-            case POD:
-                return 'pod';
-            case SERVICE:
-                return 'service';
-            case SERVICE_TYPE:
-                return 'service:type';
-            case CONTAINER:
-                return 'container';
-            case PORT:
-                return 'port';
-            default:
-                return 'unknown';
-        }
-    }
 }

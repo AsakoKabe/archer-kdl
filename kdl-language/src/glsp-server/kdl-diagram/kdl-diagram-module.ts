@@ -43,6 +43,10 @@ import { KDLDiagramChangeRoutingPointsOperation } from './handler/change-routing
 import { KuberRecoverActionHandler } from './handler/kuber-recover-action.js';
 import { KuberClient } from '../../kuber/client.js';
 import { KDLLayoutOperationHandler } from './layout/layout-operation-handler.js';
+import { KDLDiagramCreateVolumeOperationHandler } from './handler/create-volume-operation-handler.js';
+import { KDLDiagramCreateServiceTypeOperationHandler } from './handler/create-service-type-operation-handler.js';
+import { KDLDiagramCreatePodControllerOperationHandler } from './handler/create-pod-controller-operation-handler.js';
+import { KDLDiagramCreatePodCardinalityOperationHandler } from './handler/create-pod-cardinality-operation-handler.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -73,9 +77,13 @@ export class KDLDiagramModule extends DiagramModule {
         binding.add(KDLDiagramCreateClusterOperationHandler);
         binding.add(KDLDiagramCreateIngressOperationHandler);
         binding.add(KDLDiagramCreateServiceOperationHandler);
+        binding.add(KDLDiagramCreateServiceTypeOperationHandler);
         binding.add(KDLDiagramCreatePodOperationHandler);
+        binding.add(KDLDiagramCreatePodControllerOperationHandler);
+        binding.add(KDLDiagramCreatePodCardinalityOperationHandler);
         binding.add(KDLDiagramCreateContainerOperationHandler);
         binding.add(KDLDiagramCreatePortOperationHandler);
+        binding.add(KDLDiagramCreateVolumeOperationHandler);
         binding.add(KDLDiagramApplyLabelEditOperationHandler);
         binding.add(KDLDiagramCreateLinkOperationHandler);
         binding.add(KDLDiagramChangeRoutingPointsOperation);

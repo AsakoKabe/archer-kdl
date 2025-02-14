@@ -60,13 +60,4 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
 
         return builder.build();
     }
-
-    protected createStructCompartment(): GCompartment {
-        return new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.INGRESS_BODY)
-            .id(this.proxy.id + '_struct')
-            .layout('freeform')
-            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })
-            .build();
-    }
 }

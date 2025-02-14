@@ -97,14 +97,38 @@ export function createIngressNode(clusterNode: ast.ClusterNode, name?: string, h
 }
 
 export function createPodNode(cluster: ast.ClusterNode, name?: string): ast.PodNode {
-    return {
+    const pod: ast.PodNode = {
         $type: ast.PodNode,
         $container: cluster,
         id: 'PodNode' + cluster.pods.length,
         name: name ? name : 'PodNode' + cluster.pods.length,
         containers: [],
-        ports: []
-    };
+        ports: [],
+        controller: {} as ast.PodController,
+        cardinality: {} as ast.PodCardinality,
+        volumes: []
+    };    
+    pod.controller = createPodControllerNode(pod);;
+    pod.cardinality = createPodCardinalityNode(pod);;
+    return pod;
+}
+
+export function createPodControllerNode(pod: ast.PodNode, name?: string): ast.PodController {
+    return {
+        $container: pod,
+        $type: ast.PodController,
+        id: 'PodController',
+        name: name ? name : 'RC'
+    }
+}
+
+export function createPodCardinalityNode(pod: ast.PodNode, name?: string): ast.PodCardinality {
+    return {
+        $container: pod,
+        $type: ast.PodCardinality,
+        id: 'PodCardinality',
+        name: name ? name : '1'
+    }
 }
 
 export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?: number, name?: string): ast.PortNode {
@@ -114,6 +138,16 @@ export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?
         id: container.name + 'Port' + container.ports.length,
         name: name ? name : 'PortNode' + container.ports.length,
         number: number ? number : 8080
+    };
+}
+
+export function createVolumeNode(container: ast.PodNode, name?: string, type?: string): ast.VolumeNode {
+    return {
+        $type: ast.VolumeNode,
+        $container: container,
+        id: container.name + 'Volume' + container.volumes.length,
+        name: name ? name : 'Volume' + container.volumes.length,
+        type: type ? type : 'secret'
     };
 }
 
@@ -131,14 +165,17 @@ export function createServiceNode(
         ports: [],
         links: []
     };
-    const serviceType: ast.ServiceTypeNode = {
+    service.type = createServiceTypeNode(service);
+    return service;
+}
+
+export function createServiceTypeNode(service: ast.ServiceNode, name?: string): ast.ServiceTypeNode {
+    return {
         $container: service,
         $type: ast.ServiceTypeNode,
         id: 'ServiceType',
-        name: 'CIP'
+        name: name ? name : 'CIP'
     }
-    service.type = serviceType;
-    return service;
 }
 
 export function getNodeDimensions(node: ast.NodeType, kdlDiagram: ast.KDLDiagram): ast.Dimensions | undefined {

@@ -24,8 +24,10 @@ export type KDLTerminalNames = keyof typeof KDLTerminals;
 export type KDLKeywordNames = 
     | "."
     | ":"
+    | "cardinality"
     | "clusters"
     | "containers"
+    | "controller"
     | "diagram"
     | "dimensions"
     | "edgeAttributes"
@@ -45,6 +47,7 @@ export type KDLKeywordNames =
     | "sourceID"
     | "targetID"
     | "type"
+    | "volumes"
     | "width"
     | "x"
     | "y";
@@ -57,15 +60,7 @@ export function isIDReference(item: unknown): item is IDReference {
     return typeof item === 'string';
 }
 
-export type NameNode = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
-
-export const NameNode = 'NameNode';
-
-export function isNameNode(item: unknown): item is NameNode {
-    return reflection.isInstance(item, NameNode);
-}
-
-export type NodeType = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode | ServiceTypeNode;
+export type NodeType = ClusterNode | ContainerNode | IngressNode | PodCardinality | PodController | PodNode | PortNode | ServiceNode | ServiceTypeNode | VolumeNode;
 
 export const NodeType = 'NodeType';
 
@@ -229,13 +224,42 @@ export function isNodeAttribute(item: unknown): item is NodeAttribute {
     return reflection.isInstance(item, NodeAttribute);
 }
 
+export interface PodCardinality extends AstNode {
+    readonly $container: PodNode;
+    readonly $type: 'PodCardinality';
+    id: string;
+    name: string;
+}
+
+export const PodCardinality = 'PodCardinality';
+
+export function isPodCardinality(item: unknown): item is PodCardinality {
+    return reflection.isInstance(item, PodCardinality);
+}
+
+export interface PodController extends AstNode {
+    readonly $container: PodNode;
+    readonly $type: 'PodController';
+    id: string;
+    name: string;
+}
+
+export const PodController = 'PodController';
+
+export function isPodController(item: unknown): item is PodController {
+    return reflection.isInstance(item, PodController);
+}
+
 export interface PodNode extends AstNode {
     readonly $container: ClusterNode;
     readonly $type: 'PodNode';
+    cardinality?: PodCardinality;
     containers: Array<ContainerNode>;
+    controller?: PodController;
     id: string;
     name: string;
     ports: Array<PortNode>;
+    volumes: Array<VolumeNode>;
 }
 
 export const PodNode = 'PodNode';
@@ -277,7 +301,7 @@ export interface ServiceNode extends AstNode {
     links: Array<Reference<PortNode>>;
     name: string;
     ports: Array<PortNode>;
-    type: ServiceTypeNode;
+    type?: ServiceTypeNode;
 }
 
 export const ServiceNode = 'ServiceNode';
@@ -297,6 +321,20 @@ export const ServiceTypeNode = 'ServiceTypeNode';
 
 export function isServiceTypeNode(item: unknown): item is ServiceTypeNode {
     return reflection.isInstance(item, ServiceTypeNode);
+}
+
+export interface VolumeNode extends AstNode {
+    readonly $container: PodNode;
+    readonly $type: 'VolumeNode';
+    id: string;
+    name: string;
+    type: string;
+}
+
+export const VolumeNode = 'VolumeNode';
+
+export function isVolumeNode(item: unknown): item is VolumeNode {
+    return reflection.isInstance(item, VolumeNode);
 }
 
 export interface WithCustomProperties extends AstNode {
@@ -320,9 +358,10 @@ export type KDLAstType = {
     IngressNode: IngressNode
     KDLDiagram: KDLDiagram
     KDLRoot: KDLRoot
-    NameNode: NameNode
     NodeAttribute: NodeAttribute
     NodeType: NodeType
+    PodCardinality: PodCardinality
+    PodController: PodController
     PodNode: PodNode
     Point: Point
     PortNode: PortNode
@@ -330,31 +369,33 @@ export type KDLAstType = {
     ServiceTypeNode: ServiceTypeNode
     SourceNodeType: SourceNodeType
     TargetNodeType: TargetNodeType
+    VolumeNode: VolumeNode
     WithCustomProperties: WithCustomProperties
 }
 
 export class KDLAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, NameNode, NodeAttribute, NodeType, PodNode, Point, PortNode, ServiceNode, ServiceTypeNode, SourceNodeType, TargetNodeType, WithCustomProperties];
+        return [ClusterNode, ContainerNode, CustomProperty, Diagram, Dimensions, EdgeAttribute, IngressNode, KDLDiagram, KDLRoot, NodeAttribute, NodeType, PodCardinality, PodController, PodNode, Point, PortNode, ServiceNode, ServiceTypeNode, SourceNodeType, TargetNodeType, VolumeNode, WithCustomProperties];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
             case ClusterNode:
-            case PodNode: {
-                return this.isSubtype(NameNode, supertype) || this.isSubtype(NodeType, supertype);
+            case PodCardinality:
+            case PodController:
+            case PodNode:
+            case ServiceTypeNode:
+            case VolumeNode: {
+                return this.isSubtype(NodeType, supertype);
             }
             case ContainerNode:
             case IngressNode:
             case ServiceNode: {
-                return this.isSubtype(NameNode, supertype) || this.isSubtype(NodeType, supertype) || this.isSubtype(SourceNodeType, supertype);
+                return this.isSubtype(NodeType, supertype) || this.isSubtype(SourceNodeType, supertype);
             }
             case PortNode: {
-                return this.isSubtype(NameNode, supertype) || this.isSubtype(NodeType, supertype) || this.isSubtype(TargetNodeType, supertype);
-            }
-            case ServiceTypeNode: {
-                return this.isSubtype(NodeType, supertype);
+                return this.isSubtype(NodeType, supertype) || this.isSubtype(TargetNodeType, supertype);
             }
             default: {
                 return false;
@@ -488,14 +529,35 @@ export class KDLAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case PodCardinality: {
+                return {
+                    name: PodCardinality,
+                    properties: [
+                        { name: 'id' },
+                        { name: 'name' }
+                    ]
+                };
+            }
+            case PodController: {
+                return {
+                    name: PodController,
+                    properties: [
+                        { name: 'id' },
+                        { name: 'name' }
+                    ]
+                };
+            }
             case PodNode: {
                 return {
                     name: PodNode,
                     properties: [
+                        { name: 'cardinality' },
                         { name: 'containers', defaultValue: [] },
+                        { name: 'controller' },
                         { name: 'id' },
                         { name: 'name' },
-                        { name: 'ports', defaultValue: [] }
+                        { name: 'ports', defaultValue: [] },
+                        { name: 'volumes', defaultValue: [] }
                     ]
                 };
             }
@@ -536,6 +598,16 @@ export class KDLAstReflection extends AbstractAstReflection {
                     properties: [
                         { name: 'id' },
                         { name: 'name' }
+                    ]
+                };
+            }
+            case VolumeNode: {
+                return {
+                    name: VolumeNode,
+                    properties: [
+                        { name: 'id' },
+                        { name: 'name' },
+                        { name: 'type' }
                     ]
                 };
             }

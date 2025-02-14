@@ -1,20 +1,20 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 
-export class ServiceTypeNode extends GNode {
+export class PodCardinalityNode extends GNode {
     name: string;
     nodeType: string;
 
-    static override builder(): ServiceTypeNodeBuilder {
-        return new ServiceTypeNodeBuilder(ServiceTypeNode)
+    static override builder(): PodCardinalityNodeBuilder {
+        return new PodCardinalityNodeBuilder(PodCardinalityNode)
             .layout('hbox')
             .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
-            .addCssClass('service-type')
+            .addCssClass('pod-cardinality')
             .resizeLocations(GResizeLocation.CORNERS);
     }
 }
 
-export class ServiceTypeNodeBuilder<T extends ServiceTypeNode = ServiceTypeNode> extends GNodeBuilder<T> {
+export class PodCardinalityNodeBuilder<T extends PodCardinalityNode = PodCardinalityNode> extends GNodeBuilder<T> {
     name(name: string): this {
         this.proxy.name = name;
         return this;

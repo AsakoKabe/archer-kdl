@@ -55,6 +55,20 @@ export class KDLDiagramApplyLabelEditOperationHandler extends JsonOperationHandl
                 if (labelField === 'name') {
                     node.name = newValue;
                 }
+            } else if (ast.isPodController(node)) {
+                if (labelField == 'name') {
+                    node.name = newValue;
+                }
+            } else if (ast.isPodCardinality(node)) {
+                if (labelField == 'name') {
+                    node.name = newValue;
+                }
+            } else if (ast.isVolumeNode(node)) {
+                if (labelField == 'name'){
+                    node.name = newValue;
+                } else if (labelField == 'type') {
+                    node.type = newValue;
+                }
             }
         }
         const document = findDocument<KDLRoot>(node)!

@@ -3,10 +3,10 @@
  ********************************************************************************/
 import { Command, DeleteElementOperation, JsonOperationHandler, ModelState, remove } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
+import { AstNode } from 'langium';
+import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import * as ast from '../../../language-server/generated/ast.js';
-import { AstNode } from 'langium';
 
 @injectable()
 export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
@@ -45,7 +45,7 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         if (!modelElement) {
             return;
         }
-        if (ast.isNodeType(modelElement)){
+        if (ast.isNodeType(modelElement)) {
         }
         const nodeAttribute = this.modelState.kdlDiagram.diagram!.nodeAttributes.find(
             nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(modelElement)!
@@ -63,8 +63,14 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
             this.deleteIngress(modelElement);
         } else if (ast.isPodNode(modelElement)) {
             this.deletePod(modelElement);
+        } else if (ast.isPodController(modelElement)) {
+            this.deletePodController(modelElement);
+        } else if (ast.isPodCardinality(modelElement)) {
+            this.deletePodCardinality(modelElement);
         } else if (ast.isServiceNode(modelElement)) {
             this.deleteService(modelElement);
+        } else if (ast.isServiceTypeNode(modelElement)) {
+            this.deleteServiceType(modelElement);
         } else if (ast.isContainerNode(modelElement)) {
             this.deleteContainer(modelElement);
         } else if (ast.isPortNode(modelElement)) {
@@ -83,14 +89,35 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         pod.ports.slice().forEach(port => {
             this.deleteNode(port);
         });
+        if (pod.controller) {
+            this.deleteNode(pod.controller);
+        }
+        if (pod.cardinality) {
+            this.deleteNode(pod.cardinality);
+        }
         remove(pod.$container.pods, pod);
+    }
+
+    private deletePodController(pod: ast.PodController): void {
+        pod.$container.controller = undefined;
+    }
+
+    private deletePodCardinality(podCardinality: ast.PodCardinality): void {
+        podCardinality.$container.cardinality = undefined;
     }
 
     private deleteService(service: ast.ServiceNode): void {
         service.ports.slice().forEach(port => {
             this.deleteNode(port);
         });
+        if (service.type) {
+            this.deleteNode(service.type);
+        }
         remove(service.$container.services, service);
+    }
+
+    private deleteServiceType(serviceType: ast.ServiceTypeNode): void {
+        serviceType.$container.type = undefined;
     }
 
     private deleteContainer(container: ast.ContainerNode): void {

@@ -5,7 +5,6 @@ import {
     ConsoleLogger,
     ContainerConfiguration,
     DefaultTypes,
-    deletableFeature,
     editLabelFeature,
     GCompartment,
     GCompartmentView,
@@ -19,13 +18,24 @@ import {
     StructureCompartmentView,
     TYPES
 } from '@eclipse-glsp/client';
+import { ModelTypes } from '@kdl/protocol';
 import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
 import { MyCustomResponseAction, MyCustomResponseActionHandler } from './kuber-action-hundler';
-import { ClusterNode, IngressNode, PodNode, ServiceNode, ContainerNode, PortNode, ServiceTypeNode } from './model';
-import { IngressNodeView, ArrowEdgeView } from './view';
-import { ModelTypes } from '@kdl/protocol';
+import {
+    ClusterNode,
+    ContainerNode,
+    IngressNode,
+    PodCardinalityNode,
+    PodControllerNode,
+    PodNode,
+    PodVolumeNode,
+    PortNode,
+    ServiceNode,
+    ServiceTypeNode
+} from './model';
+import { ArrowEdgeView, IngressNodeView } from './view';
 
 const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -38,10 +48,12 @@ const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => 
     configureModelElement(context, ModelTypes.CLUSTER, ClusterNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.STRUCTURE, GCompartment, StructureCompartmentView);
     configureModelElement(context, ModelTypes.INGRESS, IngressNode, IngressNodeView);
-    // configureModelElement(context, 'ingress:body', GCompartment, IngressNodeView);
     configureModelElement(context, ModelTypes.POD, PodNode, RoundedCornerNodeView);
+    configureModelElement(context, ModelTypes.POD_CONTROLLER, PodControllerNode, RoundedCornerNodeView);
+    configureModelElement(context, ModelTypes.POD_CARDINALITY, PodCardinalityNode, RoundedCornerNodeView);
+    configureModelElement(context, ModelTypes.VOLUME, PodVolumeNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.SERVICE, ServiceNode, RoundedCornerNodeView);
-    configureModelElement(context, ModelTypes.SERVICE_TYPE, ServiceTypeNode, RoundedCornerNodeView, { disable: [deletableFeature] });
+    configureModelElement(context, ModelTypes.SERVICE_TYPE, ServiceTypeNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.CONTAINER, ContainerNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.PORT, PortNode, RoundedCornerNodeView);
     overrideModelElement(context, DefaultTypes.EDGE, GEdge, ArrowEdgeView);

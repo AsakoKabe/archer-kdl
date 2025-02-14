@@ -97,6 +97,81 @@ export class PodNode extends RectangularNode implements Nameable, WithEditableLa
     }
 }
 
+export class PodControllerNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
+    static override readonly DEFAULT_FEATURES = [
+        selectFeature,
+        boundsFeature,
+        moveFeature,
+        layoutContainerFeature,
+        fadeFeature,
+        hoverFeedbackFeature,
+        popupFeature,
+        nameFeature,
+        withEditLabelFeature,
+        layoutableChildFeature
+    ];
+
+    name = '';
+
+    get editableLabel(): (GChildElement & EditableLabel) | undefined {
+        const label = this.children.find(element => element.type === 'label:heading');
+        if (label && isEditableLabel(label)) {
+            return label;
+        }
+        return undefined;
+    }
+}
+
+export class PodCardinalityNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
+    static override readonly DEFAULT_FEATURES = [
+        selectFeature,
+        boundsFeature,
+        moveFeature,
+        layoutContainerFeature,
+        fadeFeature,
+        hoverFeedbackFeature,
+        popupFeature,
+        nameFeature,
+        withEditLabelFeature,
+        layoutableChildFeature
+    ];
+
+    name = '';
+
+    get editableLabel(): (GChildElement & EditableLabel) | undefined {
+        const label = this.children.find(element => element.type === 'label:heading');
+        if (label && isEditableLabel(label)) {
+            return label;
+        }
+        return undefined;
+    }
+}
+
+export class PodVolumeNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
+    static override readonly DEFAULT_FEATURES = [
+        selectFeature,
+        boundsFeature,
+        moveFeature,
+        layoutContainerFeature,
+        fadeFeature,
+        hoverFeedbackFeature,
+        popupFeature,
+        nameFeature,
+        withEditLabelFeature,
+        layoutableChildFeature
+    ];
+
+    name = '';
+
+    get editableLabel(): (GChildElement & EditableLabel) | undefined {
+        const label = this.children.find(element => element.type === 'label:heading');
+        if (label && isEditableLabel(label)) {
+            return label;
+        }
+        return undefined;
+    }
+}
+
 export class ServiceNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
     static override readonly DEFAULT_FEATURES = [
         deletableFeature,

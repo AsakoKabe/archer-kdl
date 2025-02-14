@@ -98,8 +98,27 @@ PortNode:
 
 PodNode:
     'id' ':' id=ID
-    'name' ':' name=STRING 
+    'name' ':' name=STRING
     (
+        'controller' ':' 
+        INDENT
+            controller=PodController
+        DEDENT
+    )?
+    (
+        'cardinality' ':' 
+        INDENT
+            cardinality=PodCardinality
+        DEDENT
+    )?
+    
+    (
+        (
+            'volumes' ':'
+            INDENT 
+                (LIST_ITEM volumes+=VolumeNode)+
+            DEDENT
+        ) &
         (
             'containers' ':'
             INDENT 
@@ -115,6 +134,24 @@ PodNode:
     )?
 ;
 
+PodController:
+    'id' ':' id=ID
+    'name' ':' name=STRING 
+;
+
+PodCardinality:
+    'id' ':' id=ID
+    'name' ':' name=STRING 
+;
+
+VolumeNode:
+    'id' ':' id=ID
+    (
+        'name' ':' name=STRING &
+        'type' ':' type=STRING 
+    )
+;
+
 ServiceNode:
     'id' ':' id=ID
     'name' ':' name=STRING 
@@ -123,7 +160,7 @@ ServiceNode:
         INDENT
             type=ServiceTypeNode
         DEDENT
-    )
+    )?
     (
         (
             'ports' ':'
@@ -145,12 +182,8 @@ ServiceTypeNode:
     'name' ':' name=STRING
 ;
 
-NameNode:
-    ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode
-;
-
 NodeType:
-    ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode | ServiceTypeNode
+    ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode | ServiceTypeNode | PodController | PodCardinality | VolumeNode
 ;
 
 SourceNodeType:

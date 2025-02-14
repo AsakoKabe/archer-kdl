@@ -8,10 +8,13 @@ import * as ast from '../../../language-server/generated/ast.js';
 import { ClusterNode } from './graph-extension/cluster-node.js';
 import { ContainerNode } from './graph-extension/container-node.js';
 import { IngressNode } from './graph-extension/ingress-node.js';
+import { PodCardinalityNode } from './graph-extension/pod-cardinality-node.js';
+import { PodControllerNode } from './graph-extension/pod-controller-node.js';
 import { PodNode } from './graph-extension/pod-node.js';
 import { PortNode } from './graph-extension/port-node.js';
 import { ServiceNode } from './graph-extension/service-node.js';
 import { ServiceTypeNode } from './graph-extension/service-type-node.js';
+import { VolumeNode } from './graph-extension/volume-node.js';
 import { KDLModelState } from './kdl-state.js';
 import { createEdgeID, createNodeAttribute } from './utils.js';
 
@@ -166,6 +169,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .map(container => this.createContainerNode(container));
 
         const portNodes = pod.ports.map(port => this.createPortNode(port));
+        const volumeNodes = pod.volumes.map(volume => this.createVolumeNode(volume));
 
         const podAttributes = this.findOrCreateNodeAttribute(pod);
         const builder = PodNode.builder()
@@ -183,8 +187,74 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             })
             .children()
             .addContainerNodes(containerNodes)
-            .addPortNodes(portNodes);
+            .addPortNodes(portNodes)
+            .addVolumeNodes(volumeNodes);
 
+        if (pod.controller) {
+            builder.addControllerNode(this.createPodControllerNode(pod.controller));
+        }
+        if (pod.cardinality) {
+            builder.addCardinalityNode(this.createPodCardinalityNode(pod.cardinality));
+        }
+
+        return builder.build();
+    }
+
+    private createPodControllerNode(controller: ast.PodController): GCompartment {
+        const controllerAttribute = this.findOrCreateNodeAttribute(controller);
+        const builder = PodControllerNode.builder()
+            .type(ModelTypes.POD_CONTROLLER)
+            .name(controller.name)
+            .id(this.modelState.idProvider.getLocalId(controller)!)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: controllerAttribute.dimensions.x,
+                y: controllerAttribute.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: controllerAttribute.dimensions.width,
+                prefHeight: controllerAttribute.dimensions.height
+            })
+            .children();
+        return builder.build();
+    }
+
+    private createVolumeNode(volume: ast.VolumeNode): GCompartment {
+        const controllerAttribute = this.findOrCreateNodeAttribute(volume);
+        const builder = VolumeNode.builder()
+            .type(ModelTypes.VOLUME)
+            .name(volume.name)
+            .volumeType(volume.type)
+            .id(this.modelState.idProvider.getLocalId(volume)!)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: controllerAttribute.dimensions.x,
+                y: controllerAttribute.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: controllerAttribute.dimensions.width,
+                prefHeight: controllerAttribute.dimensions.height
+            })
+            .children();
+        return builder.build();
+    }
+
+    private createPodCardinalityNode(cardinality: ast.PodCardinality): GCompartment {
+        const controllerAttribute = this.findOrCreateNodeAttribute(cardinality);
+        const builder = PodCardinalityNode.builder()
+            .type(ModelTypes.POD_CARDINALITY)
+            .name(cardinality.name)
+            .id(this.modelState.idProvider.getLocalId(cardinality)!)
+            .addArgs(ArgsUtil.cornerRadius(5))
+            .position({
+                x: controllerAttribute.dimensions.x,
+                y: controllerAttribute.dimensions.y
+            })
+            .addLayoutOptions({
+                prefWidth: controllerAttribute.dimensions.width,
+                prefHeight: controllerAttribute.dimensions.height
+            })
+            .children();
         return builder.build();
     }
 

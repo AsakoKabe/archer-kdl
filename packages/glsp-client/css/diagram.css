@@ -30,7 +30,7 @@
     fill: #feaaa2;
 }
 
-.cluster .cluster > .sprotty-node {
+.cluster > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
 }
@@ -49,6 +49,58 @@
     fill: #BDE49C;
 }
 
+.pod-controller{
+    fill: #65D111;
+}
+
+.pod-controller .sprotty-label.heading {
+    font-size: 100%;
+}
+
+.pod .pod-controller > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
+}
+
+.pod-controller .sprotty-label.heading {
+    font-size: 60%;
+}
+
+
+.pod-cardinality{
+    fill: #65D111;
+}
+
+.pod-cardinality .sprotty-label.heading {
+    font-size: 100%;
+}
+
+.pod .pod-cardinality > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
+}
+
+.pod-cardinality .sprotty-label.heading {
+    font-size: 60%;
+}
+
+.pod-volume{
+    fill: #89C8ED;
+}
+
+.pod-volume .sprotty-label.heading {
+    font-size: 100%;
+}
+
+.pod .pod-volume > .sprotty-node {
+    stroke: black;
+    stroke-width: 0.5;
+}
+
+.pod-volume .sprotty-label.heading {
+    font-size: 60%;
+}
+
 .cluster .pod > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
@@ -63,15 +115,15 @@
     font-size: 120%;
 }
 
-.serviceType{
+.service-type{
     fill: #FEE897;
 }
 
-.serviceType .sprotty-label.heading {
+.service-type .sprotty-label.heading {
     font-size: 100%;
 }
 
-.service .serviceType > .sprotty-node {
+.service .service-type > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
 }
