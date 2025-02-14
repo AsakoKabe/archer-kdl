@@ -1,13 +1,28 @@
 import { AstNode } from 'langium';
 import { AbstractSemanticTokenProvider, SemanticTokenAcceptor } from 'langium/lsp';
 import { SemanticTokenTypes } from 'vscode-languageserver-protocol';
-import { isClusterNode, isContainerNode, isDiagram, isDimensions, isEdgeAttribute, isIngressNode, isKDLDiagram,  isNodeAttribute, isPodNode, isPortNode, isServiceNode, isServiceTypeNode } from './generated/ast.js';
+import {
+    isClusterNode,
+    isContainerNode,
+    isDiagram,
+    isDimensions,
+    isEdgeAttribute,
+    isIngressNode,
+    isKDLDiagram,
+    isNodeAttribute,
+    isPodCardinality,
+    isPodController,
+    isPodNode,
+    isPortNode,
+    isServiceNode,
+    isServiceTypeNode
+} from './generated/ast.js';
 
 export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
     protected highlightElement(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         if (isKDLDiagram(node)) {
             this.highlightKDLDiagram(node, acceptor);
-        } else if (isDiagram(node)){
+        } else if (isDiagram(node)) {
             this.highlightDiagramNode(node, acceptor);
         } else if (isClusterNode(node)) {
             this.highlightClusterNode(node, acceptor);
@@ -29,6 +44,10 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             this.highlightEdgeAttribute(node, acceptor);
         } else if (isServiceTypeNode(node)) {
             this.highlightServiceTypeNode(node, acceptor);
+        } else if (isPodController(node)) {
+            this.highlightPodController(node, acceptor);
+        } else if (isPodCardinality(node)) {
+            this.highlightPodCardinality(node, acceptor);
         }
     }
     private highlightDiagramNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
@@ -47,7 +66,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'kdlDiagram',
-            type: SemanticTokenTypes.class
+            type: SemanticTokenTypes.keyword
         });
         acceptor({
             node,
@@ -257,12 +276,22 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'containers',
-            type: SemanticTokenTypes.class
+            type: SemanticTokenTypes.keyword
         });
         acceptor({
             node,
             keyword: 'ports',
-            type: SemanticTokenTypes.class
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            keyword: 'controller',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            keyword: 'cardinality',
+            type: SemanticTokenTypes.keyword
         });
     }
 
@@ -290,7 +319,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'type',
-            type: SemanticTokenTypes.class
+            type: SemanticTokenTypes.keyword
         });
         acceptor({
             node,
@@ -305,7 +334,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         acceptor({
             node,
             keyword: 'ports',
-            type: SemanticTokenTypes.class
+            type: SemanticTokenTypes.keyword
         });
     }
 
@@ -424,6 +453,52 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
     }
 
     private highlightServiceTypeNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
+        acceptor({
+            node,
+            keyword: 'id',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'id',
+            type: SemanticTokenTypes.string
+        });
+        acceptor({
+            node,
+            keyword: 'name',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'name',
+            type: SemanticTokenTypes.string
+        });
+    }
+
+    private highlightPodController(node: AstNode, acceptor: SemanticTokenAcceptor): void {
+        acceptor({
+            node,
+            keyword: 'id',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'id',
+            type: SemanticTokenTypes.string
+        });
+        acceptor({
+            node,
+            keyword: 'name',
+            type: SemanticTokenTypes.keyword
+        });
+        acceptor({
+            node,
+            property: 'name',
+            type: SemanticTokenTypes.string
+        });
+    }
+
+    private highlightPodCardinality(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         acceptor({
             node,
             keyword: 'id',
