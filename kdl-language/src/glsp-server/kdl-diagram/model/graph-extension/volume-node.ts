@@ -9,7 +9,7 @@ export class VolumeNode extends GNode {
     static override builder(): VolumeNodeBuilder {
         return new VolumeNodeBuilder(VolumeNode)
             .layout('hbox')
-            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false, resizeContainer: false })
+            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false })
             .addCssClass('pod-volume');
     }
 }
@@ -29,7 +29,7 @@ export class VolumeNodeBuilder<T extends VolumeNode = VolumeNode> extends GNodeB
     }
 
     protected addData(): GCompartment {
-        const layoutOptions: Args = { hGrab: true, hAlign: 'center', vGap: 2, resizeContainer: true };
+        const layoutOptions: Args = { hGrab: true, hAlign: 'center', vGap: 2 };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_data')

@@ -42,6 +42,7 @@ export type KDLKeywordNames =
     | "nodeID"
     | "number"
     | "pods"
+    | "points"
     | "ports"
     | "services"
     | "sourceID"
@@ -159,6 +160,7 @@ export interface EdgeAttribute extends AstNode {
     readonly $container: Diagram;
     readonly $type: 'EdgeAttribute';
     id: string;
+    points: Array<Point>;
     sourceID: Reference<SourceNodeType>;
     targetID: Reference<TargetNodeType>;
 }
@@ -269,6 +271,7 @@ export function isPodNode(item: unknown): item is PodNode {
 }
 
 export interface Point extends AstNode {
+    readonly $container: EdgeAttribute;
     readonly $type: 'Point';
     x: number;
     y: number;
@@ -484,6 +487,7 @@ export class KDLAstReflection extends AbstractAstReflection {
                     name: EdgeAttribute,
                     properties: [
                         { name: 'id' },
+                        { name: 'points', defaultValue: [] },
                         { name: 'sourceID' },
                         { name: 'targetID' }
                     ]

@@ -50,7 +50,7 @@ const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => 
     configureModelElement(context, ModelTypes.CLUSTER, ClusterNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.STRUCTURE, GCompartment, StructureCompartmentView);
     configureModelElement(context, ModelTypes.INGRESS, IngressNode, IngressNodeView);
-    configureModelElement(context, ModelTypes.POD, PodNode, RoundedCornerNodeView, {disable: []});
+    configureModelElement(context, ModelTypes.POD, PodNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.POD_CONTROLLER, PodControllerNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.POD_CARDINALITY, PodCardinalityNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.VOLUME, VolumeNode, RoundedCornerNodeView);

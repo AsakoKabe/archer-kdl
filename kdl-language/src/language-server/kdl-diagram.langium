@@ -222,5 +222,11 @@ EdgeAttribute:
     'id' ':' id=ID
     'sourceID' ':' sourceID=[SourceNodeType:IDReference]
     'targetID' ':' targetID=[TargetNodeType:IDReference]
+    (
+        'points' ':'
+        INDENT 
+            (LIST_ITEM points+=Point)+
+        DEDENT
+    )?
 ;
     

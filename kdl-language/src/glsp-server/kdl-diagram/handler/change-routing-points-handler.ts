@@ -25,15 +25,15 @@ export class KDLDiagramChangeRoutingPointsOperation extends JsonOperationHandler
         }
 
         if (newRoutingPoints) {
-            // edge.points = [];
+            edge.points = [];
 
-            // newRoutingPoints.forEach(point => {
-            //     edge.points.push({
-            //         ...point,
-            //         $container: edge,
-            //         $type: ast.Point,
-            //     })
-            // })
+            newRoutingPoints.forEach(point => {
+                edge.points.push({
+                    ...point,
+                    $container: edge,
+                    $type: ast.Point,
+                })
+            })
             
         }
     }

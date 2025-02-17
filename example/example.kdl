@@ -82,6 +82,10 @@ kdlDiagram:
             cardinality:
                 id: PodCardinality
                 name: "1"
+            volumes:
+              - id: ui-86df54f46d-l7hkcVolume0
+                name: "Volume0"
+                type: "secret"
             containers:
               - id: ContainerNode0
                 name: "ui"
@@ -101,8 +105,8 @@ kdlDiagram:
           - id: NodeAttribute1
             nodeID: example.ClusterNode1
             dimensions:
-                x: 325.0141467162505
-                y: 335.4873036707689
+                x: 204.88101297830667
+                y: 661.6079830452487
                 width: 466.91526865617544
                 height: 356.1361256870708
           - id: NodeAttribute2
@@ -185,8 +189,8 @@ kdlDiagram:
           - id: NodeAttribute13
             nodeID: example.ClusterNode1.PodNode1
             dimensions:
-                x: 28.106718206866248
-                y: 186.30280937226598
+                x: 55.011046485867126
+                y: 197.0645406838663
                 width: 134.1953125
                 height: 91.05567341416838
           - id: NodeAttribute14
@@ -213,8 +217,8 @@ kdlDiagram:
           - id: NodeAttribute17
             nodeID: example.ClusterNode1.ServiceNode0.roninPort0
             dimensions:
-                x: 20.641605036214628
-                y: -70.89942599395454
+                x: 25.701240111146262
+                y: -63.309973381557086
                 width: 64.64868927001953
                 height: 40
           - id: NodeAttribute18
@@ -273,16 +277,26 @@ kdlDiagram:
                 y: -62.88060755855423
                 width: 131.28125
                 height: 51
+          - id: NodeAttribute26
+            nodeID: example.ClusterNode1.PodNode1.ui-86df54f46d-l7hkcVolume0
+            dimensions:
+                x: -51.53059749895078
+                y: -122.92329699206863
+                width: 50.359375
+                height: 40
         edgeAttributes:
           - id: example_ClusterNode1_ServiceNode0-example_ClusterNode1_PodNode0_ronin-6dbdd7fbfc-bzf56Port0
             sourceID: example.ClusterNode1.ServiceNode0
             targetID: example.ClusterNode1.PodNode0.ronin-6dbdd7fbfc-bzf56Port0
-          - id: example_ClusterNode1_ServiceNode1-example_ClusterNode1_PodNode1_ui-86df54f46d-l7hkcPort0
-            sourceID: example.ClusterNode1.ServiceNode1
-            targetID: example.ClusterNode1.PodNode1.ui-86df54f46d-l7hkcPort0
           - id: example_ClusterNode1_IngressNode0-example_ClusterNode1_ServiceNode0_roninPort0
             sourceID: example.ClusterNode1.IngressNode0
             targetID: example.ClusterNode1.ServiceNode0.roninPort0
           - id: example_ClusterNode1_IngressNode0-example_ClusterNode1_ServiceNode1_uiPort0
             sourceID: example.ClusterNode1.IngressNode0
             targetID: example.ClusterNode1.ServiceNode1.uiPort0
+          - id: example_ClusterNode1_ServiceNode1-example_ClusterNode1_PodNode1_ui-86df54f46d-l7hkcPort0
+            sourceID: example.ClusterNode1.ServiceNode1
+            targetID: example.ClusterNode1.PodNode1.ui-86df54f46d-l7hkcPort0
+            points:
+              - x: 355.7950772498192
+                y: 788.0416667924112

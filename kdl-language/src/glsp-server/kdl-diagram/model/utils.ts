@@ -59,7 +59,8 @@ export function addEdgeAttribute(
         targetID: {
             ref: targetNode,
             $refText: targetID
-        }
+        },
+        points: []
     });
 }
 

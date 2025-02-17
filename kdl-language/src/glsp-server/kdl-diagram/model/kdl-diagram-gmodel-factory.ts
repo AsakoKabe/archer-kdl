@@ -69,15 +69,16 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const sourceID = this.modelState.idProvider.getLocalId(link.source)!;
         const targetID = this.modelState.idProvider.getLocalId(link.target)!;
         const edgeAttribute = this.findOrCreateEdgeAttribute(link.source, sourceID, link.target, targetID);
-        return (
-            GEdge.builder()
-                .id(this.modelState.idProvider.getLocalId(edgeAttribute)!)
-                .addCssClass('link')
-                .sourceId(sourceID)
-                .targetId(targetID)
-                // .addRoutingPoints(edgeAttribute.points)
-                .build()
-        );
+        const builder = GEdge.builder()
+            .id(this.modelState.idProvider.getLocalId(edgeAttribute)!)
+            .addCssClass('link')
+            .sourceId(sourceID)
+            .targetId(targetID)
+
+        if (edgeAttribute.points){
+            builder.addRoutingPoints(edgeAttribute.points.map(p => ({ x: p.x, y: p.y })))
+        }
+        return builder.build();
     }
 
     protected findOrCreateEdgeAttribute(
@@ -94,7 +95,8 @@ export class KDLDiagramGModelFactory implements GModelFactory {
                 $container: this.modelState.kdlDiagram.diagram!,
                 id: createEdgeID(sourceID, targetID),
                 sourceID: { $refText: sourceID, ref: source },
-                targetID: { $refText: targetID, ref: target }
+                targetID: { $refText: targetID, ref: target },
+                points: []
             };
             // this.modelState.kdlDiagram.diagram.edgeAttributes.push(edgeAttribute);
         }
