@@ -40,6 +40,12 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         const location = relativeLocation ?? Point.ORIGIN;
         const pod = createPodNode(clusterNode);
         addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod, location);
+        if (pod.controller) {
+            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod.controller!, location);
+        }
+        if (pod.cardinality) {
+            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod.cardinality!, location);
+        }
         clusterNode.pods.push(pod);
     }
 }

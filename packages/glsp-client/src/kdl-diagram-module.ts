@@ -1,6 +1,7 @@
 import {
     configureActionHandler,
     configureDefaultModelElements,
+    configureLayout,
     configureModelElement,
     ConsoleLogger,
     ContainerConfiguration,
@@ -30,12 +31,13 @@ import {
     PodCardinalityNode,
     PodControllerNode,
     PodNode,
-    PodVolumeNode,
     PortNode,
     ServiceNode,
-    ServiceTypeNode
+    ServiceTypeNode,
+    VolumeNode
 } from './model';
 import { ArrowEdgeView, IngressNodeView } from './view';
+import { FreeFormChildless } from './free-form-childless-layout';
 
 const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -48,16 +50,17 @@ const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => 
     configureModelElement(context, ModelTypes.CLUSTER, ClusterNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.STRUCTURE, GCompartment, StructureCompartmentView);
     configureModelElement(context, ModelTypes.INGRESS, IngressNode, IngressNodeView);
-    configureModelElement(context, ModelTypes.POD, PodNode, RoundedCornerNodeView);
+    configureModelElement(context, ModelTypes.POD, PodNode, RoundedCornerNodeView, {disable: []});
     configureModelElement(context, ModelTypes.POD_CONTROLLER, PodControllerNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.POD_CARDINALITY, PodCardinalityNode, RoundedCornerNodeView);
-    configureModelElement(context, ModelTypes.VOLUME, PodVolumeNode, RoundedCornerNodeView);
+    configureModelElement(context, ModelTypes.VOLUME, VolumeNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.SERVICE, ServiceNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.SERVICE_TYPE, ServiceTypeNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.CONTAINER, ContainerNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.PORT, PortNode, RoundedCornerNodeView);
     overrideModelElement(context, DefaultTypes.EDGE, GEdge, ArrowEdgeView);
     configureActionHandler(context, MyCustomResponseAction.KIND, MyCustomResponseActionHandler);
+    configureLayout({ bind, isBound }, FreeFormChildless.KIND, FreeFormChildless);
 });
 
 export function initializeKDLDiagramContainer(container: Container, ...containerConfiguration: ContainerConfiguration): Container {

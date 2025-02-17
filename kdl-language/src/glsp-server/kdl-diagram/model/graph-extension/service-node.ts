@@ -59,7 +59,7 @@ export class ServiceNodeBuilder<T extends ServiceNode = ServiceNode> extends GNo
         return new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.STRUCTURE)
             .id(this.proxy.id + '_struct')
-            .layout('freeform')
+            .layout('freeFormChildless')
             .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })
             .build();
     }

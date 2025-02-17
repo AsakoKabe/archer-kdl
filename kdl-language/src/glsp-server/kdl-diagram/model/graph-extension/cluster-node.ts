@@ -93,7 +93,7 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.STRUCTURE)
             .id(this.proxy.id + '_struct')
-            .layout('freeform')
+            .layout('freeFormChildless')
             .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
 
         return builder.build();

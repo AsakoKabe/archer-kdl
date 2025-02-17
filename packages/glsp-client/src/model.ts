@@ -147,19 +147,19 @@ export class PodCardinalityNode extends RectangularNode implements Nameable, Wit
     }
 }
 
-export class PodVolumeNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
-    static override readonly DEFAULT_FEATURES = [
-        selectFeature,
-        boundsFeature,
-        moveFeature,
-        layoutContainerFeature,
-        fadeFeature,
-        hoverFeedbackFeature,
-        popupFeature,
-        nameFeature,
-        withEditLabelFeature,
-        layoutableChildFeature
-    ];
+export class VolumeNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
+    // static override readonly DEFAULT_FEATURES = [
+    //     selectFeature,
+    //     boundsFeature,
+    //     moveFeature,
+    //     layoutContainerFeature,
+    //     fadeFeature,
+    //     hoverFeedbackFeature,
+    //     popupFeature,
+    //     nameFeature,
+    //     withEditLabelFeature,
+    //     layoutableChildFeature
+    // ];
 
     name = '';
 

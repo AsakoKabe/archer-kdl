@@ -49,7 +49,7 @@ export class ContainerNodeBuilder<T extends ContainerNode = ContainerNode> exten
         return new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.STRUCTURE)
             .id(this.proxy.id + '_struct')
-            .layout('freeform')
+            .layout('freeFormChildless')
             .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })
             .build();
     }

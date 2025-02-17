@@ -1,14 +1,14 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 
-export class PodNode extends GNode {
+export class PodNode extends GNode{
     name: string;
     nodeType: string = ModelTypes.POD;
 
     static override builder(): PodNodeBuilder {
         return new PodNodeBuilder(PodNode)
             .layout('vbox')
-            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
+            .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false, resizeContainer: true })
             .addCssClass('pod')
             .resizeLocations(GResizeLocation.CORNERS);
     }
@@ -51,7 +51,7 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
     }
 
     protected createLabelCompartment(): GCompartment {
-        const layoutOptions: Args = {};
+        const layoutOptions: Args = {resizeContainer: true};
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_header')
@@ -73,8 +73,8 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
         return new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.STRUCTURE)
             .id(this.proxy.id + '_struct')
-            .layout('freeform')
-            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })
+            .layout('freeFormChildless')
+            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true, resizeContainer: true })
             .build();
     }
 }

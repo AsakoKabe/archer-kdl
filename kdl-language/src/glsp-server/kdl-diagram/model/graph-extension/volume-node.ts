@@ -1,4 +1,4 @@
-import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
+import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 
 export class VolumeNode extends GNode {
@@ -9,9 +9,8 @@ export class VolumeNode extends GNode {
     static override builder(): VolumeNodeBuilder {
         return new VolumeNodeBuilder(VolumeNode)
             .layout('hbox')
-            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false })
-            .addCssClass('pod-volume')
-            .resizeLocations(GResizeLocation.CORNERS);
+            .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false, resizeContainer: false })
+            .addCssClass('pod-volume');
     }
 }
 
@@ -30,7 +29,7 @@ export class VolumeNodeBuilder<T extends VolumeNode = VolumeNode> extends GNodeB
     }
 
     protected addData(): GCompartment {
-        const layoutOptions: Args = { hGrab: true, hAlign: 'center', vGap: 2 };
+        const layoutOptions: Args = { hGrab: true, hAlign: 'center', vGap: 2, resizeContainer: true };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_data')
@@ -52,14 +51,5 @@ export class VolumeNodeBuilder<T extends VolumeNode = VolumeNode> extends GNodeB
                 .build()
         );
         return builder.build();
-    }
-
-    protected createStructCompartment(): GCompartment {
-        return new GCompartmentBuilder(GCompartment)
-            .type(ModelTypes.STRUCTURE)
-            .id(this.proxy.id + '_struct')
-            .layout('freeform')
-            .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true })
-            .build();
     }
 }
