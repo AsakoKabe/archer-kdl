@@ -19,7 +19,7 @@ kdlDiagram:
             name: "nginx-676b6c5bbc-kbtq6"
             controller:
                 id: PodController
-                name: "RC"
+                name: "D"
             cardinality:
                 id: PodCardinality
                 name: "1"
@@ -63,7 +63,7 @@ kdlDiagram:
             name: "ronin-6dbdd7fbfc-bzf56"
             controller:
                 id: PodController
-                name: "RC"
+                name: "D"
             cardinality:
                 id: PodCardinality
                 name: "1"
@@ -78,7 +78,7 @@ kdlDiagram:
             name: "ui-86df54f46d-l7hkc"
             controller:
                 id: PodController
-                name: "RC"
+                name: "D"
             cardinality:
                 id: PodCardinality
                 name: "1"
@@ -101,108 +101,108 @@ kdlDiagram:
           - id: NodeAttribute1
             nodeID: example.ClusterNode1
             dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
+                x: 135
+                y: 193
+                width: 45.2890625
+                height: 36
           - id: NodeAttribute2
-            nodeID: example.ClusterNode1.PodNode0.Port0
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute3
-            nodeID: example.ClusterNode1.PodNode0.ContainerNode0
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute4
-            nodeID: example.ClusterNode1.PodNode0
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute5
-            nodeID: example.ClusterNode1.PodNode0.PodCardinality
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute6
-            nodeID: example.ClusterNode1.PodNode0.PodController
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute7
-            nodeID: example.ClusterNode1.PodNode1.Port0
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute8
-            nodeID: example.ClusterNode1.PodNode1.ContainerNode0
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute9
-            nodeID: example.ClusterNode1.PodNode1
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute10
-            nodeID: example.ClusterNode1.PodNode1.PodCardinality
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute11
-            nodeID: example.ClusterNode1.PodNode1.PodController
-            dimensions:
-                x: 0
-                y: 0
-                width: 10
-                height: 10
-          - id: NodeAttribute12
             nodeID: example.ClusterNode0.PodNode0.ContainerNode0
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
-          - id: NodeAttribute13
+          - id: NodeAttribute3
             nodeID: example.ClusterNode0.PodNode0
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
-          - id: NodeAttribute14
+          - id: NodeAttribute4
             nodeID: example.ClusterNode0.PodNode0.PodCardinality
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
-          - id: NodeAttribute15
+          - id: NodeAttribute5
             nodeID: example.ClusterNode0.PodNode0.PodController
             dimensions:
                 x: 0
                 y: 0
                 width: 10
                 height: 10
+          - id: NodeAttribute6
+            nodeID: example.ClusterNode1.PodNode0.Port0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute7
+            nodeID: example.ClusterNode1.PodNode0.ContainerNode0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute8
+            nodeID: example.ClusterNode1.PodNode0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute9
+            nodeID: example.ClusterNode1.PodNode0.PodCardinality
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute10
+            nodeID: example.ClusterNode1.PodNode0.PodController
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute11
+            nodeID: example.ClusterNode1.PodNode1.Port0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute12
+            nodeID: example.ClusterNode1.PodNode1.ContainerNode0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
+          - id: NodeAttribute13
+            nodeID: example.ClusterNode1.PodNode1
+            dimensions:
+                x: -12
+                y: 192
+                width: 134.1953125
+                height: 36
+          - id: NodeAttribute14
+            nodeID: example.ClusterNode1.PodNode1.PodCardinality
+            dimensions:
+                x: -36
+                y: -46
+                width: 24.34375
+                height: 29
+          - id: NodeAttribute15
+            nodeID: example.ClusterNode1.PodNode1.PodController
+            dimensions:
+                x: -44
+                y: -5
+                width: 25.640625
+                height: 29
           - id: NodeAttribute16
             nodeID: example.ClusterNode1.ServiceNode0.Port0
             dimensions:

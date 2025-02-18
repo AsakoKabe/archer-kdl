@@ -103,9 +103,10 @@ export class KuberRecoverActionHandler implements ActionHandler {
 
     private async recoverPods(cluster: ast.ClusterNode): Promise<void> {
         try {
-            const podsList = await this.kuberClient.getPods(cluster.name);
-            for (const kuberPod of podsList.items) {
-                const pod = createPodNode(cluster, kuberPod.metadata?.name);
+            const pods = await this.kuberClient.getPods(cluster.name);
+            for (const kuberPod of pods.items) {
+                const controller = await this.kuberClient.getPodController(kuberPod, cluster.name);
+                const pod = createPodNode(cluster, kuberPod.metadata?.name, controller?.kind, String(controller?.spec?.replicas));
                 cluster.pods.push(pod);
                 if (kuberPod.spec?.containers) {
                     this.recoverContainers(pod, kuberPod.spec.containers);

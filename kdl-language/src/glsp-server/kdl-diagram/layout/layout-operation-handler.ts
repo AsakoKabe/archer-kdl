@@ -31,12 +31,11 @@ export class KDLLayoutOperationHandler extends JsonOperationHandler {
     }
 
     private layout(operation: LayoutOperation): void {
-        const kdlDiagram = this.modelState.kdlDiagram;
-        const cluster = kdlDiagram.clusters.at(1)!;
-        const countPods = cluster.pods.length;
-        const paddingWidth = 100;
-        const paddingHeight = 100;
-        const maxWidthNode = 
+        // const kdlDiagram = this.modelState.kdlDiagram;
+        // const cluster = kdlDiagram.clusters.at(1)!;
+        // const countPods = cluster.pods.length;
+        // const paddingWidth = 100;
+        // const paddingHeight = 100;
     }
 
 }

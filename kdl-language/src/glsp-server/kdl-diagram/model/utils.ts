@@ -97,7 +97,7 @@ export function createIngressNode(clusterNode: ast.ClusterNode, name?: string, h
     };
 }
 
-export function createPodNode(cluster: ast.ClusterNode, name?: string): ast.PodNode {
+export function createPodNode(cluster: ast.ClusterNode, name?: string, controller?: string, replicaFactor?: string): ast.PodNode {
     const pod: ast.PodNode = {
         $type: ast.PodNode,
         $container: cluster,
@@ -108,19 +108,33 @@ export function createPodNode(cluster: ast.ClusterNode, name?: string): ast.PodN
         controller: {} as ast.PodController,
         cardinality: {} as ast.PodCardinality,
         volumes: []
-    };    
-    pod.controller = createPodControllerNode(pod);;
-    pod.cardinality = createPodCardinalityNode(pod);;
+    };
+    pod.controller = createPodControllerNode(pod, controller);
+    pod.cardinality = createPodCardinalityNode(pod, replicaFactor);
     return pod;
 }
 
+function getControllerName(name: string): string {
+    switch (name) {
+        case 'Deployment':
+            return 'D';
+        case 'StatefulSet':
+            return 'SS';
+        case 'DaemonSet':
+            return 'DS';
+        case 'ReplicaSet':
+            return 'RS';
+        default:
+            return name;
+    }
+}
 export function createPodControllerNode(pod: ast.PodNode, name?: string): ast.PodController {
     return {
         $container: pod,
         $type: ast.PodController,
         id: 'PodController',
-        name: name ? name : 'RC'
-    }
+        name: name ? getControllerName(name) : 'RC'
+    };
 }
 
 export function createPodCardinalityNode(pod: ast.PodNode, name?: string): ast.PodCardinality {
@@ -129,7 +143,7 @@ export function createPodCardinalityNode(pod: ast.PodNode, name?: string): ast.P
         $type: ast.PodCardinality,
         id: 'PodCardinality',
         name: name ? name : '1'
-    }
+    };
 }
 
 export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?: number, name?: string): ast.PortNode {
@@ -152,17 +166,13 @@ export function createVolumeNode(container: ast.PodNode, name?: string, type?: s
     };
 }
 
-export function createServiceNode(
-    cluster: ast.ClusterNode,
-    name?: string,
-    type?: ast.ServiceTypeNode
-): ast.ServiceNode {
-    const service: ast.ServiceNode =  {
+export function createServiceNode(cluster: ast.ClusterNode, name?: string, type?: ast.ServiceTypeNode): ast.ServiceNode {
+    const service: ast.ServiceNode = {
         $type: ast.ServiceNode,
         $container: cluster,
         id: 'ServiceNode' + cluster.services.length,
         name: name ? name : 'ServiceNode' + cluster.services.length,
-        type: type ? type : {} as ast.ServiceTypeNode,
+        type: type ? type : ({} as ast.ServiceTypeNode),
         ports: [],
         links: []
     };
@@ -176,7 +186,7 @@ export function createServiceTypeNode(service: ast.ServiceNode, name?: string): 
         $type: ast.ServiceTypeNode,
         id: 'ServiceType',
         name: name ? name : 'CIP'
-    }
+    };
 }
 
 export function getNodeDimensions(node: ast.NodeType, kdlDiagram: ast.KDLDiagram): ast.Dimensions | undefined {
