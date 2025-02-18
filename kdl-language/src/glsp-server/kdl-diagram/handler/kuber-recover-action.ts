@@ -147,7 +147,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
         try {
             const serviceList = await this.kuberClient.getServices(cluster.name);
             for (const kuberService of serviceList.items) {
-                const service = createServiceNode(cluster, kuberService.metadata?.name);
+                const service = createServiceNode(cluster, kuberService.metadata?.name, kuberService.spec?.type);
                 cluster.services.push(service);
                 if (kuberService.spec?.ports) {
                     this.recoverServicePorts(service, kuberService.spec.ports);

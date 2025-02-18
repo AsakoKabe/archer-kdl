@@ -166,26 +166,40 @@ export function createVolumeNode(container: ast.PodNode, name?: string, type?: s
     };
 }
 
-export function createServiceNode(cluster: ast.ClusterNode, name?: string, type?: ast.ServiceTypeNode): ast.ServiceNode {
+export function createServiceNode(cluster: ast.ClusterNode, name?: string, type?: string): ast.ServiceNode {
     const service: ast.ServiceNode = {
         $type: ast.ServiceNode,
         $container: cluster,
         id: 'ServiceNode' + cluster.services.length,
         name: name ? name : 'ServiceNode' + cluster.services.length,
-        type: type ? type : ({} as ast.ServiceTypeNode),
+        type: {} as ast.ServiceTypeNode,
         ports: [],
         links: []
     };
-    service.type = createServiceTypeNode(service);
+    service.type = createServiceTypeNode(service, type);
     return service;
 }
 
+function getServiceTypeName(name: string): string {
+    switch (name) {
+        case 'ClusterIP':
+            return 'CIP';
+        case 'NodePort':
+            return 'NP';
+        case 'LoadBalancer':
+            return 'LB';
+        case 'ExternalIP':
+            return 'EIP';
+        default:
+            return name;
+    }
+}
 export function createServiceTypeNode(service: ast.ServiceNode, name?: string): ast.ServiceTypeNode {
     return {
         $container: service,
         $type: ast.ServiceTypeNode,
         id: 'ServiceType',
-        name: name ? name : 'CIP'
+        name: name ? getServiceTypeName(name) : 'Not found'
     };
 }
 
