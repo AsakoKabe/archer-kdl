@@ -22,16 +22,21 @@ export class KDLLayoutOperationHandler extends JsonOperationHandler {
 
     override createCommand(operation: LayoutOperation): MaybePromise<Command | undefined> {
         return new CrossModelCommand(this.modelState, async () => {
-            this.layout(operation);
+            if (operation.kind === LayoutOperation.KIND) {
+                if (this.diagramConfiguration.layoutKind === ServerLayoutKind.MANUAL) {
+                    this.layout(operation)
+                }
+            }
         });
     }
 
-    private async layout(operation: LayoutOperation) {
-        if (operation.kind === LayoutOperation.KIND) {
-            if (this.diagramConfiguration.layoutKind === ServerLayoutKind.MANUAL) {
-                return;
-            }
-        }
+    private layout(operation: LayoutOperation): void {
+        const kdlDiagram = this.modelState.kdlDiagram;
+        const cluster = kdlDiagram.clusters.at(1)!;
+        const countPods = cluster.pods.length;
+        const paddingWidth = 100;
+        const paddingHeight = 100;
+        const maxWidthNode = 
     }
 
 }

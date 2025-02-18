@@ -136,7 +136,7 @@ export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?
     return {
         $type: ast.PortNode,
         $container: container,
-        id: container.name + 'Port' + container.ports.length,
+        id: 'Port' + container.ports.length,
         name: name ? name : 'PortNode' + container.ports.length,
         number: number ? number : 8080
     };
@@ -146,7 +146,7 @@ export function createVolumeNode(container: ast.PodNode, name?: string, type?: s
     return {
         $type: ast.VolumeNode,
         $container: container,
-        id: container.name + 'Volume' + container.volumes.length,
+        id: 'Volume' + container.volumes.length,
         name: name ? name : 'Volume' + container.volumes.length,
         type: type ? type : 'secret'
     };

@@ -36,13 +36,14 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     }
 
     protected createGraph(): GGraph | undefined {
-        const diagramRoot = this.modelState.kdlDiagram;
-        // if (!diagramRoot.model || !diagramRoot.diagram) {
-        //     return GGraph.builder().id(this.modelState.semanticUri).build();
-        // }
+        const kdlDiagram = this.modelState.kdlDiagram;
+
+        kdlDiagram.diagram!.nodeAttributes = kdlDiagram.diagram!.nodeAttributes.filter(attr => attr.nodeID.ref)
+        kdlDiagram.diagram!.edgeAttributes = kdlDiagram.diagram!.edgeAttributes.filter(attr => attr.sourceID.ref && attr.targetID.ref)
+
         const graphBuilder = GGraph.builder().id(this.modelState.semanticUri);
-        this.addClustersToGraph(diagramRoot, graphBuilder);
-        diagramRoot.clusters.forEach(cluster => this.addLinksToGraph(cluster, graphBuilder));
+        this.addClustersToGraph(kdlDiagram, graphBuilder);
+        kdlDiagram.clusters.forEach(cluster => this.addLinksToGraph(cluster, graphBuilder));
         return graphBuilder.build();
     }
 

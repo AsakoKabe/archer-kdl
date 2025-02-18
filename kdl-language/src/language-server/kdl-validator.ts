@@ -45,6 +45,7 @@ export class KDLValidator {
     checkNode(node: AstNode, accept: ValidationAcceptor): void {
         this.checkUniqueGlobalId(node, accept);
         this.checkUniqueNodeId(node, accept);
+        // this.deleteUnusedDiagram(node, accept);
     }
 
     protected checkUniqueGlobalId(node: AstNode, accept: ValidationAcceptor): void {
