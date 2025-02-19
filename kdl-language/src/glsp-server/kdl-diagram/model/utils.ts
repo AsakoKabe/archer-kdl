@@ -156,7 +156,11 @@ export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?
     };
 }
 
-export function createVolumeNode(container: ast.PodNode, name?: string, type?: string): ast.VolumeNode {
+export enum VolumeType {
+    Secret='secret',
+    ConfigMap='configmap'
+}
+export function createVolumeNode(container: ast.PodNode, name?: string, type?: VolumeType): ast.VolumeNode {
     return {
         $type: ast.VolumeNode,
         $container: container,

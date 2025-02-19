@@ -20,7 +20,9 @@ import {
     createIngressNode,
     createPodNode,
     createPortNode,
-    createServiceNode
+    createServiceNode,
+    createVolumeNode,
+    VolumeType
 } from '../model/utils.js';
 
 export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverResponseAction> {
@@ -107,9 +109,12 @@ export class KuberRecoverActionHandler implements ActionHandler {
             for (const kuberPod of pods.items) {
                 const controller = await this.kuberClient.getPodController(kuberPod, cluster.name);
                 const pod = createPodNode(cluster, kuberPod.metadata?.name, controller?.kind, String(controller?.spec?.replicas));
+                const kubeContainers = kuberPod.spec?.containers || [];
+                this.recoverVolumes(kuberPod, kubeContainers, pod);
+
                 cluster.pods.push(pod);
                 if (kuberPod.spec?.containers) {
-                    this.recoverContainers(pod, kuberPod.spec.containers);
+                    this.recoverContainers(pod, kubeContainers);
                 }
                 addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod);
                 if (pod.cardinality) {
@@ -122,6 +127,49 @@ export class KuberRecoverActionHandler implements ActionHandler {
         } catch (error) {
             throw new GLSPServerError('Error to send k8s request to get pods');
         }
+    }
+
+    private recoverVolumes(kuberPod: k8s.V1Pod, kubeContainers: k8s.V1Container[], pod: ast.PodNode): void {
+        const volumes = new Set<{ name: string; type: string }>();
+        kuberPod.spec?.volumes?.forEach(volume => {
+            if (volume.secret?.secretName) {
+                volumes.add({ name: volume.secret.secretName, type: VolumeType.Secret });
+            }
+            if (volume.configMap?.name) {
+                volumes.add({ name: volume.configMap.name, type: VolumeType.ConfigMap });
+            }
+        });
+        if (kubeContainers) {
+            kubeContainers.forEach(container => {
+                if (container.env) {
+                    container.env.forEach(envVar => {
+                        if (envVar.valueFrom?.secretKeyRef?.name) {
+                            volumes.add({ name: envVar.valueFrom.secretKeyRef.name, type: VolumeType.Secret });
+                        }
+                        if (envVar.valueFrom?.configMapKeyRef?.name) {
+                            volumes.add({ name: envVar.valueFrom.configMapKeyRef.name, type: VolumeType.ConfigMap });
+                        }
+                    });
+                }
+
+                if (container.envFrom) {
+                    container.envFrom.forEach(envFrom => {
+                        if (envFrom.secretRef?.name) {
+                            volumes.add({ name: envFrom.secretRef.name, type: VolumeType.Secret });
+                        }
+                        if (envFrom.configMapRef?.name) {
+                            volumes.add({ name: envFrom.configMapRef.name, type: VolumeType.ConfigMap });
+                        }
+                    });
+                }
+            });
+        }
+
+        volumes.forEach(volume => {
+            const volumeNode = createVolumeNode(pod, volume.name, volume.type as VolumeType);
+            pod.volumes.push(volumeNode);
+            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, volumeNode);
+        })
     }
 
     private recoverContainers(pod: ast.PodNode, kuberContainers: k8s.V1Container[]): void {
