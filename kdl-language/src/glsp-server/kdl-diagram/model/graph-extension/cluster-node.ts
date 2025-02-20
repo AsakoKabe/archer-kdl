@@ -1,4 +1,4 @@
-import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder } from '@eclipse-glsp/server';
+import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 
 export class ClusterNode extends GNode {
@@ -10,7 +10,8 @@ export class ClusterNode extends GNode {
         return new ClusterNodeBuilder(ClusterNode)
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
-            .addCssClass('cluster');
+            .addCssClass('cluster')
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

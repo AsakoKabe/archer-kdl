@@ -11,7 +11,7 @@ export class PortNode extends GNode {
             .layout('hbox')
             .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('port')
-            .resizeLocations(GResizeLocation.CORNERS);
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

@@ -10,7 +10,7 @@ export class PodControllerNode extends GNode {
             .layout('hbox')
             .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('pod-controller')
-            .resizeLocations(GResizeLocation.CORNERS);
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

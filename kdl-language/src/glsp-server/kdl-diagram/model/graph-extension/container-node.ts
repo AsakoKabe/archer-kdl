@@ -10,8 +10,8 @@ export class ContainerNode extends GNode {
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('container')
-            .resizeLocations(GResizeLocation.CORNERS);
-    }
+            .resizeLocations(GResizeLocation.ALL);    
+        }
 }
 
 export class ContainerNodeBuilder<T extends ContainerNode = ContainerNode> extends GNodeBuilder<T> {

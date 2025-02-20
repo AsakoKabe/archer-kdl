@@ -10,7 +10,7 @@ export class ServiceTypeNode extends GNode {
             .layout('hbox')
             .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('service-type')
-            .resizeLocations(GResizeLocation.CORNERS);
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

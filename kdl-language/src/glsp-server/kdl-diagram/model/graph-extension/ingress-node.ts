@@ -11,7 +11,7 @@ export class IngressNode extends GNode {
             .layout('hbox')
             .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('ingress')
-            .resizeLocations(GResizeLocation.CORNERS);
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

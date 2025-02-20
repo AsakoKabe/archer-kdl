@@ -16,7 +16,7 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createServiceNode } from '../model/utils.js';
+import { addNodeAttribute, BaseDim, createServiceNode } from '../model/utils.js';
 
 @injectable()
 export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOperationHandler {
@@ -40,7 +40,10 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
         }
         const location = relativeLocation ?? Point.ORIGIN;
         const service = createServiceNode(clusterNode);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service, location);
+        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service, location, BaseDim.Service);
+        if (service.type){
+            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service.type, location);
+        }
         clusterNode.services.push(service);
     }
 }

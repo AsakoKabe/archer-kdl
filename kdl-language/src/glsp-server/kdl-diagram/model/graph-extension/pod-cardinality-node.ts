@@ -10,7 +10,7 @@ export class PodCardinalityNode extends GNode {
             .layout('hbox')
             .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false})
             .addCssClass('pod-cardinality')
-            .resizeLocations(GResizeLocation.CORNERS);
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

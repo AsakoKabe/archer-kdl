@@ -10,7 +10,7 @@ export class PodNode extends GNode{
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false, resizeContainer: true })
             .addCssClass('pod')
-            .resizeLocations(GResizeLocation.CORNERS);
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

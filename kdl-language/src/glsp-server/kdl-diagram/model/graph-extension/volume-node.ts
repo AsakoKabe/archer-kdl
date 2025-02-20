@@ -1,4 +1,4 @@
-import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder } from '@eclipse-glsp/server';
+import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 
 export class VolumeNode extends GNode {
@@ -10,7 +10,8 @@ export class VolumeNode extends GNode {
         return new VolumeNodeBuilder(VolumeNode)
             .layout('hbox')
             .addLayoutOptions({ vAlign: 'center', hGrab: false, vGrab: false })
-            .addCssClass('pod-volume');
+            .addCssClass('pod-volume')
+            .resizeLocations(GResizeLocation.ALL);
     }
 }
 

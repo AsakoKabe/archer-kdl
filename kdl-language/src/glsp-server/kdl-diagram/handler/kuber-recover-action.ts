@@ -15,6 +15,7 @@ import { KDLModelState } from '../model/kdl-state.js';
 import {
     addEdgeAttribute,
     addNodeAttribute,
+    BaseDim,
     createClusterNode,
     createContainerNode,
     createIngressNode,
@@ -179,7 +180,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
             if (kuberContainer.ports) {
                 this.recoverPodPorts(pod, kuberContainer.ports, kuberContainers.length);
             }
-            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, container);
+            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, container, undefined, BaseDim.Container);
         });
     }
 
@@ -195,12 +196,12 @@ export class KuberRecoverActionHandler implements ActionHandler {
         try {
             const serviceList = await this.kuberClient.getServices(cluster.name);
             for (const kuberService of serviceList.items) {
-                const service = createServiceNode(cluster, kuberService.metadata?.name, kuberService.spec?.type);
+                const service = createServiceNode(cluster, kuberService.metadata?.name, kuberService.spec?.type, );
                 cluster.services.push(service);
                 if (kuberService.spec?.ports) {
                     this.recoverServicePorts(service, kuberService.spec.ports);
                     await this.recoverServiceToPodLinks(cluster.name, cluster, service, kuberService, kuberService.spec.ports);
-                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service);
+                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service, undefined, BaseDim.Service);
                     if (service.type) {
                         addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service.type);
                     }

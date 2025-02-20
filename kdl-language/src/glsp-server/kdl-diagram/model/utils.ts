@@ -6,8 +6,19 @@ export function createEdgeID(sourceID: string, targetID: string): string {
     return `${sourceID}-${targetID}`.replaceAll('.', '_');
 }
 
-export function addNodeAttribute(kdlDiagram: ast.KDLDiagram, idProvider: IdProvider, node: ast.NodeType, location?: Point) {
-    kdlDiagram.diagram!.nodeAttributes.push(createNodeAttribute(kdlDiagram, idProvider, node, location));
+export const BaseDim = {
+    Container: {
+        width: 40,
+        height: 10
+    },
+    Service: {
+        width: 70,
+        height: 10
+    }
+};
+
+export function addNodeAttribute(kdlDiagram: ast.KDLDiagram, idProvider: IdProvider, node: ast.NodeType, location?: Point, dim?: Dimension) {
+    kdlDiagram.diagram!.nodeAttributes.push(createNodeAttribute(kdlDiagram, idProvider, node, location, dim));
 }
 
 export function createNodeAttribute(
@@ -203,7 +214,7 @@ export function createServiceTypeNode(service: ast.ServiceNode, name?: string): 
         $container: service,
         $type: ast.ServiceTypeNode,
         id: 'ServiceType',
-        name: name ? getServiceTypeName(name) : 'Not found'
+        name: name ? getServiceTypeName(name) : 'CIP'
     };
 }
 
