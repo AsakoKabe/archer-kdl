@@ -1,9 +1,12 @@
+import { GModelElement, GModelRoot, GNode } from '@eclipse-glsp/server';
 import * as ast from '../../../language-server/generated/ast.js';
 import { KDLDiagram } from '../../../language-server/generated/ast.js';
+import { CrossModelIndex } from '../../common/cross-model-index.js';
 
 export class KDLLayoutDiagram {
     private kdlDiagram: KDLDiagram;
     private nodeAttrMapping: Map<ast.NodeType, ast.NodeAttribute> = new Map();
+    private kdlIndex: CrossModelIndex;
     private podPaddingWidth = 30;
     private podPaddingHeight = 30;
     private containerPaddingWidth = 30;
@@ -14,7 +17,7 @@ export class KDLLayoutDiagram {
     private portPaddingWidth = 5;
     private podServicePaddingHeight = 10;
 
-    constructor(kdlDiagram: KDLDiagram) {
+    constructor(kdlDiagram: KDLDiagram, kdlIndex: CrossModelIndex) {
         this.kdlDiagram = kdlDiagram;
         this.kdlDiagram.diagram?.nodeAttributes.forEach(attr => {
             if (!attr.nodeID.ref) {
@@ -22,10 +25,28 @@ export class KDLLayoutDiagram {
             }
             this.nodeAttrMapping.set(attr.nodeID.ref, attr);
         });
+        this.kdlIndex = kdlIndex;
     }
 
-    layout(): void {
+    layout(root: GModelRoot): void {
+        this.applyGModelToDiagram(root);
         this.kdlDiagram.clusters.forEach(cluster => this.layoutCluster(cluster));
+    }
+
+    private applyGModelToDiagram(root: GModelElement): void {
+        root.children.forEach(child => {
+            const node = this.kdlIndex.findSemanticElement(child.id, ast.isNodeType);
+            if (node){
+                const nodeAttr = this.nodeAttrMapping.get(node);
+                if (nodeAttr && (child instanceof GNode)) {
+                    nodeAttr.dimensions.x = child.position.x;
+                    nodeAttr.dimensions.y = child.position.y;
+                    nodeAttr.dimensions.width = child.size.width;
+                    nodeAttr.dimensions.height = child.size.height;
+                }
+            }
+            this.applyGModelToDiagram(child);
+        });
     }
 
     private layoutCluster(cluster: ast.ClusterNode): void {

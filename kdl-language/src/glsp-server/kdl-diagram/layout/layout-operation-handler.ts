@@ -25,7 +25,7 @@ export class KDLLayoutOperationHandler extends JsonOperationHandler {
         return new CrossModelCommand(this.modelState, async () => {
             if (operation.kind === LayoutOperation.KIND) {
                 if (this.diagramConfiguration.layoutKind === ServerLayoutKind.MANUAL) {
-                    (new KDLLayoutDiagram(this.modelState.kdlDiagram)).layout();
+                    (new KDLLayoutDiagram(this.modelState.kdlDiagram, this.modelState.index)).layout(this.modelState.root);
                 }
             }
         });
