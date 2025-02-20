@@ -30,6 +30,9 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
     }
 
     protected async createContainer(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return;
+        }
         if (!operation.containerId) {
             throw new GLSPServerError("Container can't be outside pod");
         }
@@ -39,7 +42,7 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
         }
         const location = relativeLocation ?? Point.ORIGIN;
         const containerNode = createContainerNode(podNode);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, containerNode, location, BaseDim.Container);
+        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, containerNode, location, BaseDim.Container);
         podNode.containers.push(containerNode);
     }
 }

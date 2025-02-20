@@ -31,6 +31,9 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
     }
 
     protected async createIngress(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return;
+        }
         if (!operation.containerId) {
             throw new GLSPServerError("Ingress can't be outside cluster");
         }
@@ -40,7 +43,7 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
         }
         const location = relativeLocation ?? Point.ORIGIN;
         const ingress = createIngressNode(clusterNode);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, ingress, location);
+        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, ingress, location);
         clusterNode.ingresses.push(ingress);
     }
 }

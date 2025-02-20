@@ -31,6 +31,9 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
     }
 
     protected async createService(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return;
+        }
         if (!operation.containerId) {
             throw new GLSPServerError("Service can't be outside cluster");
         }
@@ -40,9 +43,9 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
         }
         const location = relativeLocation ?? Point.ORIGIN;
         const service = createServiceNode(clusterNode);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service, location, BaseDim.Service);
+        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, service, location, BaseDim.Service);
         if (service.type){
-            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service.type, location);
+            addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, service.type, location);
         }
         clusterNode.services.push(service);
     }

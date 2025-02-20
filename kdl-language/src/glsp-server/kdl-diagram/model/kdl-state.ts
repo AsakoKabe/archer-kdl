@@ -18,6 +18,9 @@ export class KDLModelState extends CrossModelState {
                 edgeAttributes: [],
                 nodeAttributes: [],
             };
+        } else {
+            kdlDiagram.diagram.nodeAttributes = kdlDiagram.diagram.nodeAttributes.filter(attr => attr.nodeID.ref !== undefined);
+            kdlDiagram.diagram.edgeAttributes = kdlDiagram.diagram.edgeAttributes.filter(attr => attr.sourceID.ref && attr.targetID.ref);
         }
         return kdlDiagram;
     }

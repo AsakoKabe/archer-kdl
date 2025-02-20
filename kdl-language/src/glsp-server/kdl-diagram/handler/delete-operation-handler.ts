@@ -38,7 +38,10 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         }
         sourceNode.links = sourceNode.links.filter(link => link.ref !== targetNode);
 
-        remove(this.modelState.kdlDiagram.diagram!.edgeAttributes, edge);
+        if (!this.modelState.kdlDiagram.diagram){
+            return
+        }
+        remove(this.modelState.kdlDiagram.diagram.edgeAttributes, edge);
     }
 
     private deleteNode(modelElement: AstNode | undefined): void {
@@ -47,15 +50,18 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         }
         if (ast.isNodeType(modelElement)) {
         }
-        const nodeAttribute = this.modelState.kdlDiagram.diagram!.nodeAttributes.find(
-            nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(modelElement)!
+        if (!this.modelState.kdlDiagram.diagram){
+            return
+        }
+        const nodeAttribute = this.modelState.kdlDiagram.diagram.nodeAttributes.find(
+            nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(modelElement)
         );
-        remove(this.modelState.kdlDiagram.diagram!.nodeAttributes, nodeAttribute);
+        remove(this.modelState.kdlDiagram.diagram.nodeAttributes, nodeAttribute);
 
-        const edgeAttributes = this.modelState.kdlDiagram.diagram!.edgeAttributes.filter(
+        const edgeAttributes = this.modelState.kdlDiagram.diagram.edgeAttributes.filter(
             edgeAttribute => edgeAttribute.sourceID.ref === modelElement || edgeAttribute.targetID.ref === modelElement
         );
-        remove(this.modelState.kdlDiagram.diagram!.edgeAttributes, ...edgeAttributes);
+        remove(this.modelState.kdlDiagram.diagram.edgeAttributes, ...edgeAttributes);
 
         if (ast.isClusterNode(modelElement)) {
             this.deleteCluster(modelElement);

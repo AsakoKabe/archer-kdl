@@ -30,6 +30,9 @@ export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperatio
     }
 
     protected async createEdge(operation: CreateEdgeOperation): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return
+        }
         const sourceID = operation.sourceElementId;
         const targetID = operation.targetElementId;
         const sourceNode = this.modelState.index.findSemanticElement(sourceID);
@@ -41,7 +44,7 @@ export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperatio
         if ((isIngressNode(sourceNode) || isContainerNode(sourceNode) || isServiceNode(sourceNode)) && isPortNode(targetNode)) {
             sourceNode.links.push({ ref: targetNode, $refText: operation.targetElementId });
 
-            addEdgeAttribute(this.modelState.kdlDiagram, sourceID, targetID, sourceNode, targetNode);
+            addEdgeAttribute(this.modelState.kdlDiagram.diagram, sourceID, targetID, sourceNode, targetNode);
         }
     }
 }

@@ -29,11 +29,14 @@ export class KDLDiagramCreateClusterOperationHandler extends JsonCreateNodeOpera
     }
 
     protected async createCluster(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+
         const kdlDiagram = this.modelState.kdlDiagram;
         const location = relativeLocation ?? Point.ORIGIN;
         const cluster = createClusterNode(kdlDiagram);
-
-        addNodeAttribute(kdlDiagram, this.modelState.idProvider, cluster, location);
+        if (!kdlDiagram.diagram){
+            return;
+        }
+        addNodeAttribute(kdlDiagram.diagram, this.modelState.idProvider, cluster, location);
         kdlDiagram.clusters.push(cluster);
     }
 }

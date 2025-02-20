@@ -31,6 +31,9 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
     }
 
     protected async createPort(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return;
+        }
         if (!operation.containerId) {
             throw new GLSPServerError("Port can't be outside service or pod");
         }
@@ -42,7 +45,7 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
         const location = relativeLocation ?? Point.ORIGIN;
 
         const port: ast.PortNode = createPortNode(container);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, port, location);
+        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, port, location);
         container.ports.push(port);
     }
 }

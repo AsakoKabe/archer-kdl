@@ -31,6 +31,9 @@ export class KDLDiagramCreatePodCardinalityOperationHandler extends JsonCreateNo
     }
 
     protected async createPodCardinality(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return;
+        }
         if (!operation.containerId) {
             throw new GLSPServerError("Pod Cardinality can't be outside pod");
         }
@@ -45,7 +48,7 @@ export class KDLDiagramCreatePodCardinalityOperationHandler extends JsonCreateNo
         const location = relativeLocation ?? Point.ORIGIN;
 
         const podCardinality: ast.PodCardinality = createPodCardinalityNode(pod);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod, location);
+        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, pod, location);
         pod.cardinality = podCardinality;
     }
 }

@@ -31,6 +31,9 @@ export class KDLDiagramCreateServiceTypeOperationHandler extends JsonCreateNodeO
     }
 
     protected async createServiceType(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return;
+        }
         if (!operation.containerId) {
             throw new GLSPServerError("Service Type can't be outside service");
         }
@@ -45,7 +48,7 @@ export class KDLDiagramCreateServiceTypeOperationHandler extends JsonCreateNodeO
         const location = relativeLocation ?? Point.ORIGIN;
 
         const serviceType: ast.ServiceTypeNode = createServiceTypeNode(service);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, serviceType, location);
+        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, serviceType, location);
         service.type = serviceType;
     }
 }

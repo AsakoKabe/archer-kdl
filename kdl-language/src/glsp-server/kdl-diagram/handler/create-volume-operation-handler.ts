@@ -31,6 +31,9 @@ export class KDLDiagramCreateVolumeOperationHandler extends JsonCreateNodeOperat
     }
 
     protected async createVolume(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
+        if (!this.modelState.kdlDiagram.diagram){
+            return
+        }
         if (!operation.containerId) {
             throw new GLSPServerError("Volume can't be outside pod");
         }
@@ -42,7 +45,7 @@ export class KDLDiagramCreateVolumeOperationHandler extends JsonCreateNodeOperat
         const location = relativeLocation ?? Point.ORIGIN;
 
         const volume: ast.VolumeNode = createVolumeNode(pod);
-        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, volume, location);
+        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, volume, location);
         pod.volumes.push(volume);
     }
 }

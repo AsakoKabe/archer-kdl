@@ -94,7 +94,10 @@ export class KuberRecoverActionHandler implements ActionHandler {
                 const cluster = createClusterNode(this.modelState.kdlDiagram, namespace);
                 this.modelState.kdlDiagram.clusters.push(cluster);
                 clusters.push(cluster);
-                addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, cluster);
+                if (!this.modelState.kdlDiagram.diagram){
+                    return;
+                }
+                addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, cluster);
             });
 
         await Promise.all(clusters.map(cluster => this.recoverPods(cluster)));
@@ -117,12 +120,15 @@ export class KuberRecoverActionHandler implements ActionHandler {
                 if (kuberPod.spec?.containers) {
                     this.recoverContainers(pod, kubeContainers);
                 }
-                addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod);
+                if (!this.modelState.kdlDiagram.diagram){
+                    return;
+                }
+                addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, pod);
                 if (pod.cardinality) {
-                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod.cardinality);
+                    addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, pod.cardinality);
                 }
                 if (pod.controller) {
-                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, pod.controller);
+                    addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, pod.controller);
                 }
             }
         } catch (error) {
@@ -169,7 +175,10 @@ export class KuberRecoverActionHandler implements ActionHandler {
         volumes.forEach(volume => {
             const volumeNode = createVolumeNode(pod, volume.name, volume.type as VolumeType);
             pod.volumes.push(volumeNode);
-            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, volumeNode);
+            if (!this.modelState.kdlDiagram.diagram){
+                return;
+            }
+            addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, volumeNode);
         })
     }
 
@@ -180,7 +189,10 @@ export class KuberRecoverActionHandler implements ActionHandler {
             if (kuberContainer.ports) {
                 this.recoverPodPorts(pod, kuberContainer.ports, kuberContainers.length);
             }
-            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, container, undefined, BaseDim.Container);
+            if (!this.modelState.kdlDiagram.diagram){
+                return;
+            }
+            addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, container, undefined, BaseDim.Container);
         });
     }
 
@@ -188,7 +200,10 @@ export class KuberRecoverActionHandler implements ActionHandler {
         kuberPorts?.map(kuberPort => {
             const port = createPortNode(pod, kuberPort.containerPort, kuberPort.name);
             pod.ports.push(port);
-            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, port);
+            if (!this.modelState.kdlDiagram.diagram){
+                return;
+            }
+            addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, port);
         });
     }
 
@@ -201,9 +216,12 @@ export class KuberRecoverActionHandler implements ActionHandler {
                 if (kuberService.spec?.ports) {
                     this.recoverServicePorts(service, kuberService.spec.ports);
                     await this.recoverServiceToPodLinks(cluster.name, cluster, service, kuberService, kuberService.spec.ports);
-                    addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service, undefined, BaseDim.Service);
+                    if (!this.modelState.kdlDiagram.diagram){
+                        return;
+                    }
+                    addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, service, undefined, BaseDim.Service);
                     if (service.type) {
-                        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, service.type);
+                        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, service.type);
                     }
                 }
             }
@@ -216,7 +234,10 @@ export class KuberRecoverActionHandler implements ActionHandler {
         kuberPorts?.map(kuberPort => {
             const port = createPortNode(service, kuberPort.port, kuberPort.name);
             service.ports.push(port);
-            addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, port);
+            if (!this.modelState.kdlDiagram.diagram){
+                return;
+            }
+            addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, port);
         });
     }
 
@@ -244,11 +265,14 @@ export class KuberRecoverActionHandler implements ActionHandler {
             );
 
         targetPorts.forEach(port => {
-            service.links.push({ ref: port, $refText: this.modelState.idProvider.getLocalId(port)! });
+            service.links.push({ ref: port, $refText: this.modelState.idProvider.getLocalId(port) || port.id });
+            if (!this.modelState.kdlDiagram.diagram){
+                return;
+            }
             addEdgeAttribute(
-                this.modelState.kdlDiagram,
-                this.modelState.idProvider.getLocalId(service)!,
-                this.modelState.idProvider.getLocalId(port)!,
+                this.modelState.kdlDiagram.diagram,
+                this.modelState.idProvider.getLocalId(service) || service.id,
+                this.modelState.idProvider.getLocalId(port) || port.id,
                 service,
                 port
             );
@@ -265,7 +289,10 @@ export class KuberRecoverActionHandler implements ActionHandler {
                         const ingress = createIngressNode(cluster, ingressName, rule.host);
                         cluster.ingresses.push(ingress);
                         await this.recoverIngressToServiceLink(rule.http?.paths, cluster, ingress);
-                        addNodeAttribute(this.modelState.kdlDiagram, this.modelState.idProvider, ingress);
+                        if (!this.modelState.kdlDiagram.diagram){
+                            return;
+                        }
+                        addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, ingress);
                     }
                 }
             }
@@ -299,11 +326,14 @@ export class KuberRecoverActionHandler implements ActionHandler {
                 (port): port is ast.PortNode => port !== undefined && (port.name === servicePortName || port.number === servicePortNumber)
             );
             targetPorts.map(port => {
-                ingress.links.push({ ref: port, $refText: this.modelState.idProvider.getLocalId(port)! });
+                ingress.links.push({ ref: port, $refText: this.modelState.idProvider.getLocalId(port) || port.id });
+                if (!this.modelState.kdlDiagram.diagram){
+                    return;
+                }
                 addEdgeAttribute(
-                    this.modelState.kdlDiagram,
-                    this.modelState.idProvider.getLocalId(ingress)!,
-                    this.modelState.idProvider.getLocalId(port)!,
+                    this.modelState.kdlDiagram.diagram,
+                    this.modelState.idProvider.getLocalId(ingress) || ingress.id,
+                    this.modelState.idProvider.getLocalId(port) || port.id,
                     ingress,
                     port
                 );
