@@ -6,17 +6,16 @@ import { KDLDiagram } from '../../../language-server/generated/ast.js';
 import { CrossModelState } from '../../common/cross-model-state.js';
 import * as ast from '../../../language-server/generated/ast.js';
 
-
 @injectable()
 export class KDLModelState extends CrossModelState {
     get kdlDiagram(): KDLDiagram {
-        const kdlDiagram = this.semanticRoot.kdlDiagram!
-        if (!kdlDiagram.diagram){
+        const kdlDiagram = this.semanticRoot.kdlDiagram!;
+        if (!kdlDiagram.diagram) {
             kdlDiagram.diagram = {
                 $container: kdlDiagram,
                 $type: ast.Diagram,
                 edgeAttributes: [],
-                nodeAttributes: [],
+                nodeAttributes: []
             };
         } else {
             kdlDiagram.diagram.nodeAttributes = kdlDiagram.diagram.nodeAttributes.filter(attr => attr.nodeID.ref !== undefined);

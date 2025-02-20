@@ -98,7 +98,7 @@ export const KDLDiagram = 'KDLDiagram';
 
 export interface KDLRoot {
    readonly $type: 'KDLRoot';
-   kdlDiagram?: KDLDiagram;
+   kdlDiagram: KDLDiagram;
 }
 export const KDLRoot = 'KDLRoot';
 

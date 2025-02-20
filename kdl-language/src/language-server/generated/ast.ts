@@ -203,7 +203,7 @@ export function isKDLDiagram(item: unknown): item is KDLDiagram {
 
 export interface KDLRoot extends AstNode {
     readonly $type: 'KDLRoot';
-    kdlDiagram?: KDLDiagram;
+    kdlDiagram: KDLDiagram;
 }
 
 export const KDLRoot = 'KDLRoot';

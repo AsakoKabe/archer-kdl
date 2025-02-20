@@ -133,12 +133,12 @@ export class ModelServer implements Disposable {
     }
 
     protected async updateModel(args: UpdateModelArgs<KDLRoot>): Promise<KDLDocument> {
-        const updated = await this.modelService.update({ ...args, model: args.model as ast.KDLRoot });
+        const updated = await this.modelService.update({ ...args, model: args.model} as UpdateModelArgs<ast.KDLRoot>);
         return this.toDocument(updated);
     }
 
     protected async saveModel(args: SaveModelArgs<KDLRoot>): Promise<void> {
-        await this.modelService.save({ ...args, model: args.model as ast.KDLRoot });
+        await this.modelService.save({ ...args, model: args.model } as SaveModelArgs<ast.KDLRoot>);
     }
 
     dispose(): void {
