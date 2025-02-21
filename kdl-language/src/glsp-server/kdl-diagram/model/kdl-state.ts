@@ -9,7 +9,10 @@ import * as ast from '../../../language-server/generated/ast.js';
 @injectable()
 export class KDLModelState extends CrossModelState {
     get kdlDiagram(): KDLDiagram {
-        const kdlDiagram = this.semanticRoot.kdlDiagram!;
+        let kdlDiagram = this.semanticRoot.kdlDiagram;
+        if (!kdlDiagram) {
+            return mockKDLDiagram(this.semanticRoot);
+        }
         if (!kdlDiagram.diagram) {
             kdlDiagram.diagram = {
                 $container: kdlDiagram,
@@ -23,4 +26,14 @@ export class KDLModelState extends CrossModelState {
         }
         return kdlDiagram;
     }
+}
+
+function mockKDLDiagram(container: ast.KDLRoot): KDLDiagram {
+    return {
+        $container: container,
+        $type: 'KDLDiagram',
+        clusters: [],
+        id: 'mock',
+        name: 'mock'
+    };
 }

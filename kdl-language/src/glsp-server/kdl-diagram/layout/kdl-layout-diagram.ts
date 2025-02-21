@@ -54,12 +54,19 @@ export class KDLLayoutDiagram {
             const podAttr = this.nodeAttrMapping.get(pod);
             this.layoutChildrenHorizontal(pod.containers, this.containerPaddingWidth, this.containerPaddingHeight);
             if (podAttr) {
-                const maxContainerSize = this.getMaxChildrenHeight(pod.containers);
+                const podChildren: ast.NodeType[] = [...pod.containers, ...pod.volumes];
+                if (pod.cardinality){
+                    podChildren.push(pod.cardinality)
+                }
+                if (pod.controller){
+                    podChildren.push(pod.controller)
+                }
+                const maxContainerSize = this.getMaxChildrenHeight(podChildren);
                 podAttr.dimensions.width = Math.max(
                     this.getWidthByChildren(pod.containers, this.containerPaddingWidth),
                     podAttr.dimensions.width
                 );
-                podAttr.dimensions.height = maxContainerSize.height + this.containerPaddingHeight * 2 + this.labelHeight;
+                podAttr.dimensions.height = Math.max(maxContainerSize.height + this.containerPaddingHeight * 2 + this.labelHeight, podAttr.dimensions.height);
                 this.layoutChildrenOnRightBorder(pod.volumes, podAttr);
                 this.layoutChildrenOnTopBorder(pod.ports, podAttr, this.portPaddingWidth);
                 this.layoutChildrenOnLeftBorder([pod.controller, pod.cardinality], podAttr);
@@ -87,7 +94,7 @@ export class KDLLayoutDiagram {
         if (clusterAttr) {
             const maxPodHeight = this.getMaxChildrenHeight(cluster.pods);
             clusterAttr.dimensions.width = this.getWidthByChildren(cluster.pods, this.podPaddingWidth);
-            clusterAttr.dimensions.height = maxPodHeight.y + maxPodHeight.height + this.podPaddingHeight + this.labelHeight;
+            clusterAttr.dimensions.height = Math.max(maxPodHeight.y + maxPodHeight.height + this.podPaddingHeight + this.labelHeight, clusterAttr.dimensions.height);
         }
     }
 
