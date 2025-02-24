@@ -32,20 +32,20 @@ export const KDLTerminals = {
 export type Reference<T> = string;
 
 
-export type NodeType = ClusterNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
+export type NodeType = NamespaceNode | ContainerNode | IngressNode | PodNode | PortNode | ServiceNode;
 
 export const NodeType = 'NodeType';
 
-// Updated ClusterNode interface
-export interface ClusterNode {
-   readonly $type: 'ClusterNode';
+// Updated NamespaceNode interface
+export interface NamespaceNode {
+   readonly $type: 'NamespaceNode';
    id: string;
    ingresses: Array<IngressNode>;
    name: string;
    pods: Array<PodNode>;
    services: Array<ServiceNode>;
 }
-export const ClusterNode = 'ClusterNode';
+export const NamespaceNode = 'NamespaceNode';
 
 export interface ContainerNode {
    readonly $type: 'ContainerNode';
@@ -93,7 +93,7 @@ export interface KDLDiagram {
    readonly $type: 'KDLDiagram';
    diagram?: Diagram;
    id: string;
-   clusters: Array<ClusterNode>;
+   namespaces: Array<NamespaceNode>;
    name: string;
 }
 export const KDLDiagram = 'KDLDiagram';

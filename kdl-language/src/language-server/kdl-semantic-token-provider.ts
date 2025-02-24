@@ -2,13 +2,13 @@ import { AstNode } from 'langium';
 import { AbstractSemanticTokenProvider, SemanticTokenAcceptor } from 'langium/lsp';
 import { SemanticTokenTypes } from 'vscode-languageserver-protocol';
 import {
-    isClusterNode,
     isContainerNode,
     isDiagram,
     isDimensions,
     isEdgeAttribute,
     isIngressNode,
     isKDLDiagram,
+    isNamespaceNode,
     isNodeAttribute,
     isPodCardinality,
     isPodController,
@@ -26,8 +26,8 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
             this.highlightKDLDiagram(node, acceptor);
         } else if (isDiagram(node)) {
             this.highlightDiagramNode(node, acceptor);
-        } else if (isClusterNode(node)) {
-            this.highlightClusterNode(node, acceptor);
+        } else if (isNamespaceNode(node)) {
+            this.highlightNamespaceNode(node, acceptor);
         } else if (isIngressNode(node)) {
             this.highlightIngressNode(node, acceptor);
         } else if (isContainerNode(node)) {
@@ -101,7 +101,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         });
         acceptor({
             node,
-            keyword: 'clusters',
+            keyword: 'namespaces',
             type: SemanticTokenTypes.class
         });
         acceptor({
@@ -111,7 +111,7 @@ export class KDLSemanticTokenProvider extends AbstractSemanticTokenProvider {
         });
     }
 
-    private highlightClusterNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
+    private highlightNamespaceNode(node: AstNode, acceptor: SemanticTokenAcceptor): void {
         acceptor({
             node,
             keyword: 'name',

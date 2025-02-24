@@ -5,9 +5,9 @@ import { ArgsUtil, GCompartment, GEdge, GGraph, GGraphBuilder, GModelFactory, Mo
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
-import { ClusterNode } from './graph-extension/cluster-node.js';
 import { ContainerNode } from './graph-extension/container-node.js';
 import { IngressNode } from './graph-extension/ingress-node.js';
+import { NamespaceNode } from './graph-extension/namespace-node.js';
 import { PodCardinalityNode } from './graph-extension/pod-cardinality-node.js';
 import { PodControllerNode } from './graph-extension/pod-controller-node.js';
 import { PodNode } from './graph-extension/pod-node.js';
@@ -42,21 +42,21 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         }
 
         const graphBuilder = GGraph.builder().id(this.modelState.semanticUri);
-        this.addClustersToGraph(kdlDiagram, graphBuilder);
-        kdlDiagram.clusters.forEach(cluster => this.addLinksToGraph(cluster, graphBuilder));
+        this.addNamespacesToGraph(kdlDiagram, graphBuilder);
+        kdlDiagram.namespaces.forEach(namespace => this.addLinksToGraph(namespace, graphBuilder));
         return graphBuilder.build();
     }
 
-    protected addClustersToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
-        diagramRoot.clusters
-            .map(cluster => this.createClusterNode(cluster, graphBuilder))
-            .forEach(cluster => {
-                if (cluster) graphBuilder.add(cluster);
+    protected addNamespacesToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
+        diagramRoot.namespaces
+            .map(namespace => this.createNamespaceNode(namespace, graphBuilder))
+            .forEach(namespace => {
+                if (namespace) graphBuilder.add(namespace);
             });
     }
 
-    protected addLinksToGraph(cluster: ast.ClusterNode, graphBuilder: GGraphBuilder): void {
-        const links = this.collectLinks(cluster);
+    protected addLinksToGraph(namespace: ast.NamespaceNode, graphBuilder: GGraphBuilder): void {
+        const links = this.collectLinks(namespace);
         links
             .map(link => this.createEdge(link))
             .forEach(edge => {
@@ -66,11 +66,11 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             });
     }
 
-    protected collectLinks(cluster: ast.ClusterNode): { source: ast.SourceNodeType; target: ast.TargetNodeType }[] {
+    protected collectLinks(namespace: ast.NamespaceNode): { source: ast.SourceNodeType; target: ast.TargetNodeType }[] {
         const links = [
-            ...cluster.ingresses.flatMap(ingress => ingress.links.map(link => ({ source: ingress, target: link.ref }))),
-            ...cluster.services.flatMap(service => service.links.map(link => ({ source: service, target: link.ref }))),
-            ...cluster.pods.flatMap(pod =>
+            ...namespace.ingresses.flatMap(ingress => ingress.links.map(link => ({ source: ingress, target: link.ref }))),
+            ...namespace.services.flatMap(service => service.links.map(link => ({ source: service, target: link.ref }))),
+            ...namespace.pods.flatMap(pod =>
                 pod.containers.flatMap(container => container.links.map(link => ({ source: container, target: link.ref })))
             )
         ].filter(link => link.target !== undefined) as { source: ast.SourceNodeType; target: ast.TargetNodeType }[];
@@ -137,36 +137,36 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         return nodeAttribute;
     }
 
-    protected createClusterNode(cluster: ast.ClusterNode, graphBuilder: GGraphBuilder): GCompartment | null {
-        const ingressNodes = cluster.ingresses
+    protected createNamespaceNode(namespace: ast.NamespaceNode, graphBuilder: GGraphBuilder): GCompartment | null {
+        const ingressNodes = namespace.ingresses
             .filter((e): e is ast.IngressNode => e !== undefined)
             .map(ingress => this.createIngressNode(ingress, graphBuilder))
             .filter(i => i !== null) as GCompartment[];
 
-        const podNodes = cluster.pods
+        const podNodes = namespace.pods
             .filter((e): e is ast.PodNode => e !== undefined)
             .map(pod => this.createPodNode(pod))
             .filter(p => p !== null) as GCompartment[];
 
-        const serviceNodes = cluster.services
+        const serviceNodes = namespace.services
             .filter((e): e is ast.ServiceNode => e !== undefined)
             .map(service => this.createServiceNode(service))
             .filter(s => s !== null) as GCompartment[];
 
-        const clusterAttributes = this.findOrCreateNodeAttribute(cluster);
-        if (!clusterAttributes) {
+        const namespaceAttributes = this.findOrCreateNodeAttribute(namespace);
+        if (!namespaceAttributes) {
             return null;
         }
-        const builder = ClusterNode.builder()
-            .type(ModelTypes.CLUSTER)
-            .name(cluster.name)
-            .id(this.modelState.idProvider.getLocalId(cluster)!)
+        const builder = NamespaceNode.builder()
+            .type(ModelTypes.NAMESPACE)
+            .name(namespace.name)
+            .id(this.modelState.idProvider.getLocalId(namespace)!)
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
-                x: clusterAttributes.dimensions.x,
-                y: clusterAttributes.dimensions.y
+                x: namespaceAttributes.dimensions.x,
+                y: namespaceAttributes.dimensions.y
             })
-            .addLayoutOptions({ prefWidth: clusterAttributes.dimensions.width, prefHeight: clusterAttributes.dimensions.height })
+            .addLayoutOptions({ prefWidth: namespaceAttributes.dimensions.width, prefHeight: namespaceAttributes.dimensions.height })
             .children()
             .addIngressNodes(ingressNodes)
             .addPodNodes(podNodes)
@@ -342,7 +342,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
     private createServiceTypeNode(typeNode: ast.ServiceTypeNode): GCompartment | null {
         const serviceTypeAttribute = this.findOrCreateNodeAttribute(typeNode);
         if (!serviceTypeAttribute) {
-            return null; 
+            return null;
         }
 
         const builder = ServiceTypeNode.builder()

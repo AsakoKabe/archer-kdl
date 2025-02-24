@@ -15,16 +15,16 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { injectable } from 'inversify';
-import { ClusterNode } from './model/graph-extension/cluster-node.js';
 import { ContainerNode } from './model/graph-extension/container-node.js';
 import { IngressNode } from './model/graph-extension/ingress-node.js';
+import { NamespaceNode } from './model/graph-extension/namespace-node.js';
+import { PodCardinalityNode } from './model/graph-extension/pod-cardinality-node.js';
+import { PodControllerNode } from './model/graph-extension/pod-controller-node.js';
 import { PodNode } from './model/graph-extension/pod-node.js';
 import { PortNode } from './model/graph-extension/port-node.js';
 import { ServiceNode } from './model/graph-extension/service-node.js';
-import { PodControllerNode } from './model/graph-extension/pod-controller-node.js';
-import { PodCardinalityNode } from './model/graph-extension/pod-cardinality-node.js';
-import { VolumeNode } from './model/graph-extension/volume-node.js';
 import { ServiceTypeNode } from './model/graph-extension/service-type-node.js';
+import { VolumeNode } from './model/graph-extension/volume-node.js';
 
 @injectable()
 export class KDLDiagramConfiguration implements DiagramConfiguration {
@@ -39,7 +39,7 @@ export class KDLDiagramConfiguration implements DiagramConfiguration {
         mapping.set(ModelTypes.COMP_HEADER, GCompartment);
         mapping.set(ModelTypes.COMP_COMP, GCompartment);
         mapping.set(ModelTypes.STRUCTURE, GCompartment);
-        mapping.set(ModelTypes.CLUSTER, ClusterNode);
+        mapping.set(ModelTypes.NAMESPACE, NamespaceNode);
         mapping.set(ModelTypes.INGRESS, IngressNode);
         mapping.set(ModelTypes.POD, PodNode);
         mapping.set(ModelTypes.POD_CONTROLLER, PodControllerNode);
@@ -62,8 +62,8 @@ export class KDLDiagramConfiguration implements DiagramConfiguration {
                 resizable: true
             },
             createDefaultShapeTypeHint({
-                elementTypeId: ModelTypes.CLUSTER,
-                containableElementTypeIds: [ModelTypes.INGRESS, ModelTypes.POD, ModelTypes.SERVICE],
+                elementTypeId: ModelTypes.NAMESPACE,
+                containableElementTypeIds: [ModelTypes.INGRESS, ModelTypes.POD, ModelTypes.SERVICE]
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.INGRESS,
@@ -71,10 +71,10 @@ export class KDLDiagramConfiguration implements DiagramConfiguration {
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.SERVICE,
-                containableElementTypeIds: [ModelTypes.PORT, ModelTypes.SERVICE_TYPE],
+                containableElementTypeIds: [ModelTypes.PORT, ModelTypes.SERVICE_TYPE]
             }),
             createDefaultShapeTypeHint({
-                elementTypeId: ModelTypes.SERVICE_TYPE,
+                elementTypeId: ModelTypes.SERVICE_TYPE
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.POD,
@@ -87,13 +87,13 @@ export class KDLDiagramConfiguration implements DiagramConfiguration {
                 ]
             }),
             createDefaultShapeTypeHint({
-                elementTypeId: ModelTypes.POD_CARDINALITY,
+                elementTypeId: ModelTypes.POD_CARDINALITY
             }),
             createDefaultShapeTypeHint({
-                elementTypeId: ModelTypes.POD_CONTROLLER,
+                elementTypeId: ModelTypes.POD_CONTROLLER
             }),
             createDefaultShapeTypeHint({
-                elementTypeId: ModelTypes.VOLUME,
+                elementTypeId: ModelTypes.VOLUME
             }),
             createDefaultShapeTypeHint({
                 elementTypeId: ModelTypes.CONTAINER,

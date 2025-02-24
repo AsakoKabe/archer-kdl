@@ -32,7 +32,7 @@ function mockKDLDiagram(container: ast.KDLRoot): KDLDiagram {
     return {
         $container: container,
         $type: 'KDLDiagram',
-        clusters: [],
+        namespaces: [],
         id: 'mock',
         name: 'mock'
     };

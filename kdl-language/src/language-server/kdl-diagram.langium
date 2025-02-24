@@ -7,9 +7,9 @@ KDLDiagram:
             'id' ':' id=ID
             ('name' ':'  name=STRING)
             (
-                'clusters' ':' 
+                'namespaces' ':' 
                 INDENT
-                    (LIST_ITEM clusters+=ClusterNode)+
+                    (LIST_ITEM namespaces+=NamespaceNode)+
                 DEDENT
             )?
 
@@ -38,7 +38,7 @@ Diagram:
 
 ;
 
-ClusterNode:
+NamespaceNode:
     'id' ':' id=ID
     'name' ':'  name=STRING
     (
@@ -183,7 +183,7 @@ ServiceTypeNode:
 ;
 
 NodeType:
-    ClusterNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode | ServiceTypeNode | PodController | PodCardinality | VolumeNode
+    NamespaceNode | IngressNode | ServiceNode | PodNode | ContainerNode | PortNode | ServiceTypeNode | PodController | PodCardinality | VolumeNode
 ;
 
 SourceNodeType:

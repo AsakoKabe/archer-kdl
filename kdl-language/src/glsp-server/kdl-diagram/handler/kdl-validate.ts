@@ -1,9 +1,9 @@
 import { GGraph, GModelElement, Marker, MarkerKind, MarkersReason, ModelState, ModelValidator } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { KuberClient } from '../../../kuber/client.js';
-import { ClusterNode } from '../model/graph-extension/cluster-node.js';
-import { KDLModelState } from '../model/kdl-state.js';
 import { IngressNode } from '../model/graph-extension/ingress-node.js';
+import { NamespaceNode } from '../model/graph-extension/namespace-node.js';
+import { KDLModelState } from '../model/kdl-state.js';
 
 @injectable()
 export class KDLModelValidator implements ModelValidator {
@@ -29,7 +29,7 @@ export class KDLModelValidator implements ModelValidator {
     async doBatchValidation(element: GModelElement): Promise<Marker[]> {
         if (element instanceof GGraph) {
             return await this.validateRoot(element);
-        } else if (element instanceof ClusterNode) {
+        } else if (element instanceof NamespaceNode) {
             return await this.validateCluster(element);
         } else if (element instanceof IngressNode) {
             return await this.validateIngress(element);
@@ -42,10 +42,10 @@ export class KDLModelValidator implements ModelValidator {
         const clusterNamespaces = await this.kuberClient.getNamespaces();
         const modelNamespaces = root.children
             .map(child => {
-                if (child instanceof ClusterNode) return child;
+                if (child instanceof NamespaceNode) return child;
                 return undefined;
             })
-            .filter((name): name is ClusterNode => name !== undefined);
+            .filter((name): name is NamespaceNode => name !== undefined);
         const notFoundNamespaces = clusterNamespaces.filter(name => !modelNamespaces.map(namespace => namespace.name).includes(name));
 
         const markers: Marker[] = [];
@@ -61,7 +61,7 @@ export class KDLModelValidator implements ModelValidator {
         modelNamespaces.forEach(namespace => {
             if (!clusterNamespaces.includes(namespace.name)) {
                 markers.push({
-                    kind: MarkerKind.WARNING,
+                    kind: MarkerKind.ERROR,
                     description: namespace.name + ' namespace does not found in cluster, but it is in the model',
                     elementId: namespace.id,
                     label: 'Not found'
@@ -72,8 +72,7 @@ export class KDLModelValidator implements ModelValidator {
         return markers;
     }
 
-    private async validateCluster(cluster: ClusterNode): Promise<Marker[]> {
-
+    private async validateCluster(cluster: NamespaceNode): Promise<Marker[]> {
         return [];
     }
 

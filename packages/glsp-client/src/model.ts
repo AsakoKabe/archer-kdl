@@ -20,7 +20,7 @@ import {
     withEditLabelFeature
 } from '@eclipse-glsp/client';
 
-export class ClusterNode extends RectangularNode implements Nameable, WithEditableLabel {
+export class NamespaceNode extends RectangularNode implements Nameable, WithEditableLabel {
     static override readonly DEFAULT_FEATURES = [
         deletableFeature,
         selectFeature,
@@ -222,7 +222,6 @@ export class ServiceTypeNode extends RectangularNode implements Nameable, WithEd
         return undefined;
     }
 }
-
 
 export class ContainerNode extends RectangularNode implements Nameable, WithEditableLabel, ResizableModelElement {
     static override readonly DEFAULT_FEATURES = [

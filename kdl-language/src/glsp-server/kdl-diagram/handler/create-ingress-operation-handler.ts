@@ -31,19 +31,19 @@ export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOpera
     }
 
     protected async createIngress(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {
-            throw new GLSPServerError("Ingress can't be outside cluster");
+            throw new GLSPServerError("Ingress can't be outside namespace");
         }
-        const clusterNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isClusterNode);
-        if (!clusterNode) {
-            throw new GLSPServerError('Cluster node not found');
+        const namespaceNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isNamespaceNode);
+        if (!namespaceNode) {
+            throw new GLSPServerError('Namespace node not found');
         }
         const location = relativeLocation ?? Point.ORIGIN;
-        const ingress = createIngressNode(clusterNode);
+        const ingress = createIngressNode(namespaceNode);
         addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, ingress, location);
-        clusterNode.ingresses.push(ingress);
+        namespaceNode.ingresses.push(ingress);
     }
 }

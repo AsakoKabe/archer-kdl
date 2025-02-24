@@ -26,11 +26,11 @@
     fill: inherit;
 }
 
-.cluster {
+.namespace {
     fill: #feaaa2;
 }
 
-.cluster > .sprotty-node {
+.namespace > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
 }
@@ -40,7 +40,7 @@
 }
 
 
-.cluster .ingress > .sprotty-node {
+.namespace .ingress > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
 }
@@ -101,7 +101,7 @@
     font-size: 60%;
 }
 
-.cluster .pod > .sprotty-node {
+.namespace .pod > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
 }
@@ -130,7 +130,7 @@
 
 
 
-.cluster .service > .sprotty-node {
+.namespace .service > .sprotty-node {
     stroke: black;
     stroke-width: 0.5;
 }

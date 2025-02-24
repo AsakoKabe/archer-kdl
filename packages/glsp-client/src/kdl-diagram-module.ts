@@ -23,11 +23,12 @@ import { ModelTypes } from '@kdl/protocol';
 import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
+import { FreeFormChildless } from './free-form-childless-layout';
 import { MyCustomResponseAction, MyCustomResponseActionHandler } from './kuber-action-hundler';
 import {
-    ClusterNode,
     ContainerNode,
     IngressNode,
+    NamespaceNode,
     PodCardinalityNode,
     PodControllerNode,
     PodNode,
@@ -37,7 +38,6 @@ import {
     VolumeNode
 } from './model';
 import { ArrowEdgeView, IngressNodeView } from './view';
-import { FreeFormChildless } from './free-form-childless-layout';
 
 const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
@@ -47,7 +47,7 @@ const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => 
     configureModelElement(context, ModelTypes.LABEL_HEADING, GLabel, GLabelView, { enable: [editLabelFeature] });
     configureModelElement(context, ModelTypes.COMP_COMP, GCompartment, GCompartmentView);
     // overrideModelElement(context, DefaultTypes.GRAPH, GGraph, GLSPProjectionView);
-    configureModelElement(context, ModelTypes.CLUSTER, ClusterNode, RoundedCornerNodeView);
+    configureModelElement(context, ModelTypes.NAMESPACE, NamespaceNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.STRUCTURE, GCompartment, StructureCompartmentView);
     configureModelElement(context, ModelTypes.INGRESS, IngressNode, IngressNodeView);
     configureModelElement(context, ModelTypes.POD, PodNode, RoundedCornerNodeView);

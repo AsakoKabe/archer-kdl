@@ -50,7 +50,7 @@ export namespace ModelTypes {
     export const COMP_HEADER = 'comp:header';
     export const COMP_COMP = 'comp:comp';
     export const STRUCTURE = 'struct';
-    export const CLUSTER = 'cluster';
+    export const NAMESPACE = 'namespace';
     export const INGRESS = 'ingress';
     export const POD = 'pod';
     export const POD_CONTROLLER = 'pod:controller';

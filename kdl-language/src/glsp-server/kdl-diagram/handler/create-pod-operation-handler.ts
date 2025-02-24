@@ -30,18 +30,18 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         return new CrossModelCommand(this.modelState, () => this.createPod(operation));
     }
     protected async createPod(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {
-            throw new GLSPServerError("Pod can't be outside cluster");
+            throw new GLSPServerError("Pod can't be outside namespace");
         }
-        const clusterNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isClusterNode);
-        if (!clusterNode) {
-            throw new GLSPServerError('Cluster node not found');
+        const namespaceNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isNamespaceNode);
+        if (!namespaceNode) {
+            throw new GLSPServerError('Namespace node not found');
         }
         const location = relativeLocation ?? Point.ORIGIN;
-        const pod = createPodNode(clusterNode);
+        const pod = createPodNode(namespaceNode);
         addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, pod, location);
         if (pod.controller) {
             addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, pod.controller, location);
@@ -49,6 +49,6 @@ export class KDLDiagramCreatePodOperationHandler extends JsonCreateNodeOperation
         if (pod.cardinality) {
             addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, pod.cardinality, location);
         }
-        clusterNode.pods.push(pod);
+        namespaceNode.pods.push(pod);
     }
 }

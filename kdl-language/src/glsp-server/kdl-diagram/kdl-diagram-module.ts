@@ -21,34 +21,34 @@ import {
     bindAsService
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
+import { KuberClient } from '../../kuber/client.js';
 import { CrossModelIndex } from '../common/cross-model-index.js';
 import { CrossModelState } from '../common/cross-model-state.js';
 import { CrossModelStorage } from '../common/cross-model-storage.js';
 import { CrossModelSubmissionHandler } from '../common/cross-model-submission-handler.js';
 import { KDLDiagramApplyLabelEditOperationHandler } from './handler/apply-edit-operation-handler.js';
 import { KDLDiagramChangeBoundsOperationHandler } from './handler/change-bounds-operation-handler.js';
-import { KDLDiagramCreateClusterOperationHandler } from './handler/create-cluster-operation-handler.js';
+import { KDLDiagramChangeRoutingPointsOperation } from './handler/change-routing-points-handler.js';
+import { KDLDiagramCreateContainerOperationHandler } from './handler/create-container-operation-handler.js';
+import { KDLDiagramCreateIngressOperationHandler } from './handler/create-ingress-operation-handler.js';
+import { KDLDiagramCreateLinkOperationHandler } from './handler/create-link-operation-handler.js';
+import { KDLDiagramCreateNamespaceOperationHandler } from './handler/create-namespace-operation-handler.js';
+import { KDLDiagramCreatePodCardinalityOperationHandler } from './handler/create-pod-cardinality-operation-handler.js';
+import { KDLDiagramCreatePodControllerOperationHandler } from './handler/create-pod-controller-operation-handler.js';
+import { KDLDiagramCreatePodOperationHandler } from './handler/create-pod-operation-handler.js';
+import { KDLDiagramCreatePortOperationHandler } from './handler/create-port-operation-handler.js';
+import { KDLDiagramCreateServiceOperationHandler } from './handler/create-service-operation-handler.js';
+import { KDLDiagramCreateServiceTypeOperationHandler } from './handler/create-service-type-operation-handler.js';
+import { KDLDiagramCreateVolumeOperationHandler } from './handler/create-volume-operation-handler.js';
 import { KDLDiagramDeleteOperationHandler } from './handler/delete-operation-handler.js';
+import { KDLModelValidator } from './handler/kdl-validate.js';
+import { KuberRecoverActionHandler } from './handler/kuber-recover-action.js';
 import { KDLDiagramConfiguration } from './kdl-diagram-configuration.js';
+import { KDLLayoutOperationHandler } from './layout/layout-operation-handler.js';
 import { KDLDiagramGModelFactory } from './model/kdl-diagram-gmodel-factory.js';
 import { KDLModelIndex } from './model/kdl-index.js';
 import { KDLModelState } from './model/kdl-state.js';
 import { SystemToolPaletteProvider } from './tool-palette/kdl-tool-palette-provider.js';
-import { KDLDiagramCreateIngressOperationHandler } from './handler/create-ingress-operation-handler.js';
-import { KDLDiagramCreatePodOperationHandler } from './handler/create-pod-operation-handler.js';
-import { KDLDiagramCreateContainerOperationHandler } from './handler/create-container-operation-handler.js';
-import { KDLDiagramCreatePortOperationHandler } from './handler/create-port-operation-handler.js';
-import { KDLDiagramCreateServiceOperationHandler } from './handler/create-service-operation-handler.js';
-import { KDLDiagramCreateLinkOperationHandler } from './handler/create-link-operation-handler.js';
-import { KDLDiagramChangeRoutingPointsOperation } from './handler/change-routing-points-handler.js';
-import { KuberRecoverActionHandler } from './handler/kuber-recover-action.js';
-import { KuberClient } from '../../kuber/client.js';
-import { KDLLayoutOperationHandler } from './layout/layout-operation-handler.js';
-import { KDLDiagramCreateVolumeOperationHandler } from './handler/create-volume-operation-handler.js';
-import { KDLDiagramCreateServiceTypeOperationHandler } from './handler/create-service-type-operation-handler.js';
-import { KDLDiagramCreatePodControllerOperationHandler } from './handler/create-pod-controller-operation-handler.js';
-import { KDLDiagramCreatePodCardinalityOperationHandler } from './handler/create-pod-cardinality-operation-handler.js';
-import { KDLModelValidator } from './handler/kdl-validate.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -76,7 +76,7 @@ export class KDLDiagramModule extends DiagramModule {
 
         binding.add(KDLDiagramChangeBoundsOperationHandler);
         binding.add(KDLDiagramDeleteOperationHandler);
-        binding.add(KDLDiagramCreateClusterOperationHandler);
+        binding.add(KDLDiagramCreateNamespaceOperationHandler);
         binding.add(KDLDiagramCreateIngressOperationHandler);
         binding.add(KDLDiagramCreateServiceOperationHandler);
         binding.add(KDLDiagramCreateServiceTypeOperationHandler);

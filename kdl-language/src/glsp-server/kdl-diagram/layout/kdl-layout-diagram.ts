@@ -30,7 +30,7 @@ export class KDLLayoutDiagram {
 
     layout(root: GModelRoot): void {
         this.applyGModelToDiagram(root);
-        this.kdlDiagram.clusters.forEach(cluster => this.layoutCluster(cluster));
+        this.kdlDiagram.namespaces.forEach(namespace => this.layoutNamespace(namespace));
     }
 
     private applyGModelToDiagram(root: GModelElement): void {
@@ -49,8 +49,8 @@ export class KDLLayoutDiagram {
         });
     }
 
-    private layoutCluster(cluster: ast.ClusterNode): void {
-        cluster.pods.forEach(pod => {
+    private layoutNamespace(namespace: ast.NamespaceNode): void {
+        namespace.pods.forEach(pod => {
             const podAttr = this.nodeAttrMapping.get(pod);
             this.layoutChildrenHorizontal(pod.containers, this.containerPaddingWidth, this.containerPaddingHeight);
             if (podAttr) {
@@ -73,7 +73,7 @@ export class KDLLayoutDiagram {
             }
         });
 
-        cluster.services.forEach(service => {
+        namespace.services.forEach(service => {
             const serviceAttr = this.nodeAttrMapping.get(service);
             if (!serviceAttr){
                 return;
@@ -82,19 +82,19 @@ export class KDLLayoutDiagram {
             this.layoutChildrenOnLeftBorder([service.type], serviceAttr);
         });
 
-        const clusterAttr = this.nodeAttrMapping.get(cluster);
-        if (!clusterAttr){
+        const namespaceAttr = this.nodeAttrMapping.get(namespace);
+        if (!namespaceAttr){
             return;
         }
-        this.layoutChildrenHorizontal(cluster.pods, this.podPaddingWidth, this.podPaddingHeight);
-        this.layoutChildrenHorizontal(cluster.services, this.podPaddingWidth, this.podPaddingHeight);
-        this.layoutCenterChildrenOnTopBorder(cluster.ingresses, clusterAttr, this.ingressPaddingWidth);
-        this.shiftServiceUnderIngresses(cluster.services, cluster.ingresses);
-        this.shiftPodsUnderServices(cluster.pods, cluster.services);
-        if (clusterAttr) {
-            const maxPodHeight = this.getMaxChildrenHeight(cluster.pods);
-            clusterAttr.dimensions.width = this.getWidthByChildren(cluster.pods, this.podPaddingWidth);
-            clusterAttr.dimensions.height = Math.max(maxPodHeight.y + maxPodHeight.height + this.podPaddingHeight + this.labelHeight, clusterAttr.dimensions.height);
+        this.layoutChildrenHorizontal(namespace.pods, this.podPaddingWidth, this.podPaddingHeight);
+        this.layoutChildrenHorizontal(namespace.services, this.podPaddingWidth, this.podPaddingHeight);
+        this.layoutCenterChildrenOnTopBorder(namespace.ingresses, namespaceAttr, this.ingressPaddingWidth);
+        this.shiftServiceUnderIngresses(namespace.services, namespace.ingresses);
+        this.shiftPodsUnderServices(namespace.pods, namespace.services);
+        if (namespaceAttr) {
+            const maxPodHeight = this.getMaxChildrenHeight(namespace.pods);
+            namespaceAttr.dimensions.width = this.getWidthByChildren(namespace.pods, this.podPaddingWidth);
+            namespaceAttr.dimensions.height = Math.max(maxPodHeight.y + maxPodHeight.height + this.podPaddingHeight + this.labelHeight, namespaceAttr.dimensions.height);
         }
     }
 

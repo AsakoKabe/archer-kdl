@@ -38,8 +38,8 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         }
         sourceNode.links = sourceNode.links.filter(link => link.ref !== targetNode);
 
-        if (!this.modelState.kdlDiagram.diagram){
-            return
+        if (!this.modelState.kdlDiagram.diagram) {
+            return;
         }
         remove(this.modelState.kdlDiagram.diagram.edgeAttributes, edge);
     }
@@ -50,8 +50,8 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         }
         if (ast.isNodeType(modelElement)) {
         }
-        if (!this.modelState.kdlDiagram.diagram){
-            return
+        if (!this.modelState.kdlDiagram.diagram) {
+            return;
         }
         const nodeAttribute = this.modelState.kdlDiagram.diagram.nodeAttributes.find(
             nodeAttribute => nodeAttribute.nodeID.$refText === this.modelState.idProvider.getLocalId(modelElement)
@@ -63,8 +63,8 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         );
         remove(this.modelState.kdlDiagram.diagram.edgeAttributes, ...edgeAttributes);
 
-        if (ast.isClusterNode(modelElement)) {
-            this.deleteCluster(modelElement);
+        if (ast.isNamespaceNode(modelElement)) {
+            this.deleteNamespace(modelElement);
         } else if (ast.isIngressNode(modelElement)) {
             this.deleteIngress(modelElement);
         } else if (ast.isPodNode(modelElement)) {
@@ -137,14 +137,14 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
     private deletePort(port: ast.PortNode): void {
         remove(port.$container.ports, port);
 
-        this.modelState.kdlDiagram.clusters.forEach(cluster => {
-            cluster.ingresses.slice().forEach(ingress => {
+        this.modelState.kdlDiagram.namespaces.forEach(namespace => {
+            namespace.ingresses.slice().forEach(ingress => {
                 ingress.links = ingress.links.filter(link => link.ref !== port);
             });
-            cluster.services.slice().forEach(service => {
+            namespace.services.slice().forEach(service => {
                 service.links = service.links.filter(link => link.ref !== port);
             });
-            cluster.pods.slice().forEach(pod =>
+            namespace.pods.slice().forEach(pod =>
                 pod.containers.forEach(container => {
                     container.links = container.links.filter(link => link.ref !== port);
                 })
@@ -152,17 +152,17 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         });
     }
 
-    private deleteCluster(cluster: ast.ClusterNode): void {
-        cluster.ingresses.slice().forEach(ingress => {
+    private deleteNamespace(namespace: ast.NamespaceNode): void {
+        namespace.ingresses.slice().forEach(ingress => {
             this.deleteNode(ingress);
         });
-        cluster.pods.slice().forEach(pod => {
+        namespace.pods.slice().forEach(pod => {
             this.deleteNode(pod);
         });
-        cluster.services.slice().forEach(service => {
+        namespace.services.slice().forEach(service => {
             this.deleteNode(service);
         });
-        remove(this.modelState.kdlDiagram.clusters, cluster);
+        remove(this.modelState.kdlDiagram.namespaces, namespace);
     }
 
     private deleteVolume(volume: ast.VolumeNode): void {

@@ -106,7 +106,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
             "elements": [
               {
                 "$type": "Keyword",
-                "value": "clusters"
+                "value": "namespaces"
               },
               {
                 "$type": "Keyword",
@@ -131,7 +131,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                   },
                   {
                     "$type": "Assignment",
-                    "feature": "clusters",
+                    "feature": "namespaces",
                     "operator": "+=",
                     "terminal": {
                       "$type": "RuleCall",
@@ -333,7 +333,7 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
     },
     {
       "$type": "ParserRule",
-      "name": "ClusterNode",
+      "name": "NamespaceNode",
       "definition": {
         "$type": "Group",
         "elements": [

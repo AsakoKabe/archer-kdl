@@ -77,12 +77,12 @@ export function addEdgeAttribute(
     });
 }
 
-export function createClusterNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.ClusterNode {
+export function createNamespaceNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.NamespaceNode {
     return {
-        $type: ast.ClusterNode,
+        $type: ast.NamespaceNode,
         $container: kdlDiagram,
-        id: 'ClusterNode' + kdlDiagram.clusters.length,
-        name: name ? name : 'ClusterNode' + kdlDiagram.clusters.length,
+        id: 'NamespaceNode' + kdlDiagram.namespaces.length,
+        name: name ? name : 'NamespaceNode' + kdlDiagram.namespaces.length,
         ingresses: [],
         pods: [],
         services: []
@@ -99,23 +99,23 @@ export function createContainerNode(pod: ast.PodNode, name?: string): ast.Contai
     };
 }
 
-export function createIngressNode(clusterNode: ast.ClusterNode, name?: string, host?: string): ast.IngressNode {
+export function createIngressNode(namespaceNode: ast.NamespaceNode, name?: string, host?: string): ast.IngressNode {
     return {
         $type: ast.IngressNode,
-        $container: clusterNode,
-        id: 'IngressNode' + clusterNode.ingresses.length,
-        name: name ? name : 'IngressNode' + clusterNode.ingresses.length,
+        $container: namespaceNode,
+        id: 'IngressNode' + namespaceNode.ingresses.length,
+        name: name ? name : 'IngressNode' + namespaceNode.ingresses.length,
         host: host ? host : 'localhost',
         links: []
     };
 }
 
-export function createPodNode(cluster: ast.ClusterNode, name?: string, controller?: string, replicaFactor?: string): ast.PodNode {
+export function createPodNode(namespace: ast.NamespaceNode, name?: string, controller?: string, replicaFactor?: string): ast.PodNode {
     const pod: ast.PodNode = {
         $type: ast.PodNode,
-        $container: cluster,
-        id: 'PodNode' + cluster.pods.length,
-        name: name ? name : 'PodNode' + cluster.pods.length,
+        $container: namespace,
+        id: 'PodNode' + namespace.pods.length,
+        name: name ? name : 'PodNode' + namespace.pods.length,
         containers: [],
         ports: [],
         controller: {} as ast.PodController,
@@ -170,8 +170,8 @@ export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?
 }
 
 export enum VolumeType {
-    Secret='secret',
-    ConfigMap='configmap'
+    Secret = 'secret',
+    ConfigMap = 'configmap'
 }
 export function createVolumeNode(container: ast.PodNode, name?: string, type?: VolumeType): ast.VolumeNode {
     return {
@@ -183,12 +183,12 @@ export function createVolumeNode(container: ast.PodNode, name?: string, type?: V
     };
 }
 
-export function createServiceNode(cluster: ast.ClusterNode, name?: string, type?: string): ast.ServiceNode {
+export function createServiceNode(namespace: ast.NamespaceNode, name?: string, type?: string): ast.ServiceNode {
     const service: ast.ServiceNode = {
         $type: ast.ServiceNode,
-        $container: cluster,
-        id: 'ServiceNode' + cluster.services.length,
-        name: name ? name : 'ServiceNode' + cluster.services.length,
+        $container: namespace,
+        id: 'ServiceNode' + namespace.services.length,
+        name: name ? name : 'ServiceNode' + namespace.services.length,
         type: {} as ast.ServiceTypeNode,
         ports: [],
         links: []

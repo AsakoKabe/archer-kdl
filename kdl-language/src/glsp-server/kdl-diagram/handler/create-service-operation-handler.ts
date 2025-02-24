@@ -31,22 +31,22 @@ export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOpera
     }
 
     protected async createService(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {
-            throw new GLSPServerError("Service can't be outside cluster");
+            throw new GLSPServerError("Service can't be outside namespace");
         }
-        const clusterNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isClusterNode);
-        if (!clusterNode) {
-            throw new GLSPServerError('Cluster node not found');
+        const namespaceNode = this.modelState.index.findSemanticElement(operation.containerId, ast.isNamespaceNode);
+        if (!namespaceNode) {
+            throw new GLSPServerError('Namespace node not found');
         }
         const location = relativeLocation ?? Point.ORIGIN;
-        const service = createServiceNode(clusterNode);
+        const service = createServiceNode(namespaceNode);
         addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, service, location, BaseDim.Service);
-        if (service.type){
+        if (service.type) {
             addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, service.type, location);
         }
-        clusterNode.services.push(service);
+        namespaceNode.services.push(service);
     }
 }

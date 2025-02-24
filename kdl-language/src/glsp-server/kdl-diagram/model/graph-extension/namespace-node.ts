@@ -2,21 +2,21 @@ import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, 
 import { ModelTypes } from '@kdl/protocol';
 import { labelDelimiter } from '../utils.js';
 
-export class ClusterNode extends GNode {
+export class NamespaceNode extends GNode {
     name: string;
-    nodeType: string = ModelTypes.CLUSTER;
+    nodeType: string = ModelTypes.NAMESPACE;
     container: GCompartment;
 
-    static override builder(): ClusterNodeBuilder {
-        return new ClusterNodeBuilder(ClusterNode)
+    static override builder(): NamespaceNodeBuilder {
+        return new NamespaceNodeBuilder(NamespaceNode)
             .layout('vbox')
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
-            .addCssClass('cluster')
+            .addCssClass('namespace')
             .resizeLocations(GResizeLocation.ALL);
     }
 }
 
-export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNodeBuilder<T> {
+export class NamespaceNodeBuilder<T extends NamespaceNode = NamespaceNode> extends GNodeBuilder<T> {
     name(name: string): this {
         this.proxy.name = name;
         return this;
@@ -27,7 +27,7 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
         this.proxy.children.push(this.createStructCompartment());
         return this;
     }
-    
+
     addIngressNodes(ingressNodes: GCompartment[]): this {
         (this.proxy.children.at(-1) as GCompartment).children.push(...ingressNodes);
 
