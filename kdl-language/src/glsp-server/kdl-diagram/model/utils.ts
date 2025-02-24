@@ -17,6 +17,8 @@ export const BaseDim = {
     }
 };
 
+export const labelDelimiter = '$';
+
 export function addNodeAttribute(diagram: ast.Diagram, idProvider: IdProvider, node: ast.NodeType, location?: Point, dim?: Dimension) {
     diagram.nodeAttributes.push(createNodeAttribute(diagram, idProvider, node, location, dim));
 }

@@ -1,5 +1,6 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
+import { labelDelimiter } from '../utils.js';
 
 export class VolumeNode extends GNode {
     name: string;
@@ -40,14 +41,14 @@ export class VolumeNodeBuilder<T extends VolumeNode = VolumeNode> extends GNodeB
         builder.add(
             new GLabelBuilder(GLabel)
                 .type(ModelTypes.LABEL_HEADING)
-                .id(this.proxy.id + '_name')
+                .id(this.proxy.id + labelDelimiter + 'name')
                 .text(this.proxy.name)
                 .build()
         );
         builder.add(
             new GLabelBuilder(GLabel)
                 .type(ModelTypes.LABEL_HEADING)
-                .id(this.proxy.id + '_type')
+                .id(this.proxy.id + labelDelimiter + 'type')
                 .text(this.proxy.volumeType)
                 .build()
         );

@@ -1,5 +1,6 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
+import { labelDelimiter } from '../utils.js';
 
 export class PodCardinalityNode extends GNode {
     name: string;
@@ -36,7 +37,7 @@ export class PodCardinalityNodeBuilder<T extends PodCardinalityNode = PodCardina
         builder.add(
             new GLabelBuilder(GLabel)
                 .type(ModelTypes.LABEL_HEADING)
-                .id(this.proxy.id + '_name')
+                .id(this.proxy.id + labelDelimiter + 'name')
                 .text(this.proxy.name)
                 .build()
         );

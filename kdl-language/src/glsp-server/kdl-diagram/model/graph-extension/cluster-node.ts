@@ -1,5 +1,6 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
+import { labelDelimiter } from '../utils.js';
 
 export class ClusterNode extends GNode {
     name: string;
@@ -28,33 +29,12 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
     }
     
     addIngressNodes(ingressNodes: GCompartment[]): this {
-        // const builder = new GCompartmentBuilder(GCompartment)
-        //     .type(ModelTypes.STRUCTURE)
-        //     .id(this.proxy.id + '_ingress')
-        //     .layout('freeform')
-        //     .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
-
-        // if (ingressNodes) {
-        //     builder.addChildren(ingressNodes);
-        // }
-        // this.proxy.children.push(builder.build());
         (this.proxy.children.at(-1) as GCompartment).children.push(...ingressNodes);
 
         return this;
     }
 
     addPodNodes(podNodes: GCompartment[]): this {
-        // const builder = new GCompartmentBuilder(GCompartment)
-        //     .type(ModelTypes.STRUCTURE)
-        //     .id(this.proxy.id + '_pod')
-        //     .layout('freeform')
-        //     .addLayoutOptions({ hAlign: 'left', hGrab: true, vGrab: true });
-
-        // if (podNodes) {
-        //     builder.addChildren(podNodes);
-        // }
-        // this.proxy.children.push(builder.build());
-        // console.error(this.proxy.children.at(-1));
         (this.proxy.children.at(-1) as GCompartment).children.push(...podNodes);
 
         return this;
@@ -62,11 +42,6 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
 
     addServiceNodes(serviceNodes: GCompartment[]): this {
         (this.proxy.children.at(-1) as GCompartment).children.push(...serviceNodes);
-
-        return this;
-    }
-    addContainerNodes(containerNodes: GCompartment[]): this {
-        (this.proxy.children.at(-1) as GCompartment).children.push(...containerNodes);
 
         return this;
     }
@@ -85,7 +60,7 @@ export class ClusterNodeBuilder<T extends ClusterNode = ClusterNode> extends GNo
     protected createCompartmentHeader(): GLabel {
         return new GLabelBuilder(GLabel)
             .type(ModelTypes.LABEL_HEADING)
-            .id(this.proxy.id + '_name')
+            .id(this.proxy.id + labelDelimiter + 'name')
             .text(this.proxy.name)
             .build();
     }

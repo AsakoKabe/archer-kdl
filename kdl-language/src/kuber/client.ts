@@ -22,7 +22,7 @@ export class KuberClient {
 
     // public async ping(): Promise<void> {
     //     try {
-    //         const pods = await this.k8sApi.listNamespacedPod({ namespace: 'default' });
+    //         const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: 'default' });
     //         console.error('Pods: ', pods.items);
     //     } catch (err) {
     //         console.error(err);
@@ -34,7 +34,8 @@ export class KuberClient {
             const response = await this.k8sCoreApi.listNamespace();
             const namespaces = response.items
                 .filter((item): item is { metadata: { name: string } } => item.metadata !== undefined && item.metadata.name !== undefined)
-                .map(item => item.metadata.name);
+                .map(item => item.metadata.name)
+                .filter(namespace => !namespace.startsWith('kube'));
             return namespaces;
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get namespaces');

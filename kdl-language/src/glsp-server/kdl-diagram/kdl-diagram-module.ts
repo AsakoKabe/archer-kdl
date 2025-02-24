@@ -13,6 +13,7 @@ import {
     InstanceMultiBinding,
     ModelState,
     ModelSubmissionHandler,
+    ModelValidator,
     MultiBinding,
     OperationHandlerConstructor,
     SourceModelStorage,
@@ -47,6 +48,7 @@ import { KDLDiagramCreateVolumeOperationHandler } from './handler/create-volume-
 import { KDLDiagramCreateServiceTypeOperationHandler } from './handler/create-service-type-operation-handler.js';
 import { KDLDiagramCreatePodControllerOperationHandler } from './handler/create-pod-controller-operation-handler.js';
 import { KDLDiagramCreatePodCardinalityOperationHandler } from './handler/create-pod-cardinality-operation-handler.js';
+import { KDLModelValidator } from './handler/kdl-validate.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -115,5 +117,9 @@ export class KDLDiagramModule extends DiagramModule {
         super.configureActionHandlers(binding);
         binding.add(KuberRecoverActionHandler);
         this.context.bind(KuberClient).toSelf().inSingletonScope();
+    }
+
+    protected override bindModelValidator(): BindingTarget<ModelValidator> | undefined {
+        return KDLModelValidator;
     }
 }

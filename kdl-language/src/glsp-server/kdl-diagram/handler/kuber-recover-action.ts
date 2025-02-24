@@ -89,7 +89,6 @@ export class KuberRecoverActionHandler implements ActionHandler {
     private async recoverCluster(namespaces: string[]): Promise<void> {
         const clusters: ast.ClusterNode[] = [];
         namespaces
-            .filter(namespace => !namespace.startsWith('kube'))
             .map(namespace => {
                 const cluster = createClusterNode(this.modelState.kdlDiagram, namespace);
                 this.modelState.kdlDiagram.clusters.push(cluster);

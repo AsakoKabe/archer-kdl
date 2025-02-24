@@ -9,6 +9,7 @@ import { findDocument } from '../../../language-server/util/ast-util.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import * as ast from '../../../language-server/generated/ast.js';
+import { labelDelimiter } from '../model/utils.js';
 
 @injectable()
 export class KDLDiagramApplyLabelEditOperationHandler extends JsonOperationHandler {
@@ -16,8 +17,8 @@ export class KDLDiagramApplyLabelEditOperationHandler extends JsonOperationHandl
     @inject(ModelState) declare modelState: KDLModelState;
 
     createCommand(operation: ApplyLabelEditOperation): Command {
-        const nodeID = operation.labelId.split('_')[0];
-        const labelField = operation.labelId.split('_')[1];
+        const nodeID = operation.labelId.split(labelDelimiter)[0];
+        const labelField = operation.labelId.split(labelDelimiter)[1];
         const node = getOrThrow(this.modelState.index.findSemanticElement(nodeID, ast.isNodeType), 'Node not found');
 
         return new CrossModelCommand(
