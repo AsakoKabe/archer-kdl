@@ -66,9 +66,9 @@ export async function startGLSPServer(services: KDLLSPServices, workspaceFolder:
     launcher.configure(serverModule);
     try {
         const stop = launcher.start(launchOptions);
-        launcher['netServer'].on('listening', () =>
-            services.shared.lsp.Connection?.onRequest(GLSP_PORT_COMMAND, () => getPort(launcher['netServer'].address()))
-        );
+        launcher['netServer'].on('listening', () => {
+            services.shared.lsp.Connection?.onRequest(GLSP_PORT_COMMAND, () => getPort(launcher['netServer'].address()));
+        });
         return stop;
     } catch (error) {
         logger.error('Error in GLSP server launcher:', error);

@@ -17,6 +17,8 @@ async function sleep(ms: number) {
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    // const kubeURL = vscode.workspace.getConfiguration('kdl').get('kuberURL');
+    // console.error(kubeURL);
     // Start LSP server and client
     languageClient = await startLanguageClient(context);
 

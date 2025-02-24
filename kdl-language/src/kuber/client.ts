@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import * as k8s from '@kubernetes/client-node';
 import { GLSPServerError } from '@eclipse-glsp/server';
+// import * as vscode from 'vscode';
 
 export type KuberController = k8s.V1Deployment | k8s.V1ReplicaSet | k8s.V1StatefulSet;
 

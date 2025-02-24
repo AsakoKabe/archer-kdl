@@ -159,7 +159,17 @@
         "scopeName": "source.kdl",
         "path": "kdl-language/syntaxes/kdl.tmLanguage.json"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "KDL configuration",
+      "properties": {
+        "kdl.kuberURL": {
+          "type": "string",
+          "default": "default",
+          "description": "A kubernetes api url"
+        }
+      }
+    }
   },
   "activationEvents": [
     "onStartupFinished",
