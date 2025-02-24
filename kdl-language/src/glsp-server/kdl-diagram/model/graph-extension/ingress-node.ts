@@ -6,6 +6,7 @@ export class IngressNode extends GNode {
     name: string;
     nodeType: string = ModelTypes.INGRESS;
     host: string;
+    namespace: string;
 
     static override builder(): IngressNodeBuilder {
         return new IngressNodeBuilder(IngressNode)
@@ -28,6 +29,10 @@ export class IngressNodeBuilder<T extends IngressNode = IngressNode> extends GNo
     }
     host(host: string): this {
         this.proxy.host = host;
+        return this;
+    }
+    namespace(namespace: string): this {
+        this.proxy.namespace = namespace;
         return this;
     }
 

@@ -141,7 +141,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const ingressNodes = namespace.ingresses
             .filter((e): e is ast.IngressNode => e !== undefined)
             .map(ingress => this.createIngressNode(ingress, graphBuilder))
-            .filter(i => i !== null) as GCompartment[];
+            .filter(i => i !== null) as IngressNode[];
 
         const podNodes = namespace.pods
             .filter((e): e is ast.PodNode => e !== undefined)
@@ -175,7 +175,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         return builder.build();
     }
 
-    protected createIngressNode(ingress: ast.IngressNode, graphBuilder: GGraphBuilder): GCompartment | null {
+    protected createIngressNode(ingress: ast.IngressNode, graphBuilder: GGraphBuilder): IngressNode | null {
         const ingressAttributes = this.findOrCreateNodeAttribute(ingress);
         if (!ingressAttributes) {
             return null;
@@ -184,6 +184,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .type(ModelTypes.INGRESS)
             .name(ingress.name)
             .host(ingress.host)
+            .namespace(ingress.$container.name)
             .id(this.modelState.idProvider.getLocalId(ingress) || ingress.id)
             .position({
                 x: ingressAttributes.dimensions.x,

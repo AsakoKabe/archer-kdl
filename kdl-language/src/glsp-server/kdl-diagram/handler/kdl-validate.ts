@@ -30,7 +30,7 @@ export class KDLModelValidator implements ModelValidator {
         if (element instanceof GGraph) {
             return await this.validateRoot(element);
         } else if (element instanceof NamespaceNode) {
-            return await this.validateCluster(element);
+            return await this.validateNamespace(element);
         } else if (element instanceof IngressNode) {
             return await this.validateIngress(element);
         }
@@ -52,7 +52,7 @@ export class KDLModelValidator implements ModelValidator {
         notFoundNamespaces.forEach(name => {
             markers.push({
                 kind: MarkerKind.ERROR,
-                description: name + ' namespace not found in model, but it is in the cluster',
+                description: "\"" + name + "\"" + ' namespace not found in model, but it is in the cluster',
                 elementId: root.id,
                 label: 'Not found'
             });
@@ -62,7 +62,7 @@ export class KDLModelValidator implements ModelValidator {
             if (!clusterNamespaces.includes(namespace.name)) {
                 markers.push({
                     kind: MarkerKind.ERROR,
-                    description: namespace.name + ' namespace does not found in cluster, but it is in the model',
+                    description: "\"" + namespace.name + "\"" + ' namespace does not found in cluster, but it is in the model',
                     elementId: namespace.id,
                     label: 'Not found'
                 });
@@ -72,8 +72,41 @@ export class KDLModelValidator implements ModelValidator {
         return markers;
     }
 
-    private async validateCluster(cluster: NamespaceNode): Promise<Marker[]> {
-        return [];
+    private async validateNamespace(namespace: NamespaceNode): Promise<Marker[]> {
+        const clusterNamespaces = await this.kuberClient.getNamespaces();
+        if (!clusterNamespaces.includes(namespace.name)) {
+            return [];
+        }
+        const clusterIngresses = (await this.kuberClient.getIngresses(namespace.name)).items;
+
+        const markers: Marker[] = [];
+        clusterIngresses.forEach(clusterIngress => {
+            const clusterIngressName = clusterIngress.metadata?.name;
+            if (!clusterIngressName) {
+                return;
+            }
+            if (!namespace.ingressNodes.map(ingressNode => ingressNode.name).includes(clusterIngressName)) {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: "\"" + clusterIngressName + "\"" + ' ingress not found in model, but it is in the cluster',
+                    elementId: namespace.id,
+                    label: 'Not found'
+                });
+            }
+        });
+
+        namespace.ingressNodes.forEach(ingressNode => {
+            if (!clusterIngresses.find(clusterIngress => clusterIngress.metadata?.name === ingressNode.name)) {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: "\"" + ingressNode.name + "\"" + ' ingress does not found in cluster, but it is in the model',
+                    elementId: ingressNode.id,
+                    label: 'Not found'
+                });
+            }
+        });
+
+        return markers;
     }
 
     private async validateIngress(ingress: IngressNode): Promise<Marker[]> {

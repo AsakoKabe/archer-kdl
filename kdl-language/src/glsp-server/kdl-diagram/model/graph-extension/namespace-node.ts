@@ -1,6 +1,7 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { labelDelimiter } from '../utils.js';
+import { IngressNode } from './ingress-node.js';
 
 export class NamespaceNode extends GNode {
     name: string;
@@ -14,6 +15,11 @@ export class NamespaceNode extends GNode {
             .addCssClass('namespace')
             .resizeLocations(GResizeLocation.ALL);
     }
+
+    get ingressNodes(): IngressNode[]{
+        return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof IngressNode) as IngressNode[];
+    }
+
 }
 
 export class NamespaceNodeBuilder<T extends NamespaceNode = NamespaceNode> extends GNodeBuilder<T> {
@@ -28,21 +34,18 @@ export class NamespaceNodeBuilder<T extends NamespaceNode = NamespaceNode> exten
         return this;
     }
 
-    addIngressNodes(ingressNodes: GCompartment[]): this {
+    addIngressNodes(ingressNodes: IngressNode[]): this {
         (this.proxy.children.at(-1) as GCompartment).children.push(...ingressNodes);
-
         return this;
     }
 
     addPodNodes(podNodes: GCompartment[]): this {
         (this.proxy.children.at(-1) as GCompartment).children.push(...podNodes);
-
         return this;
     }
 
     addServiceNodes(serviceNodes: GCompartment[]): this {
         (this.proxy.children.at(-1) as GCompartment).children.push(...serviceNodes);
-
         return this;
     }
 
