@@ -21,10 +21,10 @@ import {
     createNamespaceNode,
     createPodNode,
     createPortNode,
-    createServiceNode,
     createVolumeNode,
     VolumeType
 } from '../model/utils.js';
+import { createServiceNode } from './create-service-operation-handler.js';
 
 export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverResponseAction> {
     kind: typeof KuberRecoverRequestAction.KIND;

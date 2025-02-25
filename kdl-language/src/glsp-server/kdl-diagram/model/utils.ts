@@ -183,42 +183,6 @@ export function createVolumeNode(container: ast.PodNode, name?: string, type?: V
     };
 }
 
-export function createServiceNode(namespace: ast.NamespaceNode, name?: string, type?: string): ast.ServiceNode {
-    const service: ast.ServiceNode = {
-        $type: ast.ServiceNode,
-        $container: namespace,
-        id: 'ServiceNode' + namespace.services.length,
-        name: name ? name : 'ServiceNode' + namespace.services.length,
-        type: {} as ast.ServiceTypeNode,
-        ports: [],
-        links: []
-    };
-    service.type = createServiceTypeNode(service, type);
-    return service;
-}
-
-function getServiceTypeName(name: string): string {
-    switch (name) {
-        case 'ClusterIP':
-            return 'CIP';
-        case 'NodePort':
-            return 'NP';
-        case 'LoadBalancer':
-            return 'LB';
-        case 'ExternalIP':
-            return 'EIP';
-        default:
-            return name;
-    }
-}
-export function createServiceTypeNode(service: ast.ServiceNode, name?: string): ast.ServiceTypeNode {
-    return {
-        $container: service,
-        $type: ast.ServiceTypeNode,
-        id: 'ServiceType',
-        name: name ? getServiceTypeName(name) : 'CIP'
-    };
-}
 
 export function getNodeDimensions(node: ast.NodeType, kdlDiagram: ast.KDLDiagram): ast.Dimensions | undefined {
     const nodeAttribute = kdlDiagram.diagram?.nodeAttributes.find(nodeAttribute => nodeAttribute?.nodeID.ref == node);

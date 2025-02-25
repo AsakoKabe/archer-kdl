@@ -16,7 +16,23 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, BaseDim, createServiceNode } from '../model/utils.js';
+import { addNodeAttribute, BaseDim } from '../model/utils.js';
+import { createServiceTypeNode } from './create-service-type-operation-handler.js';
+
+
+export function createServiceNode(namespace: ast.NamespaceNode, name?: string, type?: string): ast.ServiceNode {
+    const service: ast.ServiceNode = {
+        $type: ast.ServiceNode,
+        $container: namespace,
+        id: 'ServiceNode' + namespace.services.length,
+        name: name ? name : 'ServiceNode' + namespace.services.length,
+        type: {} as ast.ServiceTypeNode,
+        ports: [],
+        links: []
+    };
+    service.type = createServiceTypeNode(service, type);
+    return service;
+}
 
 @injectable()
 export class KDLDiagramCreateServiceOperationHandler extends JsonCreateNodeOperationHandler {

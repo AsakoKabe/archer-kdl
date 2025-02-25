@@ -2,6 +2,7 @@ import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, 
 import { ModelTypes } from '@kdl/protocol';
 import { labelDelimiter } from '../utils.js';
 import { IngressNode } from './ingress-node.js';
+import { ServiceNode } from './service-node.js';
 
 export class NamespaceNode extends GNode {
     name: string;
@@ -18,6 +19,10 @@ export class NamespaceNode extends GNode {
 
     get ingressNodes(): IngressNode[]{
         return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof IngressNode) as IngressNode[];
+    }
+
+    get serviceNodes(): ServiceNode[]{
+        return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof ServiceNode) as ServiceNode[];
     }
 
 }

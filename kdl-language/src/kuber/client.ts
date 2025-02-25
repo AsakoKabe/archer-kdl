@@ -109,4 +109,13 @@ export class KuberClient {
             throw new GLSPServerError('Error to send k8s request to get ingress: ' + ingressName);
         }
     }
+
+    public async getNamespacedService(namespace: string, serviceName: string): Promise<k8s.V1Service> {
+        try {
+            const service = await this.k8sCoreApi.readNamespacedService({ name: serviceName, namespace: namespace });
+            return service;
+        } catch (err) {
+            throw new GLSPServerError('Error to send k8s request to get service: ' + serviceName);
+        }
+    }
 }

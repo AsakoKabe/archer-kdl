@@ -16,7 +16,48 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createServiceTypeNode } from '../model/utils.js';
+import { addNodeAttribute } from '../model/utils.js';
+
+
+function getShortServiceTypeName(name: string): string {
+    switch (name) {
+        case 'ClusterIP':
+            return 'CIP';
+        case 'NodePort':
+            return 'NP';
+        case 'LoadBalancer':
+            return 'LB';
+        case 'ExternalIP':
+            return 'EIP';
+        default:
+            return name;
+    }
+}
+
+export function getFullServiceTypeName(name: string): string {
+    switch (name) {
+        case 'CIP':
+            return 'ClusterIP';
+        case 'NP':
+            return 'NodePort';
+        case 'LB':
+            return 'LoadBalancer';
+        case 'EIP':
+            return 'ExternalIP';
+        default:
+            return name;
+    }
+}
+
+export function createServiceTypeNode(service: ast.ServiceNode, name?: string): ast.ServiceTypeNode {
+    return {
+        $container: service,
+        $type: ast.ServiceTypeNode,
+        id: 'ServiceType',
+        name: name ? getShortServiceTypeName(name) : 'CIP'
+    };
+}
+
 
 @injectable()
 export class KDLDiagramCreateServiceTypeOperationHandler extends JsonCreateNodeOperationHandler {

@@ -5,6 +5,8 @@ import { IngressNode } from '../model/graph-extension/ingress-node.js';
 import { NamespaceNode } from '../model/graph-extension/namespace-node.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import * as k8s from '@kubernetes/client-node';
+import { ServiceNode } from '../model/graph-extension/service-node.js';
+import { getFullServiceTypeName } from './create-service-type-operation-handler.js';
 
 @injectable()
 export class KDLModelValidator implements ModelValidator {
@@ -83,6 +85,11 @@ export class KDLModelValidator implements ModelValidator {
             markers.push(...(await this.validateIngress(namespace, ingressNode, clusterIngresses)));
         }
 
+        const clusterServices = (await this.kuberClient.getServices(namespace.name)).items;
+        for (const serviceNode of namespace.serviceNodes) {
+            markers.push(...(await this.validateService(namespace, serviceNode, clusterServices)));
+        }
+
         return markers;
     }
 
@@ -127,5 +134,54 @@ export class KDLModelValidator implements ModelValidator {
         }
 
         return markers;
+    }
+
+    private async validateService(namespace: NamespaceNode, serviceNode: ServiceNode, clusterServices: k8s.V1Service[]): Promise<Marker[]> {
+        const markers: Marker[] = [];
+
+        clusterServices.forEach(clusterService => {
+            const clusterServiceName = clusterService.metadata?.name;
+            if (!clusterServiceName) {
+                return;
+            }
+            if (!namespace.serviceNodes.map(serviceNode => serviceNode.name).includes(clusterServiceName)) {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: '"' + clusterServiceName + '"' + ' service does not found in model, but it exists in cluster',
+                    elementId: namespace.id,
+                    label: 'Not found'
+                });
+            }
+        });
+
+        const clusterService = clusterServices.find(clusterService => clusterService.metadata?.name === serviceNode.name);
+        if (!clusterService) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: '"' + serviceNode.name + '"' + ' ingress does not found in cluster, but it exists in model',
+                elementId: serviceNode.id,
+                label: 'Not found'
+            });
+        } else {
+            for (const port of clusterService.spec?.ports || []) {
+                markers.push(...(await this.validatePort(port)));
+            }
+            const serviceTypeNode = serviceNode.serviceTypeNode;
+            if (serviceTypeNode) {
+                if (getFullServiceTypeName(serviceTypeNode.name) !== clusterService.spec?.type) {
+                    markers.push({
+                        kind: MarkerKind.ERROR,
+                        description: `The type: ${serviceTypeNode.name} of service: ${serviceNode.name} in model does not match with the type: ${clusterService.spec?.type} of service in cluster`,
+                        elementId: serviceTypeNode.id,
+                        label: 'Not match'
+                    });
+                }
+            }
+        }
+
+        return markers;
+    }
+    private async validatePort(port: k8s.V1ServicePort): Promise<Marker[]> {
+        return [];
     }
 }

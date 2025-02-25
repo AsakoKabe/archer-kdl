@@ -37,7 +37,7 @@ kdlDiagram:
               - id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode1.Port0
         services:
           - id: ServiceNode0
-            name: "l"
+            name: "ronin"
             type:
                 id: ServiceType
                 name: "CIP"
@@ -109,8 +109,8 @@ kdlDiagram:
           - id: NodeAttribute1
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1
             dimensions:
-                x: 6
-                y: 610.9687480623256
+                x: 4.948728903624016
+                y: 320.817925462542
                 width: 395.2421875
                 height: 344.5
           - id: NodeAttribute2
@@ -257,9 +257,9 @@ kdlDiagram:
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode0
             dimensions:
                 x: 30
-                y: 75.5
+                y: 74.43816345345459
                 width: 74.6484375
-                height: 39
+                height: 39.58213806152344
           - id: NodeAttribute23
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode0.ServiceType
             dimensions:

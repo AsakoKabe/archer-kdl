@@ -1,6 +1,7 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { labelDelimiter } from '../utils.js';
+import { ServiceTypeNode } from './service-type-node.js';
 
 export class ServiceNode extends GNode {
     name: string;
@@ -12,6 +13,11 @@ export class ServiceNode extends GNode {
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false })
             .addCssClass('service')
             .resizeLocations(GResizeLocation.ALL);
+    }
+
+    get serviceTypeNode(): ServiceTypeNode | undefined{
+        const compartment = this.children.at(-1) as GCompartment;
+        return compartment.children.find(child => child instanceof ServiceTypeNode) as ServiceTypeNode | undefined;
     }
 }
 
