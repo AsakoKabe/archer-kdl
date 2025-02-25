@@ -107,7 +107,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
     private async recoverPods(namespace: ast.NamespaceNode): Promise<void> {
         try {
             const pods = await this.kuberClient.getPods(namespace.name);
-            for (const kuberPod of pods.items) {
+            for (const kuberPod of pods) {
                 const controller = await this.kuberClient.getPodController(kuberPod, namespace.name);
                 const pod = createPodNode(namespace, kuberPod.metadata?.name, controller?.kind, String(controller?.spec?.replicas));
                 const kubeContainers = kuberPod.spec?.containers || [];
@@ -207,7 +207,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
     private async recoverServices(namespace: ast.NamespaceNode): Promise<void> {
         try {
             const serviceList = await this.kuberClient.getServices(namespace.name);
-            for (const kuberService of serviceList.items) {
+            for (const kuberService of serviceList) {
                 const service = createServiceNode(namespace, kuberService.metadata?.name, kuberService.spec?.type);
                 namespace.services.push(service);
                 if (kuberService.spec?.ports) {
@@ -247,7 +247,7 @@ export class KuberRecoverActionHandler implements ActionHandler {
     ): Promise<void> {
         const selector = kuberService.spec?.selector || {};
         const selectorKeys = Object.keys(selector);
-        const matchedKuberPods = (await this.kuberClient.getPods(namespace)).items.filter(pod => {
+        const matchedKuberPods = (await this.kuberClient.getPods(namespace)).filter(pod => {
             const podLabels = pod.metadata?.labels || {};
             return selectorKeys.every(key => podLabels[key] === selector[key]);
         });
@@ -278,8 +278,8 @@ export class KuberRecoverActionHandler implements ActionHandler {
 
     private async recoverIngresses(namespaceNode: ast.NamespaceNode): Promise<void> {
         try {
-            const ingressList = await this.kuberClient.getIngresses(namespaceNode.name);
-            for (const kuberIngress of ingressList.items) {
+            const ingresses = await this.kuberClient.getIngresses(namespaceNode.name);
+            for (const kuberIngress of ingresses) {
                 const ingressName = kuberIngress.metadata?.name;
                 for (const rule of kuberIngress.spec?.rules || []) {
                     if (rule.host) {

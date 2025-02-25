@@ -2,6 +2,7 @@ import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, 
 import { ModelTypes } from '@kdl/protocol';
 import { labelDelimiter } from '../utils.js';
 import { ServiceTypeNode } from './service-type-node.js';
+import { PortNode } from './port-node.js';
 
 export class ServiceNode extends GNode {
     name: string;
@@ -18,6 +19,10 @@ export class ServiceNode extends GNode {
     get serviceTypeNode(): ServiceTypeNode | undefined{
         const compartment = this.children.at(-1) as GCompartment;
         return compartment.children.find(child => child instanceof ServiceTypeNode) as ServiceTypeNode | undefined;
+    }
+
+    get portNodes(): PortNode[]{
+        return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof PortNode) as PortNode[];
     }
 }
 

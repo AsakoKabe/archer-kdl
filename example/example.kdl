@@ -43,7 +43,7 @@ kdlDiagram:
                 name: "kk"
             ports:
               - id: Port0
-                name: "ronin-service"
+                name: "ronin-servic"
                 number: 8080
             links:
               - id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.Port0

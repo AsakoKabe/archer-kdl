@@ -7,6 +7,7 @@ import { KDLModelState } from '../model/kdl-state.js';
 import * as k8s from '@kubernetes/client-node';
 import { ServiceNode } from '../model/graph-extension/service-node.js';
 import { getFullServiceTypeName } from './create-service-type-operation-handler.js';
+import { PortNode } from '../model/graph-extension/port-node.js';
 
 @injectable()
 export class KDLModelValidator implements ModelValidator {
@@ -41,19 +42,20 @@ export class KDLModelValidator implements ModelValidator {
 
     private async validateRoot(root: GGraph): Promise<Marker[]> {
         const clusterNamespaces = await this.kuberClient.getNamespaces();
-        const modelNamespaces = root.children
-            .map(child => {
-                if (child instanceof NamespaceNode) return child;
-                return undefined;
-            })
-            .filter((name): name is NamespaceNode => name !== undefined);
-        const notFoundNamespaces = clusterNamespaces.filter(name => !modelNamespaces.map(namespace => namespace.name).includes(name));
+        const modelNamespaces = root.children.reduce((namespaces: NamespaceNode[], child) => {
+            if (child instanceof NamespaceNode) {
+                namespaces.push(child);
+            }
+            return namespaces;
+        }, []);
+        const modelNamespaceNames = modelNamespaces.map(namespace => namespace.name);
+        const notFoundNamespaces = clusterNamespaces.filter(name => !modelNamespaceNames.includes(name));
 
         const markers: Marker[] = [];
-        notFoundNamespaces.forEach(name => {
+        notFoundNamespaces.map(name => {
             markers.push({
                 kind: MarkerKind.ERROR,
-                description: `${name} namespace does not found in model, but it exists in cluster`,
+                description: `${name} namespace is not found in the model, but it exists in the cluster`,
                 elementId: root.id,
                 label: 'Not found'
             });
@@ -63,7 +65,7 @@ export class KDLModelValidator implements ModelValidator {
             if (!clusterNamespaces.includes(namespace.name)) {
                 markers.push({
                     kind: MarkerKind.ERROR,
-                    description: '"' + namespace.name + '"' + ' namespace does not found in cluster, but it exists in model',
+                    description: `"${namespace.name}" namespace does not found in cluster, but it exists in model`,
                     elementId: namespace.id,
                     label: 'Not found'
                 });
@@ -73,43 +75,56 @@ export class KDLModelValidator implements ModelValidator {
         return markers;
     }
 
-    private async validateNamespace(namespace: NamespaceNode): Promise<Marker[]> {
+    private async validateNamespace(modelNamespace: NamespaceNode): Promise<Marker[]> {
         const clusterNamespaces = await this.kuberClient.getNamespaces();
-        if (!clusterNamespaces.includes(namespace.name)) {
+        if (!clusterNamespaces.includes(modelNamespace.name)) {
             return [];
         }
         const markers: Marker[] = [];
 
-        const clusterIngresses = (await this.kuberClient.getIngresses(namespace.name)).items;
-        for (const ingressNode of namespace.ingressNodes) {
-            markers.push(...(await this.validateIngress(namespace, ingressNode, clusterIngresses)));
+        const kuberIngresses = await this.kuberClient.getIngresses(modelNamespace.name);
+        for (const modelIngress of modelNamespace.ingressNodes) {
+            kuberIngresses.forEach(kuberIngress => {
+                const kuberIngressName = kuberIngress.metadata?.name;
+                if (!kuberIngressName) {
+                    return;
+                }
+                if (!modelNamespace.ingressNodes.map(ingressNode => ingressNode.name).includes(kuberIngressName)) {
+                    markers.push({
+                        kind: MarkerKind.ERROR,
+                        description: '"' + kuberIngressName + '"' + ' ingress does not found in model, but it exists in cluster',
+                        elementId: modelNamespace.id,
+                        label: 'Not found'
+                    });
+                }
+            });
+            markers.push(...(await this.validateIngress(modelIngress, kuberIngresses)));
         }
 
-        const clusterServices = (await this.kuberClient.getServices(namespace.name)).items;
-        for (const serviceNode of namespace.serviceNodes) {
-            markers.push(...(await this.validateService(namespace, serviceNode, clusterServices)));
+        const clusterServices = await this.kuberClient.getServices(modelNamespace.name);
+        for (const serviceNode of modelNamespace.serviceNodes) {
+            clusterServices.forEach(clusterService => {
+                const clusterServiceName = clusterService.metadata?.name;
+                if (!clusterServiceName) {
+                    return;
+                }
+                if (!modelNamespace.serviceNodes.map(serviceNode => serviceNode.name).includes(clusterServiceName)) {
+                    markers.push({
+                        kind: MarkerKind.ERROR,
+                        description: '"' + clusterServiceName + '"' + ' service does not found in model, but it exists in cluster',
+                        elementId: modelNamespace.id,
+                        label: 'Not found'
+                    });
+                }
+            });
+            markers.push(...(await this.validateService(serviceNode, clusterServices)));
         }
 
         return markers;
     }
 
-    private async validateIngress(namespace: NamespaceNode, ingress: IngressNode, clusterIngresses: k8s.V1Ingress[]): Promise<Marker[]> {
+    private async validateIngress(ingress: IngressNode, clusterIngresses: k8s.V1Ingress[]): Promise<Marker[]> {
         const markers: Marker[] = [];
-
-        clusterIngresses.forEach(clusterIngress => {
-            const clusterIngressName = clusterIngress.metadata?.name;
-            if (!clusterIngressName) {
-                return;
-            }
-            if (!namespace.ingressNodes.map(ingressNode => ingressNode.name).includes(clusterIngressName)) {
-                markers.push({
-                    kind: MarkerKind.ERROR,
-                    description: '"' + clusterIngressName + '"' + ' ingress does not found in model, but it exists in cluster',
-                    elementId: namespace.id,
-                    label: 'Not found'
-                });
-            }
-        });
 
         const clusterIngress = clusterIngresses.find(clusterIngress => clusterIngress.metadata?.name === ingress.name);
         if (!clusterIngress) {
@@ -136,26 +151,11 @@ export class KDLModelValidator implements ModelValidator {
         return markers;
     }
 
-    private async validateService(namespace: NamespaceNode, serviceNode: ServiceNode, clusterServices: k8s.V1Service[]): Promise<Marker[]> {
+    private async validateService(serviceNode: ServiceNode, kuberServices: k8s.V1Service[]): Promise<Marker[]> {
         const markers: Marker[] = [];
 
-        clusterServices.forEach(clusterService => {
-            const clusterServiceName = clusterService.metadata?.name;
-            if (!clusterServiceName) {
-                return;
-            }
-            if (!namespace.serviceNodes.map(serviceNode => serviceNode.name).includes(clusterServiceName)) {
-                markers.push({
-                    kind: MarkerKind.ERROR,
-                    description: '"' + clusterServiceName + '"' + ' service does not found in model, but it exists in cluster',
-                    elementId: namespace.id,
-                    label: 'Not found'
-                });
-            }
-        });
-
-        const clusterService = clusterServices.find(clusterService => clusterService.metadata?.name === serviceNode.name);
-        if (!clusterService) {
+        const kuberService = kuberServices.find(kuberService => kuberService.metadata?.name === serviceNode.name);
+        if (!kuberService) {
             markers.push({
                 kind: MarkerKind.ERROR,
                 description: '"' + serviceNode.name + '"' + ' ingress does not found in cluster, but it exists in model',
@@ -163,15 +163,26 @@ export class KDLModelValidator implements ModelValidator {
                 label: 'Not found'
             });
         } else {
-            for (const port of clusterService.spec?.ports || []) {
-                markers.push(...(await this.validatePort(port)));
+            for (const port of serviceNode.portNodes) {
+                (kuberService.spec?.ports || []).forEach(kuberPort => {
+                    const kuberPortNumber = kuberPort.port;
+                    if (!serviceNode.portNodes.map(portNode => portNode.number.toString()).includes(kuberPortNumber.toString())) {
+                        markers.push({
+                            kind: MarkerKind.ERROR,
+                            description: `The port: ${kuberPortNumber} of service: ${serviceNode.name} in cluster does not found in model`,
+                            elementId: serviceNode.id,
+                            label: 'Not found'
+                        });
+                    }
+                });
+                markers.push(...(await this.validatePort(serviceNode, port, kuberService.spec?.ports || [])));
             }
             const serviceTypeNode = serviceNode.serviceTypeNode;
             if (serviceTypeNode) {
-                if (getFullServiceTypeName(serviceTypeNode.name) !== clusterService.spec?.type) {
+                if (getFullServiceTypeName(serviceTypeNode.name) !== kuberService.spec?.type) {
                     markers.push({
                         kind: MarkerKind.ERROR,
-                        description: `The type: ${serviceTypeNode.name} of service: ${serviceNode.name} in model does not match with the type: ${clusterService.spec?.type} of service in cluster`,
+                        description: `The type: ${serviceTypeNode.name} of service: ${serviceNode.name} in model does not match with the type: ${kuberService.spec?.type} of service in cluster`,
                         elementId: serviceTypeNode.id,
                         label: 'Not match'
                     });
@@ -181,7 +192,28 @@ export class KDLModelValidator implements ModelValidator {
 
         return markers;
     }
-    private async validatePort(port: k8s.V1ServicePort): Promise<Marker[]> {
-        return [];
+
+    private async validatePort(serviceNode: ServiceNode, modelPort: PortNode, kuberPorts: k8s.V1ServicePort[]): Promise<Marker[]> {
+        const markers: Marker[] = [];
+        const kuberPort = kuberPorts.find(kuberPort => kuberPort.port === Number(modelPort.number));
+        if (!kuberPort) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The port: ${modelPort.number} of service: ${serviceNode.name} in model does not found in cluster`,
+                elementId: modelPort.id,
+                label: 'Not found'
+            });
+        } else {
+            const kuberPortName = kuberPort.name;
+            if (kuberPortName && modelPort.name !== kuberPortName) {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: `The name: ${modelPort.name} of port: ${modelPort.number} in model does not match with the name: ${kuberPortName} of port in cluster`,
+                    elementId: modelPort.id,
+                    label: 'Not match'
+                });
+            }
+        }
+        return markers;
     }
 }

@@ -42,10 +42,10 @@ export class KuberClient {
         }
     }
 
-    public async getPods(namespace: string, selector?: string): Promise<k8s.V1PodList> {
+    public async getPods(namespace: string, selector?: string): Promise<k8s.V1Pod[]> {
         try {
             const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: namespace, labelSelector: selector });
-            return pods;
+            return pods.items;
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get pods');
         }
@@ -83,19 +83,19 @@ export class KuberClient {
         return undefined;
     }
 
-    public async getServices(namespace: string): Promise<k8s.V1ServiceList> {
+    public async getServices(namespace: string): Promise<k8s.V1Service[]> {
         try {
             const services = await this.k8sCoreApi.listNamespacedService({ namespace: namespace });
-            return services;
+            return services.items;
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get services');
         }
     }
 
-    public async getIngresses(namespace: string): Promise<k8s.V1IngressList> {
+    public async getIngresses(namespace: string): Promise<k8s.V1Ingress[]> {
         try {
             const ingresses = await this.k8sNerwokingApi.listNamespacedIngress({ namespace: namespace });
-            return ingresses;
+            return ingresses.items;
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get ingresses');
         }
