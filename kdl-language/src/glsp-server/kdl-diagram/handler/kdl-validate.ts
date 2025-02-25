@@ -31,8 +31,6 @@ export class KDLModelValidator implements ModelValidator {
             return await this.validateRoot(element);
         } else if (element instanceof NamespaceNode) {
             return await this.validateNamespace(element);
-        } else if (element instanceof IngressNode) {
-            return await this.validateIngress(element);
         }
 
         return [];
@@ -52,7 +50,7 @@ export class KDLModelValidator implements ModelValidator {
         notFoundNamespaces.forEach(name => {
             markers.push({
                 kind: MarkerKind.ERROR,
-                description: "\"" + name + "\"" + ' namespace not found in model, but it is in the cluster',
+                description: `${name} namespace does not found in model, but it exists in cluster`,
                 elementId: root.id,
                 label: 'Not found'
             });
@@ -62,7 +60,7 @@ export class KDLModelValidator implements ModelValidator {
             if (!clusterNamespaces.includes(namespace.name)) {
                 markers.push({
                     kind: MarkerKind.ERROR,
-                    description: "\"" + namespace.name + "\"" + ' namespace does not found in cluster, but it is in the model',
+                    description: '"' + namespace.name + '"' + ' namespace does not found in cluster, but it exists in model',
                     elementId: namespace.id,
                     label: 'Not found'
                 });
@@ -88,28 +86,45 @@ export class KDLModelValidator implements ModelValidator {
             if (!namespace.ingressNodes.map(ingressNode => ingressNode.name).includes(clusterIngressName)) {
                 markers.push({
                     kind: MarkerKind.ERROR,
-                    description: "\"" + clusterIngressName + "\"" + ' ingress not found in model, but it is in the cluster',
+                    description: '"' + clusterIngressName + '"' + ' ingress does not found in model, but it exists in cluster',
                     elementId: namespace.id,
                     label: 'Not found'
                 });
             }
         });
 
-        namespace.ingressNodes.forEach(ingressNode => {
+        for (const ingressNode of namespace.ingressNodes) {
             if (!clusterIngresses.find(clusterIngress => clusterIngress.metadata?.name === ingressNode.name)) {
                 markers.push({
                     kind: MarkerKind.ERROR,
-                    description: "\"" + ingressNode.name + "\"" + ' ingress does not found in cluster, but it is in the model',
+                    description: '"' + ingressNode.name + '"' + ' ingress does not found in cluster, but it exists in model',
                     elementId: ingressNode.id,
                     label: 'Not found'
                 });
+            } else {
+                markers.push(...(await this.validateIngress(ingressNode)));
             }
-        });
+        }
 
         return markers;
     }
 
     private async validateIngress(ingress: IngressNode): Promise<Marker[]> {
+        const clusterIngress = await this.kuberClient.getNamespacedIngress(ingress.namespace, ingress.name);
+        if (!clusterIngress) {
+            return [];
+        }
+        const hosts = clusterIngress.spec?.rules?.map(rule => rule.host);
+        if (!hosts || !hosts.includes(ingress.host)) {
+            return [
+                {
+                    kind: MarkerKind.ERROR,
+                    description: '"' + ingress.host + '"' + ' host does not found in cluster, but it exists in model',
+                    elementId: ingress.id,
+                    label: 'Not found'
+                }
+            ];
+        }
         return [];
     }
 }
