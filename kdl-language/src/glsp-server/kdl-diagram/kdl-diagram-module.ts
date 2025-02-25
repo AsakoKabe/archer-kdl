@@ -49,6 +49,11 @@ import { KDLDiagramGModelFactory } from './model/kdl-diagram-gmodel-factory.js';
 import { KDLModelIndex } from './model/kdl-index.js';
 import { KDLModelState } from './model/kdl-state.js';
 import { SystemToolPaletteProvider } from './tool-palette/kdl-tool-palette-provider.js';
+import { NamespaceValidator } from './handler/validators/namespace-validator.js';
+import { RootValidator } from './handler/validators/root-validator.js';
+import { IngressValidator } from './handler/validators/ingress-validator.js';
+import { ServiceValidator } from './handler/validators/service-validator.js';
+import { PodValidator } from './handler/validators/pod-validator.js';
 
 /**
  * Provides configuration about our system diagrams.
@@ -120,6 +125,11 @@ export class KDLDiagramModule extends DiagramModule {
     }
 
     protected override bindModelValidator(): BindingTarget<ModelValidator> | undefined {
+        this.context.bind(RootValidator).toSelf().inSingletonScope();
+        this.context.bind(NamespaceValidator).toSelf().inSingletonScope();
+        this.context.bind(IngressValidator).toSelf().inSingletonScope();
+        this.context.bind(ServiceValidator).toSelf().inSingletonScope();
+        this.context.bind(PodValidator).toSelf().inSingletonScope();
         return KDLModelValidator;
     }
 }
