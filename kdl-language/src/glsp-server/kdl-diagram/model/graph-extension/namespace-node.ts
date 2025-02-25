@@ -3,6 +3,7 @@ import { ModelTypes } from '@kdl/protocol';
 import { labelDelimiter } from '../utils.js';
 import { IngressNode } from './ingress-node.js';
 import { ServiceNode } from './service-node.js';
+import { PodNode } from './pod-node.js';
 
 export class NamespaceNode extends GNode {
     name: string;
@@ -23,6 +24,10 @@ export class NamespaceNode extends GNode {
 
     get serviceNodes(): ServiceNode[]{
         return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof ServiceNode) as ServiceNode[];
+    }
+
+    get podNodes(): PodNode[]{
+        return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof PodNode) as PodNode[];
     }
 
 }
