@@ -13,12 +13,10 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as ast from '../../../language-server/generated/ast.js';
-import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute } from '../model/utils.js';
-
-
+import * as ast from '../../../../language-server/generated/ast.js';
+import { CrossModelCommand } from '../../../common/cross-model-command.js';
+import { KDLModelState } from '../../model/kdl-state.js';
+import { addNodeAttribute } from '../../model/utils.js';
 
 export function createPodCardinalityNode(pod: ast.PodNode, name?: string): ast.PodCardinality {
     return {
@@ -28,7 +26,6 @@ export function createPodCardinalityNode(pod: ast.PodNode, name?: string): ast.P
         name: name ? name : '1'
     };
 }
-
 
 @injectable()
 export class KDLDiagramCreatePodCardinalityOperationHandler extends JsonCreateNodeOperationHandler {
@@ -43,7 +40,7 @@ export class KDLDiagramCreatePodCardinalityOperationHandler extends JsonCreateNo
     }
 
     protected async createPodCardinality(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {

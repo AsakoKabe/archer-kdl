@@ -13,11 +13,10 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as ast from '../../../language-server/generated/ast.js';
-import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute } from '../model/utils.js';
-
+import * as ast from '../../../../language-server/generated/ast.js';
+import { CrossModelCommand } from '../../../common/cross-model-command.js';
+import { KDLModelState } from '../../model/kdl-state.js';
+import { addNodeAttribute } from '../../model/utils.js';
 
 function getShortServiceTypeName(name: string): string {
     switch (name) {
@@ -58,7 +57,6 @@ export function createServiceTypeNode(service: ast.ServiceNode, name?: string): 
     };
 }
 
-
 @injectable()
 export class KDLDiagramCreateServiceTypeOperationHandler extends JsonCreateNodeOperationHandler {
     override label = 'Service Type';
@@ -72,7 +70,7 @@ export class KDLDiagramCreateServiceTypeOperationHandler extends JsonCreateNodeO
     }
 
     protected async createServiceType(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {
@@ -83,8 +81,8 @@ export class KDLDiagramCreateServiceTypeOperationHandler extends JsonCreateNodeO
         if (!service) {
             throw new GLSPServerError("Service Type can't be outside service");
         }
-        if (service.type){
-            throw new GLSPServerError("Service Type already exist at " + service.name);
+        if (service.type) {
+            throw new GLSPServerError('Service Type already exist at ' + service.name);
         }
         const location = relativeLocation ?? Point.ORIGIN;
 

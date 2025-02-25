@@ -12,10 +12,10 @@ import {
     ModelState
 } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { isContainerNode, isIngressNode, isPortNode, isServiceNode } from '../../../language-server/generated/ast.js';
-import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { KDLModelState } from '../model/kdl-state.js';
-import { addEdgeAttribute } from '../model/utils.js';
+import { isContainerNode, isIngressNode, isPortNode, isServiceNode } from '../../../../language-server/generated/ast.js';
+import { CrossModelCommand } from '../../../common/cross-model-command.js';
+import { KDLModelState } from '../../model/kdl-state.js';
+import { addEdgeAttribute } from '../../model/utils.js';
 
 @injectable()
 export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperationHandler {
@@ -30,8 +30,8 @@ export class KDLDiagramCreateLinkOperationHandler extends JsonCreateEdgeOperatio
     }
 
     protected async createEdge(operation: CreateEdgeOperation): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
-            return
+        if (!this.modelState.kdlDiagram.diagram) {
+            return;
         }
         const sourceID = operation.sourceElementId;
         const targetID = operation.targetElementId;

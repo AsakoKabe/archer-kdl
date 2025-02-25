@@ -13,10 +13,10 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as ast from '../../../language-server/generated/ast.js';
-import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute } from '../model/utils.js';
+import * as ast from '../../../../language-server/generated/ast.js';
+import { CrossModelCommand } from '../../../common/cross-model-command.js';
+import { KDLModelState } from '../../model/kdl-state.js';
+import { addNodeAttribute } from '../../model/utils.js';
 
 export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?: number, name?: string): ast.PortNode {
     return {

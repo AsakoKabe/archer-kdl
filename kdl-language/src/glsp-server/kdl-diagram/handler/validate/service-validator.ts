@@ -1,11 +1,11 @@
 import { Marker, MarkerKind } from '@eclipse-glsp/server';
+import * as k8s from '@kubernetes/client-node';
 import { inject, injectable } from 'inversify';
 import { KuberClient } from '../../../../kuber/client.js';
 import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
-import { ServiceNode } from '../../model/graph-extension/service-node.js';
 import { PortNode } from '../../model/graph-extension/port-node.js';
-import * as k8s from '@kubernetes/client-node';
-import { getFullServiceTypeName } from '../../handler/create-service-type-operation-handler.js';
+import { ServiceNode } from '../../model/graph-extension/service-node.js';
+import { getFullServiceTypeName } from '../create/create-service-type-operation-handler.js';
 import { createErrorMessage, Validator } from './validator.js';
 
 @injectable()

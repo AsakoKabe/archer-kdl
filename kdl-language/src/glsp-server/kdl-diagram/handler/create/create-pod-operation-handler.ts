@@ -13,12 +13,12 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as ast from '../../../language-server/generated/ast.js';
-import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute } from '../model/utils.js';
-import { createPodControllerNode } from './create-pod-controller-operation-handler.js';
+import * as ast from '../../../../language-server/generated/ast.js';
+import { CrossModelCommand } from '../../../common/cross-model-command.js';
+import { KDLModelState } from '../../model/kdl-state.js';
+import { addNodeAttribute } from '../../model/utils.js';
 import { createPodCardinalityNode } from './create-pod-cardinality-operation-handler.js';
+import { createPodControllerNode } from './create-pod-controller-operation-handler.js';
 
 export function createPodNode(namespace: ast.NamespaceNode, name?: string, controller?: string, replicaFactor?: string): ast.PodNode {
     const pod: ast.PodNode = {

@@ -13,12 +13,11 @@ import {
 } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
-import * as ast from '../../../language-server/generated/ast.js';
-import { CrossModelCommand } from '../../common/cross-model-command.js';
-import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, BaseDim } from '../model/utils.js';
+import * as ast from '../../../../language-server/generated/ast.js';
+import { CrossModelCommand } from '../../../common/cross-model-command.js';
+import { KDLModelState } from '../../model/kdl-state.js';
+import { addNodeAttribute, BaseDim } from '../../model/utils.js';
 import { createServiceTypeNode } from './create-service-type-operation-handler.js';
-
 
 export function createServiceNode(namespace: ast.NamespaceNode, name?: string, type?: string): ast.ServiceNode {
     const service: ast.ServiceNode = {

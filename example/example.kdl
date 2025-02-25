@@ -3,7 +3,7 @@ kdlDiagram:
     name: "name"
     namespaces:
       - id: NamespaceNode0
-        name: "fdsf"
+        name: "default"
         services:
           - id: ServiceNode0
             name: "kubernetes"
@@ -102,17 +102,17 @@ kdlDiagram:
           - id: NodeAttribute0
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode0
             dimensions:
-                x: 100
-                y: 7
+                x: 0
+                y: -235.28335308175656
                 width: 222.3828125
                 height: 274
           - id: NodeAttribute1
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1
             dimensions:
-                x: 32.74187038856215
-                y: 311.89809188163736
+                x: 18
+                y: 301
                 width: 395.2421875
-                height: 345.66604232788086
+                height: 344.5
           - id: NodeAttribute2
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode0.PodNode0.ContainerNode0
             dimensions:
@@ -166,23 +166,23 @@ kdlDiagram:
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0
             dimensions:
                 x: 30
-                y: 195.66604232788086
+                y: 194.5
                 width: 171.046875
                 height: 90
           - id: NodeAttribute10
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.PodCardinality
             dimensions:
                 x: -24.34375
-                y: 4.096549987792969
+                y: 4
                 width: 24.34375
                 height: 29
           - id: NodeAttribute11
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.PodController
             dimensions:
-                x: -24.640625
+                x: -25.640625
                 y: -30
                 width: 25.640625
-                height: 29.09654998779297
+                height: 29
           - id: NodeAttribute12
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1.Volume0
             dimensions:
@@ -208,7 +208,7 @@ kdlDiagram:
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1
             dimensions:
                 x: 231.046875
-                y: 195.66604232788086
+                y: 194.5
                 width: 134.1953125
                 height: 90
           - id: NodeAttribute16
@@ -236,9 +236,9 @@ kdlDiagram:
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode0.Port0
             dimensions:
                 x: 5
-                y: -70.58390426635742
+                y: -70
                 width: 64.6484375
-                height: 40.58390426635742
+                height: 40
           - id: NodeAttribute20
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode0.ServiceNode0
             dimensions:
@@ -257,14 +257,14 @@ kdlDiagram:
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode0
             dimensions:
                 x: 30
-                y: 76.08390426635742
+                y: 75.5
                 width: 74.6484375
-                height: 39.58213806152344
+                height: 39
           - id: NodeAttribute23
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode0.ServiceType
             dimensions:
-                x: -44.4609375
-                y: -32
+                x: -41.671875
+                y: -30
                 width: 41.671875
                 height: 35
           - id: NodeAttribute24
@@ -278,7 +278,7 @@ kdlDiagram:
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode1
             dimensions:
                 x: 134.6484375
-                y: 76.08390426635742
+                y: 75.5
                 width: 70
                 height: 39
           - id: NodeAttribute26

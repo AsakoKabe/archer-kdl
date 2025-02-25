@@ -29,31 +29,31 @@ import { CrossModelSubmissionHandler } from '../common/cross-model-submission-ha
 import { KDLDiagramApplyLabelEditOperationHandler } from './handler/apply-edit-operation-handler.js';
 import { KDLDiagramChangeBoundsOperationHandler } from './handler/change-bounds-operation-handler.js';
 import { KDLDiagramChangeRoutingPointsOperation } from './handler/change-routing-points-handler.js';
-import { KDLDiagramCreateContainerOperationHandler } from './handler/create-container-operation-handler.js';
-import { KDLDiagramCreateIngressOperationHandler } from './handler/create-ingress-operation-handler.js';
-import { KDLDiagramCreateLinkOperationHandler } from './handler/create-link-operation-handler.js';
-import { KDLDiagramCreateNamespaceOperationHandler } from './handler/create-namespace-operation-handler.js';
-import { KDLDiagramCreatePodCardinalityOperationHandler } from './handler/create-pod-cardinality-operation-handler.js';
-import { KDLDiagramCreatePodControllerOperationHandler } from './handler/create-pod-controller-operation-handler.js';
-import { KDLDiagramCreatePodOperationHandler } from './handler/create-pod-operation-handler.js';
-import { KDLDiagramCreatePortOperationHandler } from './handler/create-port-operation-handler.js';
-import { KDLDiagramCreateServiceOperationHandler } from './handler/create-service-operation-handler.js';
-import { KDLDiagramCreateServiceTypeOperationHandler } from './handler/create-service-type-operation-handler.js';
-import { KDLDiagramCreateVolumeOperationHandler } from './handler/create-volume-operation-handler.js';
+import { KDLDiagramCreateContainerOperationHandler } from './handler/create/create-container-operation-handler.js';
+import { KDLDiagramCreateIngressOperationHandler } from './handler/create/create-ingress-operation-handler.js';
+import { KDLDiagramCreateLinkOperationHandler } from './handler/create/create-link-operation-handler.js';
+import { KDLDiagramCreateNamespaceOperationHandler } from './handler/create/create-namespace-operation-handler.js';
+import { KDLDiagramCreatePodCardinalityOperationHandler } from './handler/create/create-pod-cardinality-operation-handler.js';
+import { KDLDiagramCreatePodControllerOperationHandler } from './handler/create/create-pod-controller-operation-handler.js';
+import { KDLDiagramCreatePodOperationHandler } from './handler/create/create-pod-operation-handler.js';
+import { KDLDiagramCreatePortOperationHandler } from './handler/create/create-port-operation-handler.js';
+import { KDLDiagramCreateServiceOperationHandler } from './handler/create/create-service-operation-handler.js';
+import { KDLDiagramCreateServiceTypeOperationHandler } from './handler/create/create-service-type-operation-handler.js';
+import { KDLDiagramCreateVolumeOperationHandler } from './handler/create/create-volume-operation-handler.js';
 import { KDLDiagramDeleteOperationHandler } from './handler/delete-operation-handler.js';
 import { KDLModelValidator } from './handler/kdl-validate.js';
 import { KuberRecoverActionHandler } from './handler/kuber-recover-action.js';
+import { IngressValidator } from './handler/validate/ingress-validator.js';
+import { NamespaceValidator } from './handler/validate/namespace-validator.js';
+import { PodValidator } from './handler/validate/pod-validator.js';
+import { RootValidator } from './handler/validate/root-validator.js';
+import { ServiceValidator } from './handler/validate/service-validator.js';
 import { KDLDiagramConfiguration } from './kdl-diagram-configuration.js';
 import { KDLLayoutOperationHandler } from './layout/layout-operation-handler.js';
 import { KDLDiagramGModelFactory } from './model/kdl-diagram-gmodel-factory.js';
 import { KDLModelIndex } from './model/kdl-index.js';
 import { KDLModelState } from './model/kdl-state.js';
 import { SystemToolPaletteProvider } from './tool-palette/kdl-tool-palette-provider.js';
-import { NamespaceValidator } from './handler/validators/namespace-validator.js';
-import { RootValidator } from './handler/validators/root-validator.js';
-import { IngressValidator } from './handler/validators/ingress-validator.js';
-import { ServiceValidator } from './handler/validators/service-validator.js';
-import { PodValidator } from './handler/validators/pod-validator.js';
 
 /**
  * Provides configuration about our system diagrams.

@@ -1,11 +1,11 @@
 import { GGraph, GModelElement, Marker, MarkersReason, ModelState, ModelValidator } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { KuberClient } from '../../../kuber/client.js';
-import { NamespaceValidator } from './validators/namespace-validator.js';
-import { RootValidator } from './validators/root-validator.js';
-import { Validator } from './validators/validator.js';
-import { KDLModelState } from '../model/kdl-state.js';
 import { NamespaceNode } from '../model/graph-extension/namespace-node.js';
+import { KDLModelState } from '../model/kdl-state.js';
+import { NamespaceValidator } from './validate/namespace-validator.js';
+import { RootValidator } from './validate/root-validator.js';
+import { Validator } from './validate/validator.js';
 
 @injectable()
 export class KDLModelValidator implements ModelValidator {

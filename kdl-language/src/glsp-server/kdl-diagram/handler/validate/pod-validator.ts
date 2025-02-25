@@ -1,13 +1,13 @@
 import { Marker, MarkerKind } from '@eclipse-glsp/server';
+import * as k8s from '@kubernetes/client-node';
 import { inject, injectable } from 'inversify';
 import { KuberClient, KuberController } from '../../../../kuber/client.js';
 import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
-import { PodNode } from '../../model/graph-extension/pod-node.js';
-import * as k8s from '@kubernetes/client-node';
-import { createErrorMessage, Validator } from './validator.js';
-import { getFullControllerName } from '../create-pod-controller-operation-handler.js';
-import { PodControllerNode } from '../../model/graph-extension/pod-controller-node.js';
 import { PodCardinalityNode } from '../../model/graph-extension/pod-cardinality-node.js';
+import { PodControllerNode } from '../../model/graph-extension/pod-controller-node.js';
+import { PodNode } from '../../model/graph-extension/pod-node.js';
+import { getFullControllerName } from '../create/create-pod-controller-operation-handler.js';
+import { createErrorMessage, Validator } from './validator.js';
 
 @injectable()
 export class PodValidator implements Validator<NamespaceNode> {
