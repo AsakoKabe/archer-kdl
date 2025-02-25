@@ -1,8 +1,11 @@
 import { Args, GCompartment, GCompartmentBuilder, GLabel, GLabelBuilder, GNode, GNodeBuilder, GResizeLocation } from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { labelDelimiter } from '../utils.js';
+import { PortNode } from './port-node.js';
+import { PodControllerNode } from './pod-controller-node.js';
+import { PodCardinalityNode } from './pod-cardinality-node.js';
 
-export class PodNode extends GNode{
+export class PodNode extends GNode {
     name: string;
     nodeType: string = ModelTypes.POD;
 
@@ -12,6 +15,20 @@ export class PodNode extends GNode{
             .addLayoutOptions({ hAlign: 'center', hGrab: false, vGrab: false, resizeContainer: true })
             .addCssClass('pod')
             .resizeLocations(GResizeLocation.ALL);
+    }
+
+    get portNodes(): PortNode[] {
+        return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof PortNode) as PortNode[];
+    }
+
+    get controllerNode(): PodControllerNode | undefined {
+        const compartment = this.children.at(-1) as GCompartment;
+        return compartment.children.find(child => child instanceof PodControllerNode) as PodControllerNode | undefined;
+    }
+
+    get cardinalityNode(): PodCardinalityNode | undefined {
+        const compartment = this.children.at(-1) as GCompartment;
+        return compartment.children.find(child => child instanceof PodCardinalityNode) as PodCardinalityNode | undefined;
     }
 }
 
@@ -52,7 +69,7 @@ export class PodNodeBuilder<T extends PodNode = PodNode> extends GNodeBuilder<T>
     }
 
     protected createLabelCompartment(): GCompartment {
-        const layoutOptions: Args = {resizeContainer: true};
+        const layoutOptions: Args = { resizeContainer: true };
         const builder = new GCompartmentBuilder(GCompartment)
             .type(ModelTypes.COMP_HEADER)
             .id(this.proxy.id + '_header')

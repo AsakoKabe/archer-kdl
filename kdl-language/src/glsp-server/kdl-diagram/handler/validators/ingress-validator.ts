@@ -49,18 +49,19 @@ export class IngressValidator implements Validator<NamespaceNode> {
                 elementId: ingress.id,
                 label: 'Not found'
             });
-        } else {
-            const hosts = clusterIngress.spec?.rules?.map(rule => rule.host);
-            if (!hosts || !hosts.includes(ingress.host)) {
-                return [
-                    {
-                        kind: MarkerKind.ERROR,
-                        description: `Host "${ingress.host}" does not found in cluster ingress "${ingress.name}"`,
-                        elementId: ingress.id,
-                        label: 'Not found'
-                    }
-                ];
-            }
+            return markers;
+        }
+        
+        const hosts = clusterIngress.spec?.rules?.map(rule => rule.host);
+        if (!hosts || !hosts.includes(ingress.host)) {
+            return [
+                {
+                    kind: MarkerKind.ERROR,
+                    description: `Host "${ingress.host}" does not found in cluster ingress "${ingress.name}"`,
+                    elementId: ingress.id,
+                    label: 'Not found'
+                }
+            ];
         }
 
         return markers;

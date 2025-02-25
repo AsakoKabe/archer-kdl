@@ -51,13 +51,14 @@ export class ServiceValidator implements Validator<NamespaceNode> {
                 elementId: serviceNode.id,
                 label: 'Not found'
             });
-        } else {
-            this.addServicePortNotFoundMarkers(kuberService, serviceNode, markers);
-            for (const port of serviceNode.portNodes) {
-                markers.push(...(await this.validatePort(serviceNode, port, kuberService.spec?.ports || [])));
-            }
-            this.addServiceTypeMismatchMarkers(kuberService, serviceNode, markers);
+            return markers;
         }
+
+        this.addServicePortNotFoundMarkers(kuberService, serviceNode, markers);
+        for (const port of serviceNode.portNodes) {
+            markers.push(...(await this.validatePort(serviceNode, port, kuberService.spec?.ports || [])));
+        }
+        this.addServiceTypeMismatchMarkers(kuberService, serviceNode, markers);
 
         return markers;
     }
@@ -86,16 +87,17 @@ export class ServiceValidator implements Validator<NamespaceNode> {
                 elementId: modelPort.id,
                 label: 'Not found'
             });
-        } else {
-            const kuberPortName = kuberPort.name;
-            if (kuberPortName && modelPort.name !== kuberPortName) {
-                markers.push({
-                    kind: MarkerKind.ERROR,
-                    description: `The name: ${modelPort.name} of port: ${modelPort.number} in model does not match with the name: ${kuberPortName} of port in cluster`,
-                    elementId: modelPort.id,
-                    label: 'Not match'
-                });
-            }
+            return markers;
+        }
+
+        const kuberPortName = kuberPort.name;
+        if (kuberPortName && modelPort.name !== kuberPortName) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The name: ${modelPort.name} of port: ${modelPort.number} in model does not match with the name: ${kuberPortName} of port in cluster`,
+                elementId: modelPort.id,
+                label: 'Not match'
+            });
         }
         return markers;
     }

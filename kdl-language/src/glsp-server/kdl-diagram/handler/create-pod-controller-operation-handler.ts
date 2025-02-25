@@ -18,7 +18,6 @@ import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import { addNodeAttribute } from '../model/utils.js';
 
-
 function getControllerName(name: string): string {
     switch (name) {
         case 'Deployment':
@@ -29,6 +28,21 @@ function getControllerName(name: string): string {
             return 'DS';
         case 'ReplicaSet':
             return 'RS';
+        default:
+            return name;
+    }
+}
+
+export function getFullControllerName(name: string): string {
+    switch (name) {
+        case 'D':
+            return 'Deployment';
+        case 'SS':
+            return 'StatefulSet';
+        case 'DS':
+            return 'DaemonSet';
+        case 'RS':
+            return 'ReplicaSet';
         default:
             return name;
     }
@@ -55,7 +69,7 @@ export class KDLDiagramCreatePodControllerOperationHandler extends JsonCreateNod
     }
 
     protected async createPodController(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {
