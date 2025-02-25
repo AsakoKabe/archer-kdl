@@ -40,7 +40,7 @@ kdlDiagram:
             name: "ronin"
             type:
                 id: ServiceType
-                name: "CIP"
+                name: "kk"
             ports:
               - id: Port0
                 name: "ronin-service"

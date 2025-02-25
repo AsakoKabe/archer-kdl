@@ -16,7 +16,18 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createIngressNode } from '../model/utils.js';
+import { addNodeAttribute } from '../model/utils.js';
+
+export function createIngressNode(namespaceNode: ast.NamespaceNode, name?: string, host?: string): ast.IngressNode {
+    return {
+        $type: ast.IngressNode,
+        $container: namespaceNode,
+        id: 'IngressNode' + namespaceNode.ingresses.length,
+        name: name ? name : 'IngressNode' + namespaceNode.ingresses.length,
+        host: host ? host : 'localhost',
+        links: []
+    };
+}
 
 @injectable()
 export class KDLDiagramCreateIngressOperationHandler extends JsonCreateNodeOperationHandler {

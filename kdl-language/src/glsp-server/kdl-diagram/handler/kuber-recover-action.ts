@@ -15,16 +15,15 @@ import { KDLModelState } from '../model/kdl-state.js';
 import {
     addEdgeAttribute,
     addNodeAttribute,
-    BaseDim,
-    createContainerNode,
-    createIngressNode,
-    createNamespaceNode,
-    createPodNode,
-    createPortNode,
-    createVolumeNode,
-    VolumeType
+    BaseDim
 } from '../model/utils.js';
 import { createServiceNode } from './create-service-operation-handler.js';
+import { createContainerNode } from './create-container-operation-handler.js';
+import { createIngressNode } from './create-ingress-operation-handler.js';
+import { createNamespaceNode } from './create-namespace-operation-handler.js';
+import { createPodNode } from './create-pod-operation-handler.js';
+import { createPortNode } from './create-port-operation-handler.js';
+import { VolumeType, createVolumeNode } from './create-volume-operation-handler.js';
 
 export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverResponseAction> {
     kind: typeof KuberRecoverRequestAction.KIND;

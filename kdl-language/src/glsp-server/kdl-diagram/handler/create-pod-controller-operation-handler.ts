@@ -16,7 +16,31 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createPodControllerNode } from '../model/utils.js';
+import { addNodeAttribute } from '../model/utils.js';
+
+
+function getControllerName(name: string): string {
+    switch (name) {
+        case 'Deployment':
+            return 'D';
+        case 'StatefulSet':
+            return 'SS';
+        case 'DaemonSet':
+            return 'DS';
+        case 'ReplicaSet':
+            return 'RS';
+        default:
+            return name;
+    }
+}
+export function createPodControllerNode(pod: ast.PodNode, name?: string): ast.PodController {
+    return {
+        $container: pod,
+        $type: ast.PodController,
+        id: 'PodController',
+        name: name ? getControllerName(name) : 'RC'
+    };
+}
 
 @injectable()
 export class KDLDiagramCreatePodControllerOperationHandler extends JsonCreateNodeOperationHandler {

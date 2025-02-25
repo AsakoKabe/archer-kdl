@@ -16,7 +16,19 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createPodCardinalityNode } from '../model/utils.js';
+import { addNodeAttribute } from '../model/utils.js';
+
+
+
+export function createPodCardinalityNode(pod: ast.PodNode, name?: string): ast.PodCardinality {
+    return {
+        $container: pod,
+        $type: ast.PodCardinality,
+        id: 'PodCardinality',
+        name: name ? name : '1'
+    };
+}
+
 
 @injectable()
 export class KDLDiagramCreatePodCardinalityOperationHandler extends JsonCreateNodeOperationHandler {

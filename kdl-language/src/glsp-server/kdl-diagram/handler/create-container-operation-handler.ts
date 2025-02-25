@@ -9,13 +9,24 @@ import {
     JsonCreateNodeOperationHandler,
     MaybePromise,
     ModelState,
-    Point} from '@eclipse-glsp/server';
+    Point
+} from '@eclipse-glsp/server';
 import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, BaseDim, createContainerNode } from '../model/utils.js';
+import { addNodeAttribute, BaseDim } from '../model/utils.js';
+
+export function createContainerNode(pod: ast.PodNode, name?: string): ast.ContainerNode {
+    return {
+        $type: ast.ContainerNode,
+        $container: pod,
+        id: 'ContainerNode' + pod.containers.length,
+        name: name ? name : 'ContainerNode' + pod.containers.length,
+        links: []
+    };
+}
 
 @injectable()
 export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOperationHandler {
@@ -30,7 +41,7 @@ export class KDLDiagramCreateContainerOperationHandler extends JsonCreateNodeOpe
     }
 
     protected async createContainer(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {

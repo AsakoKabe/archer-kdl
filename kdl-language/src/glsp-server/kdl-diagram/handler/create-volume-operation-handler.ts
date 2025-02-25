@@ -16,7 +16,21 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createVolumeNode } from '../model/utils.js';
+import { addNodeAttribute } from '../model/utils.js';
+
+export enum VolumeType {
+    Secret = 'secret',
+    ConfigMap = 'configmap'
+}
+export function createVolumeNode(container: ast.PodNode, name?: string, type?: VolumeType): ast.VolumeNode {
+    return {
+        $type: ast.VolumeNode,
+        $container: container,
+        id: 'Volume' + container.volumes.length,
+        name: name ? name : 'Volume' + container.volumes.length,
+        type: type ? type : 'secret'
+    };
+}
 
 @injectable()
 export class KDLDiagramCreateVolumeOperationHandler extends JsonCreateNodeOperationHandler {
@@ -31,8 +45,8 @@ export class KDLDiagramCreateVolumeOperationHandler extends JsonCreateNodeOperat
     }
 
     protected async createVolume(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
-            return
+        if (!this.modelState.kdlDiagram.diagram) {
+            return;
         }
         if (!operation.containerId) {
             throw new GLSPServerError("Volume can't be outside pod");

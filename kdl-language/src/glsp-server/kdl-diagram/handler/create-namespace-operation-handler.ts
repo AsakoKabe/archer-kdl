@@ -14,7 +14,20 @@ import { ModelTypes } from '@kdl/protocol';
 import { inject, injectable } from 'inversify';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createNamespaceNode } from '../model/utils.js';
+import { addNodeAttribute } from '../model/utils.js';
+import * as ast from '../../../language-server/generated/ast.js';
+
+export function createNamespaceNode(kdlDiagram: ast.KDLDiagram, name?: string): ast.NamespaceNode {
+    return {
+        $type: ast.NamespaceNode,
+        $container: kdlDiagram,
+        id: 'NamespaceNode' + kdlDiagram.namespaces.length,
+        name: name ? name : 'NamespaceNode' + kdlDiagram.namespaces.length,
+        ingresses: [],
+        pods: [],
+        services: []
+    };
+}
 
 @injectable()
 export class KDLDiagramCreateNamespaceOperationHandler extends JsonCreateNodeOperationHandler {

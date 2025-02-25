@@ -16,7 +16,17 @@ import { inject, injectable } from 'inversify';
 import * as ast from '../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
-import { addNodeAttribute, createPortNode } from '../model/utils.js';
+import { addNodeAttribute } from '../model/utils.js';
+
+export function createPortNode(container: ast.PodNode | ast.ServiceNode, number?: number, name?: string): ast.PortNode {
+    return {
+        $type: ast.PortNode,
+        $container: container,
+        id: 'Port' + container.ports.length,
+        name: name ? name : 'PortNode' + container.ports.length,
+        number: number ? number : 8080
+    };
+}
 
 @injectable()
 export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperationHandler {
@@ -31,7 +41,7 @@ export class KDLDiagramCreatePortOperationHandler extends JsonCreateNodeOperatio
     }
 
     protected async createPort(operation: CreateNodeOperation, relativeLocation?: Point): Promise<void> {
-        if (!this.modelState.kdlDiagram.diagram){
+        if (!this.modelState.kdlDiagram.diagram) {
             return;
         }
         if (!operation.containerId) {
