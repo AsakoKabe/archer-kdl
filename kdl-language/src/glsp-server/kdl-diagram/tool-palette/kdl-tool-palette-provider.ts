@@ -10,8 +10,8 @@ import {
    PaletteItem,
    ToolPaletteItemProvider} from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { KuberRecoverRequestAction } from '../handler/kuber-recover-action.js';
 import * as uuid from 'uuid';
+import { KuberRecoverRequestAction } from '../handler/kuber-recover-actions.js';
 
 
 @injectable()
