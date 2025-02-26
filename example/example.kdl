@@ -143,7 +143,7 @@ kdlDiagram:
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.ContainerNode0
             dimensions:
                 x: 30
-                y: 10
+                y: 9
                 width: 48.9140625
                 height: 35
           - id: NodeAttribute9

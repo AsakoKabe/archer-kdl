@@ -4,6 +4,8 @@ import { labelDelimiter } from '../utils.js';
 import { PortNode } from './port-node.js';
 import { PodControllerNode } from './pod-controller-node.js';
 import { PodCardinalityNode } from './pod-cardinality-node.js';
+import { VolumeNode } from './volume-node.js';
+import { ContainerNode } from './container-node.js';
 
 export class PodNode extends GNode {
     name: string;
@@ -29,6 +31,14 @@ export class PodNode extends GNode {
     get cardinalityNode(): PodCardinalityNode | undefined {
         const compartment = this.children.at(-1) as GCompartment;
         return compartment.children.find(child => child instanceof PodCardinalityNode) as PodCardinalityNode | undefined;
+    }
+
+    get volumeNodes(): VolumeNode[] {
+        return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof VolumeNode) as VolumeNode[];
+    }
+
+    get containerNodes(): ContainerNode[] {
+        return (this.children.at(-1) as GCompartment).children.filter(child => child instanceof ContainerNode) as ContainerNode[];
     }
 }
 

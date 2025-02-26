@@ -2,13 +2,14 @@ import { Marker, MarkerKind } from '@eclipse-glsp/server';
 import * as k8s from '@kubernetes/client-node';
 import { inject, injectable } from 'inversify';
 import { KuberClient, KuberController } from '../../../../kuber/client.js';
+import { ContainerNode } from '../../model/graph-extension/container-node.js';
 import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
 import { PodCardinalityNode } from '../../model/graph-extension/pod-cardinality-node.js';
 import { PodControllerNode } from '../../model/graph-extension/pod-controller-node.js';
 import { PodNode } from '../../model/graph-extension/pod-node.js';
+import { PortNode } from '../../model/graph-extension/port-node.js';
 import { getFullControllerName } from '../create/create-pod-controller-operation-handler.js';
 import { createErrorMessage, Validator } from './validator.js';
-import { PortNode } from '../../model/graph-extension/port-node.js';
 
 @injectable()
 export class PodValidator implements Validator<NamespaceNode> {
@@ -71,6 +72,16 @@ export class PodValidator implements Validator<NamespaceNode> {
         for (const portNode of podPorts) {
             markers.push(...(await this.validatePort(podNode, portNode, kuberPorts)));
         }
+
+        const podContainers = podNode.containerNodes;
+        const kuberContainers = kuberPod.spec?.containers || [];
+        this.addPodContainerNotFoundMarkers(kuberContainers, podNode, markers);
+        for (const containerNode of podContainers) {
+            markers.push(...(await this.validateContainer(podNode, containerNode, kuberContainers)));
+        }
+
+        // const podVolumes = podNode.volumeNodes;
+        // const kuberVolumes = VolumeExtractor.extractVolumes(kuberPod, kubeContainers);
 
         return markers;
     }
@@ -139,6 +150,40 @@ export class PodValidator implements Validator<NamespaceNode> {
                 label: 'Not match'
             });
         }
+        return markers;
+    }
+
+    private addPodContainerNotFoundMarkers(kuberContainers: k8s.V1Container[], podNode: PodNode, markers: Marker[]): void {
+        kuberContainers.forEach(kuberContainer => {
+            const kuberContainerName = kuberContainer.name;
+            if (!podNode.containerNodes.map(containerNode => containerNode.name).includes(kuberContainerName)) {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: `The container: ${kuberContainerName} of pod: ${podNode.name} in cluster does not found in model`,
+                    elementId: podNode.id,
+                    label: 'Not found'
+                });
+            }
+        });
+    }
+
+    private async validateContainer(
+        podNode: PodNode,
+        modelContainer: ContainerNode,
+        kuberContainers: k8s.V1Container[]
+    ): Promise<Marker[]> {
+        const markers: Marker[] = [];
+        const kuberContainer = kuberContainers.find(kuberContainer => kuberContainer.name === modelContainer.name);
+        if (!kuberContainer) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The container: ${modelContainer.name} of pod: ${podNode.name} in model does not found in cluster`,
+                elementId: modelContainer.id,
+                label: 'Not found'
+            });
+            return markers;
+        }
+
         return markers;
     }
 }

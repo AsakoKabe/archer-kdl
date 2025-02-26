@@ -15,7 +15,7 @@ export class ContainerRecovery implements Recover<PodRecoveryParams> {
         kubeContainers?.map(kuberContainer => {
             const container = this.createAndAddContainerNode(pod, kuberContainer);
             if (kuberContainer.ports) {
-                this.recoverPodPorts(pod, kubeContainers, kuberContainer);
+                this.recoverPodPorts(pod, kuberContainer);
             }
             this.addContainerNodeAttributes(container);
         });
@@ -27,7 +27,7 @@ export class ContainerRecovery implements Recover<PodRecoveryParams> {
         return container;
     }
 
-    private recoverPodPorts(pod: ast.PodNode, kubeContainers: k8s.V1Container[], kuberContainer: k8s.V1Container): void {
+    private recoverPodPorts(pod: ast.PodNode, kuberContainer: k8s.V1Container): void {
         new PortRecovery(this.modelState).recoverPodPorts({
             pod,
             kuberPorts: kuberContainer.ports || []
