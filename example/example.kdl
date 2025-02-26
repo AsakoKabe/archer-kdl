@@ -135,9 +135,9 @@ kdlDiagram:
           - id: NodeAttribute6
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.Volume0
             dimensions:
-                x: 156.046875
-                y: -25
-                width: 61.1875
+                x: 119.52993497322862
+                y: 27
+                width: 65.51806640625
                 height: 40
           - id: NodeAttribute8
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.ContainerNode0

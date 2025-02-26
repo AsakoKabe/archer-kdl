@@ -8,7 +8,9 @@ import { PodCardinalityNode } from '../../model/graph-extension/pod-cardinality-
 import { PodControllerNode } from '../../model/graph-extension/pod-controller-node.js';
 import { PodNode } from '../../model/graph-extension/pod-node.js';
 import { PortNode } from '../../model/graph-extension/port-node.js';
+import { VolumeNode } from '../../model/graph-extension/volume-node.js';
 import { getFullControllerName } from '../create/create-pod-controller-operation-handler.js';
+import { ExtractedVolume, VolumeExtractor } from '../recovery/volume-extractor.js';
 import { createErrorMessage, Validator } from './validator.js';
 
 @injectable()
@@ -80,8 +82,12 @@ export class PodValidator implements Validator<NamespaceNode> {
             markers.push(...(await this.validateContainer(podNode, containerNode, kuberContainers)));
         }
 
-        // const podVolumes = podNode.volumeNodes;
-        // const kuberVolumes = VolumeExtractor.extractVolumes(kuberPod, kubeContainers);
+        const podVolumes = podNode.volumeNodes;
+        const kuberVolumes = VolumeExtractor.extractVolumes(kuberPod, kuberContainers);
+        this.addPodVolumeNotFoundMarkers(kuberVolumes, podNode, markers);
+        for (const volumeNode of podVolumes) {
+            markers.push(...(await this.validateVolume(podNode, volumeNode, kuberVolumes)));
+        }
 
         return markers;
     }
@@ -182,6 +188,51 @@ export class PodValidator implements Validator<NamespaceNode> {
                 label: 'Not found'
             });
             return markers;
+        }
+
+        return markers;
+    }
+
+    private addPodVolumeNotFoundMarkers(kuberVolumes: Set<ExtractedVolume>, podNode: PodNode, markers: Marker[]): void {
+        kuberVolumes.forEach(kuberVolume => {
+            const kuberVolumeName = kuberVolume.name;
+            if (!podNode.volumeNodes.map(volumeNode => volumeNode.name).includes(kuberVolumeName)) {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: `The volume: ${kuberVolumeName} of pod: ${podNode.name} in cluster does not found in model`,
+                    elementId: podNode.id,
+                    label: 'Not found'
+                });
+            }
+        });
+    }
+
+    private async validateVolume(podNode: PodNode, modelVolume: VolumeNode, kuberVolumes: Set<ExtractedVolume>): Promise<Marker[]> {
+        const markers: Marker[] = [];
+        let kuberVolume: ExtractedVolume | undefined;
+        for (const volume of kuberVolumes) {
+            if (volume.name === modelVolume.name) {
+                kuberVolume = volume;
+                break;
+            }
+        }
+        if (!kuberVolume) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The volume: ${modelVolume.name} of pod: ${podNode.name} in model does not found in cluster`,
+                elementId: modelVolume.id,
+                label: 'Not found'
+            });
+            return markers;
+        }
+
+        if (kuberVolume.type !== modelVolume.volumeType) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The type: ${modelVolume.volumeType} of volume: ${modelVolume.name} in model does not match with the type: ${kuberVolume.type} of volume in cluster`,
+                elementId: modelVolume.id,
+                label: 'Type mismatch'
+            });
         }
 
         return markers;

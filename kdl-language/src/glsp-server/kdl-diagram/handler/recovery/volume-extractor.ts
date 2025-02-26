@@ -1,9 +1,14 @@
 import * as k8s from '@kubernetes/client-node';
 import { VolumeType } from '../create/create-volume-operation-handler.js';
 
+export type ExtractedVolume = {
+    name: string;
+    type: string;
+};
+
 export class VolumeExtractor {
-    static extractVolumes(kuberPod: k8s.V1Pod, kubeContainers: k8s.V1Container[]): Set<{ name: string; type: string }> {
-        const volumes = new Set<{ name: string; type: string }>();
+    static extractVolumes(kuberPod: k8s.V1Pod, kubeContainers: k8s.V1Container[]): Set<ExtractedVolume> {
+        const volumes = new Set<ExtractedVolume>();
         kuberPod.spec?.volumes?.forEach(volume => {
             if (volume.secret?.secretName) {
                 volumes.add({ name: volume.secret.secretName, type: VolumeType.Secret });
@@ -20,7 +25,7 @@ export class VolumeExtractor {
         return volumes;
     }
 
-    private static extractContainerVolumes(container: k8s.V1Container, volumes: Set<{ name: string; type: string }>): void {
+    private static extractContainerVolumes(container: k8s.V1Container, volumes: Set<ExtractedVolume>): void {
         if (container.env) {
             container.env.forEach(envVar => {
                 if (envVar.valueFrom?.secretKeyRef?.name) {
