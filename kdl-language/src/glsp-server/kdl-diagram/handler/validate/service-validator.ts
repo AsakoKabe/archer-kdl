@@ -113,6 +113,13 @@ export class ServiceValidator implements Validator<NamespaceNode> {
                     label: 'Not match'
                 });
             }
+        } else {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The type of service: ${serviceNode.name} in model is not defined`,
+                elementId: serviceNode.id,
+                label: 'Not defined'
+            });
         }
     }
 }

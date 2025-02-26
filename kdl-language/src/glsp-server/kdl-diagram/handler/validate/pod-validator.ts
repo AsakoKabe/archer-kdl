@@ -8,6 +8,7 @@ import { PodControllerNode } from '../../model/graph-extension/pod-controller-no
 import { PodNode } from '../../model/graph-extension/pod-node.js';
 import { getFullControllerName } from '../create/create-pod-controller-operation-handler.js';
 import { createErrorMessage, Validator } from './validator.js';
+import { PortNode } from '../../model/graph-extension/port-node.js';
 
 @injectable()
 export class PodValidator implements Validator<NamespaceNode> {
@@ -64,7 +65,20 @@ export class PodValidator implements Validator<NamespaceNode> {
             this.addPodCardinalityMismatchMarkers(podCardinality, kuberController, markers);
         }
 
+        const podPorts = podNode.portNodes;
+        const kuberPorts = this.getKuberPorts(kuberPod);
+        this.addPodPortNotFoundMarkers(kuberPorts, podNode, markers);
+        for (const portNode of podPorts) {
+            markers.push(...(await this.validatePort(podNode, portNode, kuberPorts)));
+        }
+
         return markers;
+    }
+
+    private getKuberPorts(kuberPod: k8s.V1Pod): k8s.V1ContainerPort[] {
+        return (kuberPod.spec?.containers?.flatMap(container => container.ports) || []).filter(
+            (port): port is k8s.V1ContainerPort => port !== undefined
+        );
     }
 
     private addPodControllerMismatchMarkers(podController: PodControllerNode, kuberController: KuberController, markers: Marker[]) {
@@ -87,5 +101,44 @@ export class PodValidator implements Validator<NamespaceNode> {
                 label: 'Not match'
             });
         }
+    }
+
+    private addPodPortNotFoundMarkers(kuberPorts: k8s.V1ContainerPort[], podNode: PodNode, markers: Marker[]): void {
+        kuberPorts.forEach(kuberPort => {
+            const kuberPortNumber = kuberPort.containerPort;
+            if (!podNode.portNodes.map(portNode => portNode.number.toString()).includes(kuberPortNumber.toString())) {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: `The port: ${kuberPortNumber} of pod: ${podNode.name} in cluster does not found in model`,
+                    elementId: podNode.id,
+                    label: 'Not found'
+                });
+            }
+        });
+    }
+
+    private async validatePort(podNode: PodNode, modelPort: PortNode, kuberPorts: k8s.V1ContainerPort[]): Promise<Marker[]> {
+        const markers: Marker[] = [];
+        const kuberPort = kuberPorts.find(kuberPort => kuberPort.containerPort === Number(modelPort.number));
+        if (!kuberPort) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The port: ${modelPort.number} of pod: ${podNode.name} in model does not found in cluster`,
+                elementId: modelPort.id,
+                label: 'Not found'
+            });
+            return markers;
+        }
+
+        const kuberPortName = kuberPort.name;
+        if (kuberPortName && modelPort.name !== kuberPortName) {
+            markers.push({
+                kind: MarkerKind.ERROR,
+                description: `The name: ${modelPort.name} of port: ${modelPort.number} in model does not match with the name: ${kuberPortName} of port in cluster`,
+                elementId: modelPort.id,
+                label: 'Not match'
+            });
+        }
+        return markers;
     }
 }
