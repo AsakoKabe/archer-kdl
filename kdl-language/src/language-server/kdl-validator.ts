@@ -4,7 +4,7 @@
 import * as k8s from '@kubernetes/client-node';
 import { AstNode, ValidationAcceptor, ValidationChecks } from 'langium';
 import { Diagnostic } from 'vscode-languageserver-protocol';
-import { IngressNode, isKDLDiagram, KDLAstType, KDLDiagram, NamespaceNode, PortNode, ServiceNode } from './generated/ast.js';
+import { ContainerNode, IngressNode, isKDLDiagram, KDLAstType, KDLDiagram, NamespaceNode, PodNode, PortNode, ServiceNode } from './generated/ast.js';
 import type { KDLServices } from './kdl-module.js';
 import { ID_PROPERTY, IdentifiableAstNode } from './kdl-naming.js';
 
@@ -117,6 +117,7 @@ export class KubeValidator {
 
         await IngressValidator.validateIngresses(namespaceNode, accept, this.services);
         await ServiceValidator.validateServices(namespaceNode, accept, this.services);
+        await PodValidator.validate(namespaceNode, accept, this.services);
     }
 
     async checkKdlDiagram(kdlDiagram: KDLDiagram, accept: ValidationAcceptor): Promise<void> {
@@ -129,6 +130,127 @@ export class KubeValidator {
                     keyword: 'namespaces'
                 });
             }
+        }
+    }
+}
+
+namespace PodValidator {
+    export async function validate(modelNamespace: NamespaceNode, accept: ValidationAcceptor, services: KDLServices): Promise<void> {
+        const kuberPods = await services.api.Kube.getPods(modelNamespace.name);
+        addPodNotFoundMarkers(kuberPods, modelNamespace, accept);
+        for (const podNode of modelNamespace.pods) {
+            await validatePod(podNode, kuberPods, accept, services);
+        }
+    }
+
+    function addPodNotFoundMarkers(kuberPods: k8s.V1Pod[], modelNamespace: NamespaceNode, accept: ValidationAcceptor): void {
+        kuberPods.forEach(clusterPod => {
+            const clusterPodName = clusterPod.metadata?.name;
+            if (!clusterPodName) {
+                return;
+            }
+            if (!modelNamespace.pods.map(podNode => podNode.name).includes(clusterPodName)) {
+                accept('warning', `Pod "${clusterPodName}" is not found in the model.`, {
+                    node: modelNamespace,
+                    keyword: 'pods'
+                });
+            }
+        });
+    }
+
+    async function validatePod(podNode: PodNode, kuberPods: k8s.V1Pod[], accept: ValidationAcceptor, services: KDLServices): Promise<void> {
+        const kuberPod = kuberPods.find(kuberPod => kuberPod.metadata?.name === podNode.name);
+        if (!kuberPod) {
+            accept('warning', `Pod "${podNode.name}" not found in cluster.`, { node: podNode, property: 'name' });
+            return;
+        }
+
+        const podPorts = podNode.ports;
+        const kuberPorts = getKuberPorts(kuberPod);
+        addPodPortNotFoundMarkers(kuberPorts, podNode, accept);
+        for (const portNode of podPorts) {
+            await validatePort(podNode, portNode, kuberPorts, accept);
+        }
+
+        const podContainers = podNode.containers;
+        const kuberContainers = kuberPod.spec?.containers || [];
+        addPodContainerNotFoundMarkers(kuberContainers, podNode, accept);
+        for (const containerNode of podContainers) {
+            await validateContainer(podNode, containerNode, kuberContainers, accept);
+        }
+    }
+
+    function getKuberPorts(kuberPod: k8s.V1Pod): k8s.V1ContainerPort[] {
+        return (kuberPod.spec?.containers?.flatMap(container => container.ports) || []).filter(
+            (port): port is k8s.V1ContainerPort => port !== undefined
+        );
+    }
+
+    function addPodPortNotFoundMarkers(kuberPorts: k8s.V1ContainerPort[], podNode: PodNode, accept: ValidationAcceptor): void {
+        kuberPorts.forEach(kuberPort => {
+            const kuberPortNumber = kuberPort.containerPort;
+            if (!podNode.ports.map(portNode => portNode.number.toString()).includes(kuberPortNumber.toString())) {
+                accept('warning', `The port: "${kuberPortNumber}" of pod: "${podNode.name}" in cluster does not found in model`, {
+                    node: podNode,
+                    keyword: 'ports'
+                });
+            }
+        });
+    }
+
+    async function validatePort(
+        podNode: PodNode,
+        modelPort: PortNode,
+        kuberPorts: k8s.V1ContainerPort[],
+        accept: ValidationAcceptor
+    ): Promise<void> {
+        const kuberPort = kuberPorts.find(kuberPort => kuberPort.containerPort === Number(modelPort.number));
+        if (!kuberPort) {
+            accept('warning', `The port: "${modelPort.number}" of pod: "${podNode.name}" in model does not found in cluster`, {
+                node: modelPort,
+                property: 'number'
+            });
+            return;
+        }
+
+        const kuberPortName = kuberPort.name;
+        if (kuberPortName && modelPort.name !== kuberPortName) {
+            accept(
+                'warning',
+                `The name: "${modelPort.name}" of port: "${modelPort.number}" in model does not match with the name: "${kuberPortName}" of port in cluster`,
+                {
+                    node: modelPort,
+                    property: 'name'
+                }
+            );
+        }
+    }
+
+    function addPodContainerNotFoundMarkers(kuberContainers: k8s.V1Container[], podNode: PodNode, accept: ValidationAcceptor): void {
+        kuberContainers.forEach(kuberContainer => {
+            const kuberContainerName = kuberContainer.name;
+            if (!podNode.containers.map(containerNode => containerNode.name).includes(kuberContainerName)) {
+                accept('warning', `The container: "${kuberContainerName}" of pod: "${podNode.name}" in cluster does not found in model`, {
+                    node: podNode,
+                    keyword: 'containers'
+                });
+            }
+        });
+    }
+
+    async function validateContainer(
+        podNode: PodNode,
+        modelContainer: ContainerNode,
+        kuberContainers: k8s.V1Container[],
+        accept: ValidationAcceptor
+    ): Promise<void> {
+        const kuberContainer = kuberContainers.find(kuberContainer => kuberContainer.name === modelContainer.name);
+        if (!kuberContainer) {
+            accept('warning', `The container: "${modelContainer.name}" of pod: "${podNode.name}" in model does not found in cluster`, {
+                node: modelContainer,
+                property: 'name'
+            });
+            return;
         }
     }
 }
@@ -293,5 +415,4 @@ namespace ServiceValidator {
                 return name;
         }
     }
-    
 }
