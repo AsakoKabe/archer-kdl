@@ -182,13 +182,6 @@ kdlDiagram:
                 y: -70
                 width: 64.6484375
                 height: 40
-          - id: NodeAttribute19
-            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode0.ServiceNode0.Port0
-            dimensions:
-                x: 5
-                y: -70
-                width: 36.9140625
-                height: 40
           - id: NodeAttribute20
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode0
             dimensions:
@@ -238,6 +231,13 @@ kdlDiagram:
                 y: -55.5
                 width: 131.28125
                 height: 51
+          - id: NodeAttribute20
+            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode0.ServiceNode0.Port0
+            dimensions:
+                x: 0
+                y: 0
+                width: 10
+                height: 10
         edgeAttributes:
           - id: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6_NamespaceNode1_ServiceNode1-id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6_NamespaceNode1_PodNode1_Port0
             sourceID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode1
