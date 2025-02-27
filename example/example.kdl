@@ -59,10 +59,6 @@ kdlDiagram:
         pods:
           - id: PodNode0
             name: "ronin-67c664bb86-84wdm"
-            ports:
-              - id: id_9900c80c-dcb9-45a3-ae79-7af4d7f4b10f
-                name: "http-port"
-                number: 8080
             volumes:
               - id: Volume0
                 name: "ronin-secret"
@@ -70,6 +66,10 @@ kdlDiagram:
             containers:
               - id: ContainerNode0
                 name: "ronin"
+            ports:
+              - id: id_9900c80c-dcb9-45a3-ae79-7af4d7f4b10f
+                name: "http-port"
+                number: 8080
           - id: PodNode1
             name: "ui-86df54f46d-l7hkc"
             controller:
@@ -79,7 +79,7 @@ kdlDiagram:
                 id: PodCardinality
                 name: "1"
             volumes:
-              - id: Volume0
+              - id: id_3340e165-7fe5-4af1-9efb-a9926cd3b181
                 name: "ui-secret"
                 type: "secret"
             containers:
@@ -147,13 +147,6 @@ kdlDiagram:
                 y: 203.5
                 width: 171.046875
                 height: 90
-          - id: NodeAttribute12
-            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1.Volume0
-            dimensions:
-                x: 119.1953125
-                y: -25
-                width: 49.9140625
-                height: 40
           - id: NodeAttribute13
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1.Port0
             dimensions:

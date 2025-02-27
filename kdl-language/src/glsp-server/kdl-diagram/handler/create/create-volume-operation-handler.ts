@@ -17,11 +17,9 @@ import * as ast from '../../../../language-server/generated/ast.js';
 import { CrossModelCommand } from '../../../common/cross-model-command.js';
 import { KDLModelState } from '../../model/kdl-state.js';
 import { addNodeAttribute } from '../../model/utils.js';
+import { VolumeType } from '../../../../kuber/volume-extractor.js';
 
-export enum VolumeType {
-    Secret = 'secret',
-    ConfigMap = 'configmap'
-}
+
 export function createVolumeNode(container: ast.PodNode, name?: string, type?: VolumeType): ast.VolumeNode {
     return {
         $type: ast.VolumeNode,

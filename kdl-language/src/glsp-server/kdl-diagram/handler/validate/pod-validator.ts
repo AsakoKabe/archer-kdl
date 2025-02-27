@@ -2,6 +2,7 @@ import { Marker, MarkerKind } from '@eclipse-glsp/server';
 import * as k8s from '@kubernetes/client-node';
 import { inject, injectable } from 'inversify';
 import { KubeClient, KuberController } from '../../../../kuber/client.js';
+import { ExtractedVolume, VolumeExtractor } from '../../../../kuber/volume-extractor.js';
 import { ContainerNode } from '../../model/graph-extension/container-node.js';
 import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
 import { PodCardinalityNode } from '../../model/graph-extension/pod-cardinality-node.js';
@@ -10,7 +11,6 @@ import { PodNode } from '../../model/graph-extension/pod-node.js';
 import { PortNode } from '../../model/graph-extension/port-node.js';
 import { VolumeNode } from '../../model/graph-extension/volume-node.js';
 import { getFullControllerName } from '../create/create-pod-controller-operation-handler.js';
-import { ExtractedVolume, VolumeExtractor } from '../recovery/volume-extractor.js';
 import { createErrorMessage, Validator } from './validator.js';
 
 @injectable()
@@ -62,7 +62,7 @@ export class PodValidator implements Validator<NamespaceNode> {
         const podCardinality = podNode.cardinalityNode;
         const kuberController = await this.kuberClient.getPodController(kuberPod, namespaceName);
         if (kuberController) {
-            if (podController){
+            if (podController) {
                 this.addPodControllerMismatchMarkers(podController, kuberController, markers);
             } else {
                 markers.push({
@@ -74,7 +74,7 @@ export class PodValidator implements Validator<NamespaceNode> {
             }
         }
         if (kuberController) {
-            if (podCardinality){
+            if (podCardinality) {
                 this.addPodCardinalityMismatchMarkers(podCardinality, kuberController, markers);
             } else {
                 markers.push({

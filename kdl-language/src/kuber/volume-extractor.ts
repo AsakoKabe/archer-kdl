@@ -1,11 +1,13 @@
 import * as k8s from '@kubernetes/client-node';
-import { VolumeType } from '../create/create-volume-operation-handler.js';
 
 export type ExtractedVolume = {
     name: string;
     type: string;
 };
-
+export enum VolumeType {
+    Secret = 'secret',
+    ConfigMap = 'configmap'
+}
 export class VolumeExtractor {
     static extractVolumes(kuberPod: k8s.V1Pod, kubeContainers: k8s.V1Container[]): Set<ExtractedVolume> {
         const volumes = new Set<ExtractedVolume>();
