@@ -1,4 +1,4 @@
-import { KuberClient } from '../../../../kuber/client.js';
+import { KubeClient } from '../../../../kuber/client.js';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { KDLModelState } from '../../model/kdl-state.js';
 import { addNodeAttribute } from '../../model/utils.js';
@@ -12,7 +12,7 @@ export type ClusterNamespaces = string[];
 
 export class ClusterRecovery implements Recover<ClusterNamespaces> {
     constructor(
-        private kuberClient: KuberClient,
+        private kuberClient: KubeClient,
         private modelState: KDLModelState
     ) {}
 

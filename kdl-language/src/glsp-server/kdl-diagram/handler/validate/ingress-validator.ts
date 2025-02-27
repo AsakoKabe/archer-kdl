@@ -1,15 +1,15 @@
 import { Marker, MarkerKind } from '@eclipse-glsp/server';
-import { inject, injectable } from 'inversify';
-import { KuberClient } from '../../../../kuber/client.js';
-import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
-import { IngressNode } from '../../model/graph-extension/ingress-node.js';
 import * as k8s from '@kubernetes/client-node';
+import { inject, injectable } from 'inversify';
+import { KubeClient } from '../../../../kuber/client.js';
+import { IngressNode } from '../../model/graph-extension/ingress-node.js';
+import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
 import { createErrorMessage, Validator } from './validator.js';
 
 @injectable()
 export class IngressValidator implements Validator<NamespaceNode> {
-    @inject(KuberClient)
-    protected kuberClient: KuberClient;
+    @inject(KubeClient)
+    protected kuberClient: KubeClient;
 
     async validate(modelNamespace: NamespaceNode): Promise<Marker[]> {
         const markers: Marker[] = [];
@@ -51,7 +51,7 @@ export class IngressValidator implements Validator<NamespaceNode> {
             });
             return markers;
         }
-        
+
         const hosts = clusterIngress.spec?.rules?.map(rule => rule.host);
         if (!hosts || !hosts.includes(ingress.host)) {
             return [

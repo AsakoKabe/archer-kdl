@@ -38,6 +38,9 @@ kdlDiagram:
         services:
           - id: ServiceNode0
             name: "ronin"
+            type:
+                id: id_381be476-d3ed-41c3-9813-28669d97d232
+                name: "CIP"
             ports:
               - id: Port0
                 name: "ronin-service"
@@ -93,15 +96,15 @@ kdlDiagram:
           - id: NodeAttribute0
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode0
             dimensions:
-                x: 8.221555865742062
-                y: -228.83330492982063
+                x: 147.34361773529204
+                y: -201.5057570625876
                 width: 222.3828125
                 height: 274
           - id: NodeAttribute1
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1
             dimensions:
-                x: 2
-                y: 172.5828193642168
+                x: 39
+                y: 209.5828193642168
                 width: 395.2421875
                 height: 344.5
           - id: NodeAttribute2
@@ -149,8 +152,8 @@ kdlDiagram:
           - id: NodeAttribute9
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0
             dimensions:
-                x: 30
-                y: 194.5
+                x: 15
+                y: 217.5
                 width: 171.046875
                 height: 90
           - id: NodeAttribute10
@@ -191,8 +194,8 @@ kdlDiagram:
           - id: NodeAttribute15
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1
             dimensions:
-                x: 231.046875
-                y: 194.5
+                x: 87.046875
+                y: 200.5
                 width: 134.1953125
                 height: 90
           - id: NodeAttribute16
@@ -261,14 +264,14 @@ kdlDiagram:
           - id: NodeAttribute26
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode1.ServiceType
             dimensions:
-                x: -41.671875
-                y: -30
+                x: -34.821419069349275
+                y: -33.29638171663623
                 width: 41.671875
                 height: 35
           - id: NodeAttribute27
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.IngressNode0
             dimensions:
-                x: 30
+                x: 29
                 y: -55.5
                 width: 131.28125
                 height: 51

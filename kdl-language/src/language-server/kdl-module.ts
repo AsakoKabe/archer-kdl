@@ -14,6 +14,7 @@ import {
 } from 'langium/lsp';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { URI } from 'vscode-uri';
+import { KubeClient } from '../kuber/client.js';
 import AddedSharedModelServices from '../model-server/model-module.js';
 import { ModelService } from '../model-server/model-service.js';
 import { OpenTextDocumentManager } from '../model-server/open-text-document-manager.js';
@@ -32,12 +33,12 @@ import { DefaultIdProvider } from './kdl-naming.js';
 import { KDLPackageManager } from './kdl-package-manager.js';
 import { KDLScopeProvider } from './kdl-scope-provider.js';
 import { KDLScopeComputation } from './kdl-scope.js';
+import { KDLSemanticTokenProvider } from './kdl-semantic-token-provider.js';
 import { CrossModelSerializer } from './kdl-serializer.js';
-import { KDLValidator, registerValidationChecks } from './kdl-validator.js';
 import { KDLWorkspaceManager } from './kdl-workspace-manager.js';
 import { KDLTokenBuilder } from './parser/kdl-indentation-aware.js';
 import { KDLLinker } from './references/kdl-linker.js';
-import { KDLSemanticTokenProvider } from './kdl-semantic-token-provider.js';
+import { KDLValidator, KubeValidator, registerValidationChecks } from './kdl-validator.js';
 
 /***************************
  * Shared Module
@@ -98,30 +99,28 @@ export interface KDLAddedSharedServices {
 export const KDLSharedServices = Symbol('KDLSharedServices');
 export type KDLSharedServices = Omit<LangiumSharedServices, 'ServiceRegistry'> & KDLAddedSharedServices & AddedSharedModelServices;
 
-export const KDLSharedModule: Module<
-    KDLSharedServices,
-    PartialLangiumSharedServices & KDLAddedSharedServices & AddedSharedModelServices
-> = {
-    ServiceRegistry: () => new DefaultExtendedServiceRegistry(),
-    workspace: {
-        WorkspaceManager: services => new KDLWorkspaceManager(services),
-        PackageManager: services => new KDLPackageManager(services),
-        LangiumDocuments: services => new KDLLangiumDocuments(services),
-        TextDocuments: services => new OpenableTextDocuments(TextDocument, services),
-        TextDocumentManager: services => new OpenTextDocumentManager(services),
-        DocumentBuilder: services => new KDLDocumentBuilder(services),
-        IndexManager: services => new KDLIndexManager(services)
-    },
-    logger: {
-        ClientLogger: services => new ClientLogger(services)
-    },
-    lsp: {
-        LanguageServer: services => new KDLLanguageServer(services)
-    },
-    model: {
-        ModelService: services => new ModelService(services)
-    }
-};
+export const KDLSharedModule: Module<KDLSharedServices, PartialLangiumSharedServices & KDLAddedSharedServices & AddedSharedModelServices> =
+    {
+        ServiceRegistry: () => new DefaultExtendedServiceRegistry(),
+        workspace: {
+            WorkspaceManager: services => new KDLWorkspaceManager(services),
+            PackageManager: services => new KDLPackageManager(services),
+            LangiumDocuments: services => new KDLLangiumDocuments(services),
+            TextDocuments: services => new OpenableTextDocuments(TextDocument, services),
+            TextDocumentManager: services => new OpenTextDocumentManager(services),
+            DocumentBuilder: services => new KDLDocumentBuilder(services),
+            IndexManager: services => new KDLIndexManager(services)
+        },
+        logger: {
+            ClientLogger: services => new ClientLogger(services)
+        },
+        lsp: {
+            LanguageServer: services => new KDLLanguageServer(services)
+        },
+        model: {
+            ModelService: services => new ModelService(services)
+        }
+    };
 
 /***************************
  * Language Module
@@ -142,6 +141,7 @@ export interface CrossModelAddedServices {
     };
     validation: {
         CrossModelValidator: KDLValidator;
+        KubeValidator: KubeValidator;
     };
     serializer: {
         Serializer: CrossModelSerializer;
@@ -153,6 +153,9 @@ export interface CrossModelAddedServices {
         /* implement */ CodeActionProvider: KDLCodeActionProvider;
     };
     /* override */ shared: KDLSharedServices;
+    api: {
+        Kube: KubeClient;
+    };
 }
 
 /**
@@ -179,13 +182,14 @@ export function createCrossModelModule(
             Linker: services => new KDLLinker(services)
         },
         validation: {
-            CrossModelValidator: services => new KDLValidator(services)
+            CrossModelValidator: services => new KDLValidator(services),
+            KubeValidator: services => new KubeValidator(services)
         },
         lsp: {
             CodeActionProvider: () => new KDLCodeActionProvider(),
             CompletionProvider: services => new KDLCompletionProvider(services),
             Formatter: () => new KDLModelFormatter(),
-            SemanticTokenProvider: services => new KDLSemanticTokenProvider(services),
+            SemanticTokenProvider: services => new KDLSemanticTokenProvider(services)
         },
         serializer: {
             Serializer: services => new CrossModelSerializer(services.Grammar)
@@ -194,7 +198,10 @@ export function createCrossModelModule(
             TokenBuilder: () => new KDLTokenBuilder(),
             Lexer: services => new IndentationAwareLexer(services)
         },
-        shared: () => context.shared
+        shared: () => context.shared,
+        api: {
+            Kube: () => new KubeClient()
+        }
     };
 }
 

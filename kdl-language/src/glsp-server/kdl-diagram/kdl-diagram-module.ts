@@ -21,7 +21,7 @@ import {
     bindAsService
 } from '@eclipse-glsp/server';
 import { injectable } from 'inversify';
-import { KuberClient } from '../../kuber/client.js';
+import { KubeClient } from '../../kuber/client.js';
 import { CrossModelIndex } from '../common/cross-model-index.js';
 import { CrossModelState } from '../common/cross-model-state.js';
 import { CrossModelStorage } from '../common/cross-model-storage.js';
@@ -121,7 +121,7 @@ export class KDLDiagramModule extends DiagramModule {
     protected override configureActionHandlers(binding: InstanceMultiBinding<ActionHandlerConstructor>): void {
         super.configureActionHandlers(binding);
         binding.add(KuberRecoverActionHandler);
-        this.context.bind(KuberClient).toSelf().inSingletonScope();
+        this.context.bind(KubeClient).toSelf().inSingletonScope();
     }
 
     protected override bindModelValidator(): BindingTarget<ModelValidator> | undefined {

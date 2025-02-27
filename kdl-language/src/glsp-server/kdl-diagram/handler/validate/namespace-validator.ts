@@ -1,16 +1,16 @@
 import { Marker } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { KuberClient } from '../../../../kuber/client.js';
+import { KubeClient } from '../../../../kuber/client.js';
 import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
 import { IngressValidator } from './ingress-validator.js';
-import { ServiceValidator } from './service-validator.js';
 import { PodValidator } from './pod-validator.js';
+import { ServiceValidator } from './service-validator.js';
 import { Validator } from './validator.js';
 
 @injectable()
 export class NamespaceValidator implements Validator<NamespaceNode> {
-    @inject(KuberClient)
-    protected kuberClient: KuberClient;
+    @inject(KubeClient)
+    protected kuberClient: KubeClient;
 
     @inject(IngressValidator)
     protected ingressValidator: IngressValidator;

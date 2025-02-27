@@ -1,5 +1,5 @@
 import * as k8s from '@kubernetes/client-node';
-import { KuberClient } from '../../../../kuber/client.js';
+import { KubeClient } from '../../../../kuber/client.js';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { KDLModelState } from '../../model/kdl-state.js';
 import { addEdgeAttribute } from '../../model/utils.js';
@@ -15,7 +15,7 @@ export type ServiceLinkRecoveryParams = {
 
 export class ServiceLinkRecovery implements Recover<ServiceLinkRecoveryParams> {
     constructor(
-        private kuberClient: KuberClient,
+        private kuberClient: KubeClient,
         private modelState: KDLModelState
     ) {}
 

@@ -1,6 +1,6 @@
 import { GLSPServerError } from '@eclipse-glsp/server';
 import * as k8s from '@kubernetes/client-node';
-import { KuberClient } from '../../../../kuber/client.js';
+import { KubeClient } from '../../../../kuber/client.js';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { KDLModelState } from '../../model/kdl-state.js';
 import { addNodeAttribute } from '../../model/utils.js';
@@ -10,7 +10,7 @@ import { Recover } from './recover.js';
 
 export class IngressRecovery implements Recover<ast.NamespaceNode> {
     constructor(
-        private kuberClient: KuberClient,
+        private kuberClient: KubeClient,
         private modelState: KDLModelState
     ) {}
 

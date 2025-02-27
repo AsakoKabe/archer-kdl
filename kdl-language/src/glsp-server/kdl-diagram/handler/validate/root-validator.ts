@@ -1,14 +1,13 @@
-import { Marker, MarkerKind } from '@eclipse-glsp/server';
+import { GGraph, Marker, MarkerKind } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { KuberClient } from '../../../../kuber/client.js';
-import { GGraph } from '@eclipse-glsp/server';
+import { KubeClient } from '../../../../kuber/client.js';
 import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
 import { createErrorMessage, Validator } from './validator.js';
 
 @injectable()
 export class RootValidator implements Validator<GGraph> {
-    @inject(KuberClient)
-    protected kuberClient: KuberClient;
+    @inject(KubeClient)
+    protected kuberClient: KubeClient;
 
     async validate(root: GGraph): Promise<Marker[]> {
         const clusterNamespaces = await this.kuberClient.getNamespaces();

@@ -1,5 +1,5 @@
 import { GLSPServerError } from '@eclipse-glsp/server';
-import { KuberClient } from '../../../../kuber/client.js';
+import { KubeClient } from '../../../../kuber/client.js';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { KDLModelState } from '../../model/kdl-state.js';
 import { addNodeAttribute, BaseDim } from '../../model/utils.js';
@@ -10,7 +10,7 @@ import { ServiceLinkRecovery } from './service-link-recovery.js';
 
 export class ServiceRecovery implements Recover<ast.NamespaceNode> {
     constructor(
-        private kuberClient: KuberClient,
+        private kuberClient: KubeClient,
         private modelState: KDLModelState
     ) {}
 

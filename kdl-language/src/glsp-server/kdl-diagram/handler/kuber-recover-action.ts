@@ -1,6 +1,6 @@
 import { Action, ActionHandler, MaybePromise, ModelSubmissionHandler } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { KuberClient } from '../../../kuber/client.js';
+import { KubeClient } from '../../../kuber/client.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import { KuberRecoverRequestAction } from './kuber-recover-actions.js';
 import { ClusterRecovery } from './recovery/cluster-recovery.js';
@@ -9,8 +9,8 @@ import { ClusterRecovery } from './recovery/cluster-recovery.js';
 export class KuberRecoverActionHandler implements ActionHandler {
     actionKinds = [KuberRecoverRequestAction.KIND];
 
-    @inject(KuberClient)
-    protected kuberClient: KuberClient;
+    @inject(KubeClient)
+    protected kuberClient: KubeClient;
 
     @inject(KDLModelState)
     protected modelState: KDLModelState;

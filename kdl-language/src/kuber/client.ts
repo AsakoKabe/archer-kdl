@@ -1,12 +1,12 @@
-import { injectable } from 'inversify';
-import * as k8s from '@kubernetes/client-node';
 import { GLSPServerError } from '@eclipse-glsp/server';
+import * as k8s from '@kubernetes/client-node';
+import { injectable } from 'inversify';
 // import * as vscode from 'vscode';
 
 export type KuberController = k8s.V1Deployment | k8s.V1ReplicaSet | k8s.V1StatefulSet;
 
 @injectable()
-export class KuberClient {
+export class KubeClient {
     protected kc: k8s.KubeConfig;
     protected k8sCoreApi: k8s.CoreV1Api;
     protected k8sAppApi: k8s.AppsV1Api;
@@ -20,14 +20,14 @@ export class KuberClient {
         this.k8sNerwokingApi = this.kc.makeApiClient(k8s.NetworkingV1Api);
     }
 
-    // public async ping(): Promise<void> {
-    //     try {
-    //         const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: 'default' });
-    //         console.error('Pods: ', pods.items);
-    //     } catch (err) {
-    //         console.error(err);
-    //     }
-    // }
+    public async ping(): Promise<void> {
+        try {
+            const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: 'default' });
+            console.error('Pods: ', pods.items);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     public async getNamespaces(): Promise<string[]> {
         try {

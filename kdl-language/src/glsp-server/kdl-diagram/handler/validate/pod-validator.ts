@@ -1,7 +1,7 @@
 import { Marker, MarkerKind } from '@eclipse-glsp/server';
 import * as k8s from '@kubernetes/client-node';
 import { inject, injectable } from 'inversify';
-import { KuberClient, KuberController } from '../../../../kuber/client.js';
+import { KubeClient, KuberController } from '../../../../kuber/client.js';
 import { ContainerNode } from '../../model/graph-extension/container-node.js';
 import { NamespaceNode } from '../../model/graph-extension/namespace-node.js';
 import { PodCardinalityNode } from '../../model/graph-extension/pod-cardinality-node.js';
@@ -15,8 +15,8 @@ import { createErrorMessage, Validator } from './validator.js';
 
 @injectable()
 export class PodValidator implements Validator<NamespaceNode> {
-    @inject(KuberClient)
-    protected kuberClient: KuberClient;
+    @inject(KubeClient)
+    protected kuberClient: KubeClient;
 
     async validate(modelNamespace: NamespaceNode): Promise<Marker[]> {
         const markers: Marker[] = [];
