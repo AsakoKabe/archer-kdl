@@ -61,11 +61,29 @@ export class PodValidator implements Validator<NamespaceNode> {
         const podController = podNode.controllerNode;
         const podCardinality = podNode.cardinalityNode;
         const kuberController = await this.kuberClient.getPodController(kuberPod, namespaceName);
-        if (podController && kuberController) {
-            this.addPodControllerMismatchMarkers(podController, kuberController, markers);
+        if (kuberController) {
+            if (podController){
+                this.addPodControllerMismatchMarkers(podController, kuberController, markers);
+            } else {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: `Pod controller "${kuberController.kind}" does not found in model`,
+                    elementId: podNode.id,
+                    label: 'Not found'
+                });
+            }
         }
-        if (podCardinality && kuberController) {
-            this.addPodCardinalityMismatchMarkers(podCardinality, kuberController, markers);
+        if (kuberController) {
+            if (podCardinality){
+                this.addPodCardinalityMismatchMarkers(podCardinality, kuberController, markers);
+            } else {
+                markers.push({
+                    kind: MarkerKind.ERROR,
+                    description: `Pod cardinality "${kuberController.spec?.replicas}" does not found in model`,
+                    elementId: podNode.id,
+                    label: 'Not found'
+                });
+            }
         }
 
         const podPorts = podNode.portNodes;

@@ -18,7 +18,7 @@ kdlDiagram:
           - id: PodNode0
             name: "nginx-676b6c5bbc-kbtq6"
             controller:
-                id: PodController
+                id: id_b1dee51b-e27f-454e-96e0-a70dcf60fac8
                 name: "D"
             cardinality:
                 id: PodCardinality
@@ -59,12 +59,10 @@ kdlDiagram:
         pods:
           - id: PodNode0
             name: "ronin-67c664bb86-84wdm"
-            controller:
-                id: PodController
-                name: "D"
-            cardinality:
-                id: PodCardinality
-                name: "1"
+            ports:
+              - id: id_9900c80c-dcb9-45a3-ae79-7af4d7f4b10f
+                name: "http-port"
+                number: 8080
             volumes:
               - id: Volume0
                 name: "ronin-secret"
@@ -72,10 +70,6 @@ kdlDiagram:
             containers:
               - id: ContainerNode0
                 name: "ronin"
-            ports:
-              - id: Port0
-                name: "http-port"
-                number: 8080
           - id: PodNode1
             name: "ui-86df54f46d-l7hkc"
             controller:
@@ -89,7 +83,7 @@ kdlDiagram:
                 name: "ui-secret"
                 type: "secret"
             containers:
-              - id: ContainerNode0
+              - id: id_c1f339c3-5426-48eb-acef-5743a845d89d
                 name: "ui"
             ports:
               - id: Port0
@@ -132,13 +126,6 @@ kdlDiagram:
                 y: 4
                 width: 24.34375
                 height: 29
-          - id: NodeAttribute5
-            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode0.PodNode0.PodController
-            dimensions:
-                x: -25.640625
-                y: -30
-                width: 25.640625
-                height: 29
           - id: NodeAttribute6
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.Volume0
             dimensions:
@@ -156,24 +143,10 @@ kdlDiagram:
           - id: NodeAttribute9
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0
             dimensions:
-                x: 15
-                y: 217.5
+                x: 31
+                y: 203.5
                 width: 171.046875
                 height: 90
-          - id: NodeAttribute10
-            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.PodCardinality
-            dimensions:
-                x: -24.34375
-                y: 4
-                width: 24.34375
-                height: 29
-          - id: NodeAttribute11
-            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.PodController
-            dimensions:
-                x: -25.640625
-                y: -30
-                width: 25.640625
-                height: 29
           - id: NodeAttribute12
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1.Volume0
             dimensions:
@@ -188,13 +161,6 @@ kdlDiagram:
                 y: -70
                 width: 49.0546875
                 height: 40
-          - id: NodeAttribute14
-            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1.ContainerNode0
-            dimensions:
-                x: 30
-                y: 10
-                width: 40
-                height: 35
           - id: NodeAttribute15
             nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode1
             dimensions:
@@ -279,13 +245,6 @@ kdlDiagram:
                 y: -55.5
                 width: 131.28125
                 height: 51
-          - id: NodeAttribute26
-            nodeID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.PodNode0.Port0
-            dimensions:
-                x: 109
-                y: -102
-                width: 49.0546875
-                height: 40
         edgeAttributes:
           - id: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6_NamespaceNode1_ServiceNode1-id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6_NamespaceNode1_PodNode1_Port0
             sourceID: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6.NamespaceNode1.ServiceNode1

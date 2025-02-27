@@ -4,7 +4,20 @@
 import * as k8s from '@kubernetes/client-node';
 import { AstNode, ValidationAcceptor, ValidationChecks } from 'langium';
 import { Diagnostic } from 'vscode-languageserver-protocol';
-import { ContainerNode, IngressNode, isKDLDiagram, KDLAstType, KDLDiagram, NamespaceNode, PodNode, PortNode, ServiceNode } from './generated/ast.js';
+import { KuberController } from '../kuber/client.js';
+import {
+    ContainerNode,
+    IngressNode,
+    isKDLDiagram,
+    KDLAstType,
+    KDLDiagram,
+    NamespaceNode,
+    PodCardinality,
+    PodController,
+    PodNode,
+    PortNode,
+    ServiceNode
+} from './generated/ast.js';
 import type { KDLServices } from './kdl-module.js';
 import { ID_PROPERTY, IdentifiableAstNode } from './kdl-naming.js';
 
@@ -178,6 +191,30 @@ namespace PodValidator {
         for (const containerNode of podContainers) {
             await validateContainer(podNode, containerNode, kuberContainers, accept);
         }
+
+        const podController = podNode.controller;
+        const podCardinality = podNode.cardinality;
+        const kuberController = await services.api.Kube.getPodController(kuberPod, podNode.$container.name);
+        if (kuberController) {
+            if (podController) {
+                addPodControllerMismatchMarkers(podController, kuberController, accept);
+            } else {
+                accept('warning', `Pod controller "${kuberController.kind}" exists in cluster but not in model.`, {
+                    node: podNode,
+                    keyword: 'name'
+                });
+            }
+        }
+        if (kuberController) {
+            if (podCardinality) {
+                addPodCardinalityMismatchMarkers(podCardinality, kuberController, accept);
+            } else {
+                accept('warning', `Pod cardinality "${kuberController.spec?.replicas}" exists in cluster but not in model.`, {
+                    node: podNode,
+                    keyword: 'name'
+                });
+            }
+        }
     }
 
     function getKuberPorts(kuberPod: k8s.V1Pod): k8s.V1ContainerPort[] {
@@ -251,6 +288,55 @@ namespace PodValidator {
                 property: 'name'
             });
             return;
+        }
+    }
+
+    function addPodControllerMismatchMarkers(
+        podController: PodController,
+        kuberController: KuberController,
+        accept: ValidationAcceptor
+    ): void {
+        if (getFullControllerName(podController.name) !== kuberController.kind) {
+            accept(
+                'warning',
+                `Pod controller "${getFullControllerName(podController.name)}" does not match with cluster controller "${kuberController.kind}"`,
+                {
+                    node: podController,
+                    property: 'name'
+                }
+            );
+        }
+    }
+
+    function addPodCardinalityMismatchMarkers(
+        podCardinality: PodCardinality,
+        kuberController: KuberController,
+        accept: ValidationAcceptor
+    ): void {
+        if (kuberController.spec?.replicas?.toString() !== podCardinality.name) {
+            accept(
+                'warning',
+                `Pod cardinality "${podCardinality.name}" does not match with cluster cardinality "${kuberController.spec?.replicas}"`,
+                {
+                    node: podCardinality,
+                    property: 'name'
+                }
+            );
+        }
+    }
+
+    export function getFullControllerName(name: string): string {
+        switch (name) {
+            case 'D':
+                return 'Deployment';
+            case 'SS':
+                return 'StatefulSet';
+            case 'DS':
+                return 'DaemonSet';
+            case 'RS':
+                return 'ReplicaSet';
+            default:
+                return name;
         }
     }
 }
