@@ -5,6 +5,8 @@ import { ChangeBoundsOperation, Command, JsonOperationHandler, ModelState } from
 import { inject, injectable } from 'inversify';
 import { CrossModelCommand } from '../../common/cross-model-command.js';
 import { KDLModelState } from '../model/kdl-state.js';
+import { addNodeAttribute } from '../model/utils.js';
+import * as ast from '../../../language-server/generated/ast.js';
 
 @injectable()
 export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler {
@@ -30,6 +32,9 @@ export class KDLDiagramChangeBoundsOperationHandler extends JsonOperationHandler
                 nodeAttribute.dimensions.y = elementAndBounds.newPosition?.y || nodeAttribute.dimensions.y;
                 nodeAttribute.dimensions.width = elementAndBounds.newSize.width;
                 nodeAttribute.dimensions.height = elementAndBounds.newSize.height;
+            }
+            else if (ast.isNodeType(node)) {
+                addNodeAttribute(this.modelState.kdlDiagram.diagram, this.modelState.idProvider, node)
             }
         });
     }

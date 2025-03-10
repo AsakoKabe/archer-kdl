@@ -49,7 +49,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected addNamespacesToGraph(diagramRoot: ast.KDLDiagram, graphBuilder: GGraphBuilder): void {
         diagramRoot.namespaces
-            .map(namespace => this.createNamespaceNode(namespace, graphBuilder))
+            .map(namespace => this.createNamespaceNode(namespace))
             .forEach(namespace => {
                 if (namespace) graphBuilder.add(namespace);
             });
@@ -137,10 +137,10 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         return nodeAttribute;
     }
 
-    protected createNamespaceNode(namespace: ast.NamespaceNode, graphBuilder: GGraphBuilder): GCompartment | null {
+    protected createNamespaceNode(namespace: ast.NamespaceNode): GCompartment | null {
         const ingressNodes = namespace.ingresses
             .filter((e): e is ast.IngressNode => e !== undefined)
-            .map(ingress => this.createIngressNode(ingress, graphBuilder))
+            .map(ingress => this.createIngressNode(ingress))
             .filter(i => i !== null) as IngressNode[];
 
         const podNodes = namespace.pods
@@ -175,7 +175,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         return builder.build();
     }
 
-    protected createIngressNode(ingress: ast.IngressNode, graphBuilder: GGraphBuilder): IngressNode | null {
+    protected createIngressNode(ingress: ast.IngressNode): IngressNode | null {
         const ingressAttributes = this.findOrCreateNodeAttribute(ingress);
         if (!ingressAttributes) {
             return null;
@@ -185,7 +185,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .name(ingress.name)
             .host(ingress.host)
             .namespace(ingress.$container.name)
-            .id(this.modelState.idProvider.getLocalId(ingress) || ingress.id)
+            .id(this.modelState.idProvider.getLocalId(ingress) || ingress.id || "")
             .position({
                 x: ingressAttributes.dimensions.x,
                 y: ingressAttributes.dimensions.y
@@ -215,7 +215,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const builder = PodNode.builder()
             .type(ModelTypes.POD)
             .name(pod.name)
-            .id(this.modelState.idProvider.getLocalId(pod) || pod.id)
+            .id(this.modelState.idProvider.getLocalId(pod) || pod.id  || "")
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: podAttributes.dimensions.x,
@@ -250,7 +250,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const builder = PodControllerNode.builder()
             .type(ModelTypes.POD_CONTROLLER)
             .name(controller.name)
-            .id(this.modelState.idProvider.getLocalId(controller) || controller.id)
+            .id(this.modelState.idProvider.getLocalId(controller) || controller.id  || "")
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: controllerAttribute.dimensions.x,
@@ -273,7 +273,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
             .type(ModelTypes.VOLUME)
             .name(volume.name)
             .volumeType(volume.type)
-            .id(this.modelState.idProvider.getLocalId(volume) || volume.id)
+            .id(this.modelState.idProvider.getLocalId(volume) || volume.id  || "")
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: volumeAttr.dimensions.x,
@@ -295,7 +295,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const builder = PodCardinalityNode.builder()
             .type(ModelTypes.POD_CARDINALITY)
             .name(cardinality.name)
-            .id(this.modelState.idProvider.getLocalId(cardinality) || cardinality.id)
+            .id(this.modelState.idProvider.getLocalId(cardinality) || cardinality.id  || "")
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: controllerAttribute.dimensions.x,
@@ -311,7 +311,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
 
     protected createServiceNode(service: ast.ServiceNode): GCompartment | null {
         const portNodes = service.ports.map(port => this.createPortNode(port)).filter(p => p !== null) as GCompartment[];
-        const serviceID = this.modelState.idProvider.getLocalId(service) || service.id;
+        const serviceID = this.modelState.idProvider.getLocalId(service) || service.id  || "";
         const serviceAttributes = this.findOrCreateNodeAttribute(service);
         if (!serviceAttributes) {
             return null;
@@ -349,7 +349,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const builder = ServiceTypeNode.builder()
             .type(ModelTypes.SERVICE_TYPE)
             .name(typeNode.name)
-            .id(this.modelState.idProvider.getLocalId(typeNode) || typeNode.id)
+            .id(this.modelState.idProvider.getLocalId(typeNode) || typeNode.id  || "")
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: serviceTypeAttribute.dimensions.x,
@@ -371,7 +371,7 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const builder = ContainerNode.builder()
             .type(ModelTypes.CONTAINER)
             .name(container.name)
-            .id(this.modelState.idProvider.getLocalId(container) || container.id)
+            .id(this.modelState.idProvider.getLocalId(container) || container.id  || "")
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: containerAttributes.dimensions.x,
@@ -393,8 +393,8 @@ export class KDLDiagramGModelFactory implements GModelFactory {
         const builder = PortNode.builder()
             .type(ModelTypes.PORT)
             .name(port.name)
-            .number(port.number.toString())
-            .id(this.modelState.idProvider.getLocalId(port) || port.id)
+            .number(port.number? port.number.toString() : "number")
+            .id(this.modelState.idProvider.getLocalId(port) || port.id  || "")
             .addArgs(ArgsUtil.cornerRadius(5))
             .position({
                 x: portAttributes.dimensions.x,

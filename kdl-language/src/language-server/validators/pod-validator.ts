@@ -91,7 +91,7 @@ export namespace PodValidator {
     function addPodPortNotFoundMarkers(kuberPorts: k8s.V1ContainerPort[], podNode: PodNode, accept: ValidationAcceptor): void {
         kuberPorts.forEach(kuberPort => {
             const kuberPortNumber = kuberPort.containerPort;
-            if (!podNode.ports.map(portNode => portNode.number.toString()).includes(kuberPortNumber.toString())) {
+            if (!podNode.ports.map(portNode => portNode.number? portNode.number.toString() : "").includes(kuberPortNumber.toString())) {
                 accept('warning', `The port: "${kuberPortNumber}" of pod: "${podNode.name}" in cluster does not found in model`, {
                     node: podNode,
                     keyword: 'ports'

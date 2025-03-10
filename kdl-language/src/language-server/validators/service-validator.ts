@@ -44,7 +44,7 @@ export namespace ServiceValidator {
     function addServicePortNotFoundMarkers(kubeService: k8s.V1Service, serviceNode: ServiceNode, accept: ValidationAcceptor): void {
         (kubeService.spec?.ports || []).forEach(kubePort => {
             const kubePortNumber = kubePort.port;
-            if (!serviceNode.ports.map(portNode => portNode.number.toString()).includes(kubePortNumber.toString())) {
+            if (!serviceNode.ports.map(portNode => portNode.number? portNode.number.toString() : "").includes(kubePortNumber.toString())) {
                 accept('warning', `The port: "${kubePortNumber}" of service: "${serviceNode.name}" in cluster does not found in model`, {
                     node: serviceNode,
                     keyword: 'ports'

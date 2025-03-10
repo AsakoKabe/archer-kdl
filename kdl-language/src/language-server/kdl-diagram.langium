@@ -93,7 +93,7 @@ ContainerNode:
 PortNode:
     'id' ':' id=ID
     'name' ':' name=STRING
-    'number' ':' number=NUMBER
+    'number' ':' number=NUMBER?
 ;
 
 PodNode:

@@ -862,7 +862,8 @@ export const KDLGrammar = (): Grammar => loadedKDLGrammar ?? (loadedKDLGrammar =
                 "$ref": "#/rules@24"
               },
               "arguments": []
-            }
+            },
+            "cardinality": "?"
           }
         ]
       },

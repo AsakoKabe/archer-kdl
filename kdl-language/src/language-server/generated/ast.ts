@@ -288,7 +288,7 @@ export interface PortNode extends AstNode {
     readonly $type: 'PortNode';
     id: string;
     name: string;
-    number: number;
+    number?: number;
 }
 
 export const PortNode = 'PortNode';
