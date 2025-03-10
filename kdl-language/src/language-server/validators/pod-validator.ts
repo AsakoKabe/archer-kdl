@@ -1,9 +1,11 @@
 import * as k8s from '@kubernetes/client-node';
 import { ValidationAcceptor } from 'langium';
-import { KuberController } from '../../kuber/client.js';
-import { ExtractedVolume, VolumeExtractor } from '../../kuber/volume-extractor.js';
-import { ContainerNode, NamespaceNode, PodCardinality, PodController, PodNode, PortNode, VolumeNode } from '../generated/ast.js';
+import { VolumeExtractor } from '../../kuber/volume-extractor.js';
+import { NamespaceNode, PodNode, PortNode } from '../generated/ast.js';
 import type { KDLServices } from '../kdl-module.js';
+import { addPodContainerNotFoundMarkers, validateContainer } from './container-validator.js';
+import { addPodCardinalityMismatchMarkers, addPodControllerMismatchMarkers } from './controller-validator.js';
+import { addPodVolumeNotFoundMarkers, validateVolume } from './volume-validator.js';
 
 export namespace PodValidator {
     export async function validate(modelNamespace: NamespaceNode, accept: ValidationAcceptor, services: KDLServices): Promise<void> {
@@ -21,10 +23,17 @@ export namespace PodValidator {
                 return;
             }
             if (!modelNamespace.pods.map(podNode => podNode.name).includes(clusterPodName)) {
-                accept('warning', `Pod "${clusterPodName}" is not found in the model.`, {
-                    node: modelNamespace,
-                    keyword: 'pods'
-                });
+                if (modelNamespace.pods.length) {
+                    accept('warning', `Pod "${clusterPodName}" is not found in the model.`, {
+                        node: modelNamespace,
+                        keyword: 'pods'
+                    });
+                } else {
+                    accept('warning', `Pod "${clusterPodName}" is not found in the model.`, {
+                        node: modelNamespace,
+                        keyword: 'name'
+                    });
+                }
             }
         });
     }
@@ -36,20 +45,36 @@ export namespace PodValidator {
             return;
         }
 
+        await validatePodPorts(podNode, kuberPod, accept);
+        await validatePodContainers(podNode, kuberPod, accept);
+        await validatePodControllerAndCardinality(podNode, kuberPod, accept, services);
+        await validatePodVolumes(podNode, kuberPod, accept);
+    }
+
+    async function validatePodPorts(podNode: PodNode, kuberPod: k8s.V1Pod, accept: ValidationAcceptor): Promise<void> {
         const podPorts = podNode.ports;
         const kuberPorts = getKuberPorts(kuberPod);
         addPodPortNotFoundMarkers(kuberPorts, podNode, accept);
         for (const portNode of podPorts) {
             await validatePort(podNode, portNode, kuberPorts, accept);
         }
+    }
 
+    async function validatePodContainers(podNode: PodNode, kuberPod: k8s.V1Pod, accept: ValidationAcceptor): Promise<void> {
         const podContainers = podNode.containers;
         const kuberContainers = kuberPod.spec?.containers || [];
         addPodContainerNotFoundMarkers(kuberContainers, podNode, accept);
         for (const containerNode of podContainers) {
             await validateContainer(podNode, containerNode, kuberContainers, accept);
         }
+    }
 
+    async function validatePodControllerAndCardinality(
+        podNode: PodNode,
+        kuberPod: k8s.V1Pod,
+        accept: ValidationAcceptor,
+        services: KDLServices
+    ): Promise<void> {
         const podController = podNode.controller;
         const podCardinality = podNode.cardinality;
         const kuberController = await services.api.Kube.getPodController(kuberPod, podNode.$container.name);
@@ -73,9 +98,11 @@ export namespace PodValidator {
                 });
             }
         }
+    }
 
+    async function validatePodVolumes(podNode: PodNode, kuberPod: k8s.V1Pod, accept: ValidationAcceptor): Promise<void> {
         const podVolumes = podNode.volumes;
-        const kuberVolumes = VolumeExtractor.extractVolumes(kuberPod, kuberContainers);
+        const kuberVolumes = VolumeExtractor.extractVolumes(kuberPod, kuberPod.spec?.containers || []);
         addPodVolumeNotFoundMarkers(kuberVolumes, podNode, accept);
         for (const volumeNode of podVolumes) {
             await validateVolume(podNode, volumeNode, kuberVolumes, accept);
@@ -91,11 +118,22 @@ export namespace PodValidator {
     function addPodPortNotFoundMarkers(kuberPorts: k8s.V1ContainerPort[], podNode: PodNode, accept: ValidationAcceptor): void {
         kuberPorts.forEach(kuberPort => {
             const kuberPortNumber = kuberPort.containerPort;
-            if (!podNode.ports.map(portNode => portNode.number? portNode.number.toString() : "").includes(kuberPortNumber.toString())) {
-                accept('warning', `The port: "${kuberPortNumber}" of pod: "${podNode.name}" in cluster does not found in model`, {
-                    node: podNode,
-                    keyword: 'ports'
-                });
+            if (!podNode.ports.map(portNode => (portNode.number ? portNode.number.toString() : '')).includes(kuberPortNumber.toString())) {
+                if (podNode.ports.length) {
+                    accept('warning', `The port: "${kuberPortNumber}" of pod: "${podNode.name}" in cluster does not found in model`, {
+                        node: podNode,
+                        keyword: 'ports'
+                    });
+                } else {
+                    accept(
+                        'warning',
+                        `The port: "${kuberPort.containerPort}" of pod: "${podNode.name}" in cluster does not found in model`,
+                        {
+                            node: podNode,
+                            keyword: 'name'
+                        }
+                    );
+                }
             }
         });
     }
@@ -125,128 +163,6 @@ export namespace PodValidator {
                     property: 'name'
                 }
             );
-        }
-    }
-
-    function addPodContainerNotFoundMarkers(kuberContainers: k8s.V1Container[], podNode: PodNode, accept: ValidationAcceptor): void {
-        kuberContainers.forEach(kuberContainer => {
-            const kuberContainerName = kuberContainer.name;
-            if (!podNode.containers.map(containerNode => containerNode.name).includes(kuberContainerName)) {
-                accept('warning', `The container: "${kuberContainerName}" of pod: "${podNode.name}" in cluster does not found in model`, {
-                    node: podNode,
-                    keyword: 'containers'
-                });
-            }
-        });
-    }
-
-    async function validateContainer(
-        podNode: PodNode,
-        modelContainer: ContainerNode,
-        kuberContainers: k8s.V1Container[],
-        accept: ValidationAcceptor
-    ): Promise<void> {
-        const kuberContainer = kuberContainers.find(kuberContainer => kuberContainer.name === modelContainer.name);
-        if (!kuberContainer) {
-            accept('warning', `The container: "${modelContainer.name}" of pod: "${podNode.name}" in model does not found in cluster`, {
-                node: modelContainer,
-                property: 'name'
-            });
-            return;
-        }
-    }
-
-    function addPodControllerMismatchMarkers(
-        podController: PodController,
-        kuberController: KuberController,
-        accept: ValidationAcceptor
-    ): void {
-        if (getFullControllerName(podController.name) !== kuberController.kind) {
-            accept(
-                'warning',
-                `Pod controller "${getFullControllerName(podController.name)}" does not match with cluster controller "${kuberController.kind}"`,
-                {
-                    node: podController,
-                    property: 'name'
-                }
-            );
-        }
-    }
-
-    function addPodCardinalityMismatchMarkers(
-        podCardinality: PodCardinality,
-        kuberController: KuberController,
-        accept: ValidationAcceptor
-    ): void {
-        if (kuberController.spec?.replicas?.toString() !== podCardinality.name) {
-            accept(
-                'warning',
-                `Pod cardinality "${podCardinality.name}" does not match with cluster cardinality "${kuberController.spec?.replicas}"`,
-                {
-                    node: podCardinality,
-                    property: 'name'
-                }
-            );
-        }
-    }
-
-    function addPodVolumeNotFoundMarkers(kuberVolumes: Set<ExtractedVolume>, podNode: PodNode, accept: ValidationAcceptor): void {
-        kuberVolumes.forEach(kuberVolume => {
-            const kuberVolumeName = kuberVolume.name;
-            if (!podNode.volumes.map(volumeNode => volumeNode.name).includes(kuberVolumeName)) {
-                accept('warning', `The volume: "${kuberVolumeName}" of pod: "${podNode.name}" in cluster does not found in model`, {
-                    node: podNode,
-                    keyword: 'volumes'
-                });
-            }
-        });
-    }
-
-    async function validateVolume(
-        podNode: PodNode,
-        modelVolume: VolumeNode,
-        kuberVolumes: Set<ExtractedVolume>,
-        accept: ValidationAcceptor
-    ): Promise<void> {
-        let kuberVolume: ExtractedVolume | undefined;
-        for (const volume of kuberVolumes) {
-            if (volume.name === modelVolume.name) {
-                kuberVolume = volume;
-                break;
-            }
-        }
-        if (!kuberVolume) {
-            accept('warning', `The volume: "${modelVolume.name}" of pod: "${podNode.name}" in model does not found in cluster`, {
-                node: modelVolume,
-                property: 'name'
-            });
-            return;
-        }
-
-        if (kuberVolume.type !== modelVolume.type) {
-            accept(
-                'warning',
-                `The type: "${modelVolume.type}" of volume: "${modelVolume.name}" in model does not match with the type: "${kuberVolume.type}" of volume in cluster`,
-                {
-                    node: modelVolume,
-                    property: 'type'
-                }
-            );
-        }
-    }
-
-    export function getFullControllerName(name: string): string {
-        switch (name) {
-            case 'D':
-                return 'Deployment';
-            case 'SS':
-                return 'StatefulSet';
-            case 'DS':
-                return 'DaemonSet';
-            case 'RS':
-                return 'ReplicaSet';
-            default:
-                return name;
         }
     }
 }

@@ -25,10 +25,17 @@ export namespace IngressValidator {
                 return;
             }
             if (!modelNamespace.ingresses.map(ingressNode => ingressNode.name).includes(kubeIngressName)) {
-                accept('warning', `Ingress "${kubeIngressName}" is not found in the model.`, {
-                    node: modelNamespace,
-                    keyword: 'ingresses'
-                });
+                if (modelNamespace.ingresses.length){
+                    accept('warning', `Ingress "${kubeIngressName}" is not found in the model.`, {
+                        node: modelNamespace,
+                        keyword: 'ingresses'
+                    });
+                } else {
+                    accept('warning', `Ingress "${kubeIngressName}" is not found in the model.`, {
+                        node: modelNamespace,
+                        keyword: 'name'
+                    });
+                }
             }
         });
     }
@@ -42,10 +49,17 @@ export namespace IngressValidator {
 
         const hosts = clusterIngress.spec?.rules?.map(rule => rule.host);
         if (!hosts || !hosts.includes(ingress.host)) {
-            accept('warning', `Host "${ingress.host}" not found in cluster ingress "${ingress.name}".`, {
-                node: ingress,
-                property: 'host'
-            });
+            if (ingress.host) {
+                accept('warning', `Host "${ingress.host}" not found in cluster ingress "${ingress.name}".`, {
+                    node: ingress,
+                    property: 'host'
+                });
+            } else {
+                accept('warning', `Host "${ingress.host}" not found in cluster ingress "${ingress.name}".`, {
+                    node: ingress,
+                    property: 'name'
+                });
+            }
         }
     }
 }

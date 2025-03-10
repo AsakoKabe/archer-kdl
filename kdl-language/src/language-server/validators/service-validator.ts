@@ -19,10 +19,17 @@ export namespace ServiceValidator {
                 return;
             }
             if (!namespaceNode.services.map(serviceNode => serviceNode.name).includes(clusterServiceName)) {
-                accept('warning', `Service "${clusterServiceName}" is not found in the model.`, {
-                    node: namespaceNode,
-                    keyword: 'services'
-                });
+                if (namespaceNode.services.length) {
+                    accept('warning', `Service "${clusterServiceName}" is not found in the model.`, {
+                        node: namespaceNode,
+                        keyword: 'services'
+                    });
+                } else {
+                    accept('warning', `Service "${clusterServiceName}" is not found in the model.`, {
+                        node: namespaceNode,
+                        keyword: 'name'
+                    });
+                }
             }
         });
     }
@@ -44,11 +51,28 @@ export namespace ServiceValidator {
     function addServicePortNotFoundMarkers(kubeService: k8s.V1Service, serviceNode: ServiceNode, accept: ValidationAcceptor): void {
         (kubeService.spec?.ports || []).forEach(kubePort => {
             const kubePortNumber = kubePort.port;
-            if (!serviceNode.ports.map(portNode => portNode.number? portNode.number.toString() : "").includes(kubePortNumber.toString())) {
-                accept('warning', `The port: "${kubePortNumber}" of service: "${serviceNode.name}" in cluster does not found in model`, {
-                    node: serviceNode,
-                    keyword: 'ports'
-                });
+            if (
+                !serviceNode.ports.map(portNode => (portNode.number ? portNode.number.toString() : '')).includes(kubePortNumber.toString())
+            ) {
+                if (serviceNode.ports.length) {
+                    accept(
+                        'warning',
+                        `The port: "${kubePortNumber}" of service: "${serviceNode.name}" in cluster does not found in model`,
+                        {
+                            node: serviceNode,
+                            keyword: 'ports'
+                        }
+                    );
+                } else {
+                    accept(
+                        'warning',
+                        `The port: "${kubePortNumber}" of service: "${serviceNode.name}" in cluster does not found in model`,
+                        {
+                            node: serviceNode,
+                            keyword: 'name'
+                        }
+                    );
+                }
             }
         });
     }
@@ -95,10 +119,17 @@ export namespace ServiceValidator {
                 );
             }
         } else {
-            accept('warning', `The type of service: "${serviceNode.name}" in model is not defined`, {
-                node: serviceNode,
-                property: 'type'
-            });
+            if (serviceNode.type) {
+                accept('warning', `The type of service: "${serviceNode.name}" in model is not defined`, {
+                    node: serviceNode,
+                    property: 'type'
+                });
+            } else {
+                accept('warning', `The type of service: "${serviceNode.name}" in model is not defined`, {
+                    node: serviceNode,
+                    property: 'name'
+                });
+            }
         }
     }
 
