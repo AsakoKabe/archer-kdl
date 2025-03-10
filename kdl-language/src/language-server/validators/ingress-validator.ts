@@ -50,12 +50,12 @@ export namespace IngressValidator {
         const hosts = clusterIngress.spec?.rules?.map(rule => rule.host);
         if (!hosts || !hosts.includes(ingress.host)) {
             if (ingress.host) {
-                accept('warning', `Host "${ingress.host}" not found in cluster ingress "${ingress.name}".`, {
+                accept('warning', `Host "${ingress.host}" not found in cluster hosts "${hosts}".`, {
                     node: ingress,
                     property: 'host'
                 });
             } else {
-                accept('warning', `Host "${ingress.host}" not found in cluster ingress "${ingress.name}".`, {
+                accept('warning', `Host "${ingress.host}" not found in cluster hosts "${hosts}".`, {
                     node: ingress,
                     property: 'name'
                 });

@@ -3,7 +3,13 @@ import * as ast from '../../../language-server/generated/ast.js';
 import { IdProvider } from '../../../language-server/kdl-naming.js';
 
 export function createEdgeID(sourceID: string, targetID: string): string {
-    return `${sourceID}-${targetID}`.replaceAll('.', '_');
+    return `${sourceID}${labelDelimiter}${targetID}`.replaceAll('.', '_');
+}
+
+export function parseEdgeID(edgeID: string): {sourceID: string, targetID: string} {
+    const sourceID = edgeID.split(labelDelimiter)[0].replaceAll('_', '.');
+    const targetID = edgeID.split(labelDelimiter)[1].replaceAll('_', '.');
+    return {sourceID: sourceID, targetID: targetID}
 }
 
 export const BaseDim = {

@@ -1,3 +1,304 @@
 kdlDiagram:
-    id: id_cfe270ee-1fee-408f-ab5a-1d5361bc23b6
+    id: example
     name: "name"
+    namespaces:
+      - id: NamespaceNode0
+        name: "default"
+        services:
+          - id: ServiceNode0
+            name: "kubernetes"
+            type:
+                id: ServiceType
+                name: "CIP"
+            ports:
+              - id: Port0
+                name: "https"
+                number: 443
+        pods:
+          - id: PodNode0
+            name: "nginx-676b6c5bbc-kbtq6"
+            controller:
+                id: PodController
+                name: "D"
+            cardinality:
+                id: PodCardinality
+                name: "1"
+            containers:
+              - id: ContainerNode0
+                name: "nginx"
+      - id: NamespaceNode1
+        name: "rags"
+        ingresses:
+          - id: IngressNode0
+            name: "ingress"
+            host: "rags.corernd.space"
+            links:
+              - example.NamespaceNode1.ServiceNode1.Port0
+              - example.NamespaceNode1.ServiceNode0.Port0
+        services:
+          - id: ServiceNode0
+            name: "ronin"
+            type:
+                id: ServiceType
+                name: "CIP"
+            ports:
+              - id: Port0
+                name: "ronin-service"
+                number: 8080
+            links:
+              - example.NamespaceNode1.PodNode0.Port0
+          - id: ServiceNode1
+            name: "ui"
+            type:
+                id: ServiceType
+                name: "CIP"
+            ports:
+              - id: Port0
+                name: "ui-service"
+                number: 3000
+            links:
+              - example.NamespaceNode1.PodNode1.Port0
+        pods:
+          - id: PodNode0
+            name: "ronin-67c664bb86-84wdm"
+            controller:
+                id: PodController
+                name: "D"
+            cardinality:
+                id: PodCardinality
+                name: "1"
+            volumes:
+              - id: Volume0
+                name: "ronin-secret"
+                type: "secret"
+            containers:
+              - id: ContainerNode0
+                name: "ronin"
+            ports:
+              - id: Port0
+                name: "http-port"
+                number: 8080
+          - id: PodNode1
+            name: "ui-86df54f46d-l7hkc"
+            controller:
+                id: PodController
+                name: "D"
+            cardinality:
+                id: PodCardinality
+                name: "1"
+            volumes:
+              - id: Volume0
+                name: "ui-secret"
+                type: "secret"
+            containers:
+              - id: ContainerNode0
+                name: "ui"
+            ports:
+              - id: Port0
+                name: "http-port"
+                number: 3000
+    diagram:
+        nodeAttributes:
+          - id: NodeAttribute0
+            nodeID: example.NamespaceNode0
+            dimensions:
+                x: 0
+                y: 0
+                width: 222.3828125
+                height: 274
+          - id: NodeAttribute1
+            nodeID: example.NamespaceNode1
+            dimensions:
+                x: 128
+                y: 439
+                width: 395.2421875
+                height: 344.5
+          - id: NodeAttribute2
+            nodeID: example.NamespaceNode0.PodNode0.ContainerNode0
+            dimensions:
+                x: 30
+                y: 10
+                width: 51.078125
+                height: 35
+          - id: NodeAttribute3
+            nodeID: example.NamespaceNode0.PodNode0
+            dimensions:
+                x: 30
+                y: 129
+                width: 162.3828125
+                height: 85
+          - id: NodeAttribute4
+            nodeID: example.NamespaceNode0.PodNode0.PodCardinality
+            dimensions:
+                x: -24.34375
+                y: 4
+                width: 24.34375
+                height: 29
+          - id: NodeAttribute5
+            nodeID: example.NamespaceNode0.PodNode0.PodController
+            dimensions:
+                x: -25.640625
+                y: -30
+                width: 25.640625
+                height: 29
+          - id: NodeAttribute6
+            nodeID: example.NamespaceNode1.PodNode0.Volume0
+            dimensions:
+                x: 156.046875
+                y: -25
+                width: 61.1875
+                height: 40
+          - id: NodeAttribute7
+            nodeID: example.NamespaceNode1.PodNode0.Port0
+            dimensions:
+                x: 5
+                y: -70
+                width: 49.0546875
+                height: 40
+          - id: NodeAttribute8
+            nodeID: example.NamespaceNode1.PodNode0.ContainerNode0
+            dimensions:
+                x: 30
+                y: 10
+                width: 48.9140625
+                height: 35
+          - id: NodeAttribute9
+            nodeID: example.NamespaceNode1.PodNode0
+            dimensions:
+                x: 30
+                y: 194.5
+                width: 171.046875
+                height: 90
+          - id: NodeAttribute10
+            nodeID: example.NamespaceNode1.PodNode0.PodCardinality
+            dimensions:
+                x: -24.34375
+                y: 4
+                width: 24.34375
+                height: 29
+          - id: NodeAttribute11
+            nodeID: example.NamespaceNode1.PodNode0.PodController
+            dimensions:
+                x: -25.640625
+                y: -30
+                width: 25.640625
+                height: 29
+          - id: NodeAttribute12
+            nodeID: example.NamespaceNode1.PodNode1.Volume0
+            dimensions:
+                x: 119.1953125
+                y: -25
+                width: 49.9140625
+                height: 40
+          - id: NodeAttribute13
+            nodeID: example.NamespaceNode1.PodNode1.Port0
+            dimensions:
+                x: 5
+                y: -70
+                width: 49.0546875
+                height: 40
+          - id: NodeAttribute14
+            nodeID: example.NamespaceNode1.PodNode1.ContainerNode0
+            dimensions:
+                x: 30
+                y: 10
+                width: 40
+                height: 35
+          - id: NodeAttribute15
+            nodeID: example.NamespaceNode1.PodNode1
+            dimensions:
+                x: 231.046875
+                y: 194.5
+                width: 134.1953125
+                height: 90
+          - id: NodeAttribute16
+            nodeID: example.NamespaceNode1.PodNode1.PodCardinality
+            dimensions:
+                x: -24.34375
+                y: 4
+                width: 24.34375
+                height: 29
+          - id: NodeAttribute17
+            nodeID: example.NamespaceNode1.PodNode1.PodController
+            dimensions:
+                x: -25.640625
+                y: -30
+                width: 25.640625
+                height: 29
+          - id: NodeAttribute18
+            nodeID: example.NamespaceNode0.ServiceNode0.Port0
+            dimensions:
+                x: 5
+                y: -70
+                width: 36.9140625
+                height: 40
+          - id: NodeAttribute19
+            nodeID: example.NamespaceNode1.ServiceNode0.Port0
+            dimensions:
+                x: 5
+                y: -70
+                width: 64.6484375
+                height: 40
+          - id: NodeAttribute20
+            nodeID: example.NamespaceNode0.ServiceNode0
+            dimensions:
+                x: 30
+                y: 50
+                width: 97.1875
+                height: 39
+          - id: NodeAttribute21
+            nodeID: example.NamespaceNode0.ServiceNode0.ServiceType
+            dimensions:
+                x: -41.671875
+                y: -30
+                width: 41.671875
+                height: 35
+          - id: NodeAttribute22
+            nodeID: example.NamespaceNode1.ServiceNode0
+            dimensions:
+                x: 30
+                y: 75.5
+                width: 74.6484375
+                height: 39
+          - id: NodeAttribute23
+            nodeID: example.NamespaceNode1.ServiceNode0.ServiceType
+            dimensions:
+                x: -41.671875
+                y: -30
+                width: 41.671875
+                height: 35
+          - id: NodeAttribute24
+            nodeID: example.NamespaceNode1.ServiceNode1.Port0
+            dimensions:
+                x: 5
+                y: -70
+                width: 53.375
+                height: 40
+          - id: NodeAttribute25
+            nodeID: example.NamespaceNode1.ServiceNode1
+            dimensions:
+                x: 134.6484375
+                y: 75.5
+                width: 70
+                height: 39
+          - id: NodeAttribute26
+            nodeID: example.NamespaceNode1.ServiceNode1.ServiceType
+            dimensions:
+                x: -41.671875
+                y: -30
+                width: 41.671875
+                height: 35
+          - id: NodeAttribute27
+            nodeID: example.NamespaceNode1.IngressNode0
+            dimensions:
+                x: 133
+                y: -63.5
+                width: 131.28125
+                height: 51
+        edgeAttributes:
+          - id: example_NamespaceNode1_IngressNode0$example_NamespaceNode1_ServiceNode1_Port0
+            sourceID: example.NamespaceNode1.IngressNode0
+            targetID: example.NamespaceNode1.ServiceNode1.Port0
+          - id: example_NamespaceNode1_IngressNode0$example_NamespaceNode1_ServiceNode0_Port0
+            sourceID: example.NamespaceNode1.IngressNode0
+            targetID: example.NamespaceNode1.ServiceNode0.Port0
