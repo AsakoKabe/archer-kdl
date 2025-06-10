@@ -100,19 +100,18 @@ PodNode:
     'id' ':' id=ID
     'name' ':' name=STRING
     (
-        'controller' ':' 
-        INDENT
-            controller=PodController
-        DEDENT
-    )?
-    (
-        'cardinality' ':' 
-        INDENT
-            cardinality=PodCardinality
-        DEDENT
-    )?
-    
-    (
+        (
+            'controller' ':' 
+            INDENT
+                controller=PodController
+            DEDENT
+        ) &
+        (
+            'cardinality' ':' 
+            INDENT
+                cardinality=PodCardinality
+            DEDENT
+        ) &
         (
             'volumes' ':'
             INDENT 
@@ -155,13 +154,14 @@ VolumeNode:
 ServiceNode:
     'id' ':' id=ID
     'name' ':' name=STRING 
+
     (
-        'type' ':' 
-        INDENT
-            type=ServiceTypeNode
-        DEDENT
-    )?
-    (
+        (
+            'type' ':' 
+            INDENT
+                type=ServiceTypeNode
+            DEDENT
+        ) &
         (
             'ports' ':'
             INDENT 

@@ -22,8 +22,7 @@ export class KubeClient {
 
     public async ping(): Promise<void> {
         try {
-            const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: 'default' });
-            console.error('Pods: ', pods.items);
+            // const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: 'default' });
         } catch (err) {
             console.error(err);
         }
@@ -45,7 +44,22 @@ export class KubeClient {
     public async getPods(namespace: string, selector?: string): Promise<k8s.V1Pod[]> {
         try {
             const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: namespace, labelSelector: selector });
-            return pods.items;
+            // Map to store unique pods by deployment name
+            const deploymentPodMap = new Map<string, k8s.V1Pod>();
+            for (const pod of pods.items) {
+                const ownerRefs = pod.metadata?.ownerReferences;
+                if (!ownerRefs) continue;
+                const rsOwner = ownerRefs.find(ref => ref.kind === 'ReplicaSet');
+                if (!rsOwner) continue;
+                // ReplicaSet name pattern: <deploymentName>-<random>
+                const match = rsOwner.name.match(/^(.+)-[a-z0-9]{9,}$/);
+                if (!match) continue;
+                const deploymentName = match[1];
+                if (!deploymentPodMap.has(deploymentName)) {
+                    deploymentPodMap.set(deploymentName, pod);
+                }
+            }
+            return Array.from(deploymentPodMap.values());
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get pods');
         }
@@ -54,6 +68,7 @@ export class KubeClient {
     public async getPodController(pod: k8s.V1Pod, namespace: string): Promise<KuberController | undefined> {
         try {
             const ownerRefs = pod.metadata?.ownerReferences;
+
             if (ownerRefs) {
                 for (const owner of ownerRefs) {
                     if (owner.kind === 'ReplicaSet') {
@@ -74,6 +89,9 @@ export class KubeClient {
                                 }
                             }
                         }
+                    }
+                    if (owner.kind === 'StatefulSet') {
+                        return await this.k8sAppApi.readNamespacedStatefulSet({ name: owner.name, namespace: namespace });
                     }
                 }
             }

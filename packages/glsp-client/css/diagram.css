@@ -39,6 +39,9 @@
     fill: #FEE897;
 }
 
+p {
+  color: black;
+}
 
 .namespace .ingress > .sprotty-node {
     stroke: black;

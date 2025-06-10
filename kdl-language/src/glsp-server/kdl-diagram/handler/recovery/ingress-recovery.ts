@@ -18,6 +18,7 @@ export class IngressRecovery implements Recover<ast.NamespaceNode> {
         try {
             const ingresses = await this.kuberClient.getIngresses(namespaceNode.name);
             for (const kuberIngress of ingresses) {
+                console.error(`Recovering ingress: ${kuberIngress.metadata?.name}`);
                 await this.recoverIngress(namespaceNode, kuberIngress);
             }
         } catch (error) {
@@ -28,14 +29,14 @@ export class IngressRecovery implements Recover<ast.NamespaceNode> {
     private async recoverIngress(namespaceNode: ast.NamespaceNode, kuberIngress: k8s.V1Ingress): Promise<void> {
         const ingressName = kuberIngress.metadata?.name || '';
         for (const rule of kuberIngress.spec?.rules || []) {
-            if (rule.host) {
-                await this.recoverHost(namespaceNode, ingressName, rule);
-            }
+            await this.recoverHost(namespaceNode, ingressName, rule);
         }
     }
 
     private async recoverHost(namespaceNode: ast.NamespaceNode, ingressName: string, rule: k8s.V1IngressRule): Promise<void> {
         const ingress = createIngressNode(namespaceNode, ingressName, rule.host);
+        console.error(ingress);
+
         namespaceNode.ingresses.push(ingress);
         await new IngressLinkRecovery(this.modelState).recover({ paths: rule.http?.paths, namespaceNode, ingress });
         if (!this.modelState.kdlDiagram.diagram) {

@@ -17,6 +17,7 @@ export class PodRecovery implements Recover<ast.NamespaceNode> {
     async recover(namespace: ast.NamespaceNode): Promise<void> {
         try {
             const pods = await this.kuberClient.getPods(namespace.name);
+            
             for (const kuberPod of pods) {
                 await this.recoverPod(namespace, kuberPod);
             }
