@@ -1,6 +1,7 @@
 {
   "name": "kdl-webview",
   "version": "0.0.1",
+  "license": "AGPL-3.0",
   "private": "true",
   "description": "KDL GLSP diagrams in a VS Code extensions (WebView part)",
   "keywords": [

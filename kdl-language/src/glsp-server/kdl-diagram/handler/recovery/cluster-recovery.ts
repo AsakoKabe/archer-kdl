@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { KubeClient } from '../../../../kuber/client.js';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { KDLModelState } from '../../model/kdl-state.js';

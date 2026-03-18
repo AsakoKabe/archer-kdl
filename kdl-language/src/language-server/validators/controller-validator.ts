@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { ValidationAcceptor } from 'langium';
 import { KuberController } from '../../kuber/client.js';
 import { PodCardinality, PodController } from '../generated/ast.js';

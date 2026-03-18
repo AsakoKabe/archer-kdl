@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { GModelElement, GModelRoot, GNode } from '@eclipse-glsp/server';
 import * as ast from '../../../language-server/generated/ast.js';
 import { KDLDiagram } from '../../../language-server/generated/ast.js';

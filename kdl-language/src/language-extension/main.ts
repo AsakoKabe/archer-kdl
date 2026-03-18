@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import type { LanguageClientOptions, ServerOptions} from 'vscode-languageclient/node.js';
 import type * as vscode from 'vscode';
 import * as path from 'node:path';

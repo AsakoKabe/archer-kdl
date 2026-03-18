@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { AstNode } from 'langium';
 import { AbstractSemanticTokenProvider, SemanticTokenAcceptor } from 'langium/lsp';
 import { SemanticTokenTypes } from 'vscode-languageserver-protocol';

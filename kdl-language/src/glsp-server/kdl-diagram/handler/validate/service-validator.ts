@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { Marker, MarkerKind } from '@eclipse-glsp/server';
 import * as k8s from '@kubernetes/client-node';
 import { inject, injectable } from 'inversify';

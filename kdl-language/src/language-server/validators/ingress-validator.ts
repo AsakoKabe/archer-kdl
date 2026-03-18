@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import * as k8s from '@kubernetes/client-node';
 import { ValidationAcceptor } from 'langium';
 import { IngressNode, NamespaceNode } from '../generated/ast.js';

@@ -2,6 +2,7 @@
   "name": "kdl-extension",
   "displayName": "KDL GLSP Diagram Editor",
   "version": "0.0.1",
+  "license": "AGPL-3.0",
   "private": "true",
   "description": "Extension for KDL GLSP diagrams",
   "categories": [

@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { Action, IActionHandler, ResponseAction } from '@eclipse-glsp/client';
 import { injectable } from 'inversify';
 

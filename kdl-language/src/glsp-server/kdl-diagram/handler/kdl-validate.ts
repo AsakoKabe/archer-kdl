@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { GGraph, GModelElement, Marker, MarkersReason, ModelState, ModelValidator } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
 import { KubeClient } from '../../../kuber/client.js';

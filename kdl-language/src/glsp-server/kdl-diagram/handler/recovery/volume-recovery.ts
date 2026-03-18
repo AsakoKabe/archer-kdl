@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import * as k8s from '@kubernetes/client-node';
 import { VolumeExtractor, VolumeType } from '../../../../kuber/volume-extractor.js';
 import * as ast from '../../../../language-server/generated/ast.js';

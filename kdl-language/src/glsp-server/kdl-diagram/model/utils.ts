@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { Dimension, Point } from '@eclipse-glsp/server';
 import * as ast from '../../../language-server/generated/ast.js';
 import { IdProvider } from '../../../language-server/kdl-naming.js';

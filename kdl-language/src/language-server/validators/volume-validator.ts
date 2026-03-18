@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { ValidationAcceptor } from 'langium';
 import { ExtractedVolume } from '../../kuber/volume-extractor.js';
 import { PodNode, VolumeNode } from '../generated/ast.js';

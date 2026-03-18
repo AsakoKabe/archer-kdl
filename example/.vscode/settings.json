@@ -1,4 +1,5 @@
 {
     "files.saveConflictResolution": "overwriteFileOnDisk",
     "kdl.kuberURL": "localhost",
+    "workbench.colorTheme": "Default Light+",
 }

@@ -1,6 +1,7 @@
 {
   "name": "@kdl/protocol",
   "version": "0.0.0",
+  "license": "AGPL-3.0",
   "private": true,
   "description": "KDL Protocol Extensions between Server and Client",
   "main": "lib/index",

@@ -1,3 +1,7 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 Archer.
+ ********************************************************************************/
+
 import { Action, RequestAction, ResponseAction } from '@eclipse-glsp/server';
 
 export interface KuberRecoverRequestAction extends RequestAction<KuberRecoverResponseAction> {
