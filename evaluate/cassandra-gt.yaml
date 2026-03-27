@@ -1,0 +1,47 @@
+kdlDiagram:
+    id: cassandra-example
+    name: "name"
+    namespaces:
+      - id: NamespaceNode0
+        name: "cassandra"
+        services:
+          - id: ServiceNode0
+            name: "cassandra"
+            type:
+                id: ServiceType
+                name: "CIP"
+            ports:
+              - id: Port0
+                name: "PortNode0"
+                number: 9042
+            links:
+              - tf-serving-example.NamespaceNode0.PodNode0.Port3
+        pods:
+          - id: PodNode0
+            name: "cassandra-0"
+            controller:
+                id: PodController
+                name: "SS"
+            cardinality:
+                id: PodCardinality
+                name: "3"
+            containers:
+              - id: ContainerNode0
+                name: "cassandra"
+            ports:
+              - id: Port0
+                name: "intra-node"
+                number: 7000
+              - id: Port1
+                name: "tls-intra-node"
+                number: 7001
+              - id: Port2
+                name: "jmx"
+                number: 7199
+              - id: Port3
+                name: "cql"
+                number: 9042
+            volumes:
+              - id: Volume0
+                name: cassandra-data
+                type: volumeMounts

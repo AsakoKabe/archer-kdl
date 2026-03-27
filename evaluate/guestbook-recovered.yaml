@@ -1,0 +1,86 @@
+kdlDiagram:
+    id: guestbook-example
+    name: "name"
+    namespaces:
+      - id: NamespaceNode0
+        name: "guestbook"
+        services:
+          - id: ServiceNode0
+            name: "frontend"
+            type:
+                id: ServiceType
+                name: "NP"
+            ports:
+              - id: Port0
+                name: "PortNode0"
+                number: 80
+            links:
+              - guestbook-example.NamespaceNode0.PodNode0.Port0
+          - id: ServiceNode1
+            name: "redis-master"
+            type:
+                id: ServiceType
+                name: "CIP"
+            ports:
+              - id: Port0
+                name: "PortNode0"
+                number: 6379
+            links:
+              - guestbook-example.NamespaceNode0.PodNode1.Port0
+          - id: ServiceNode2
+            name: "redis-replica"
+            type:
+                id: ServiceType
+                name: "CIP"
+            ports:
+              - id: Port0
+                name: "PortNode0"
+                number: 6379
+            links:
+              - guestbook-example.NamespaceNode0.PodNode2.Port0
+        pods:
+          - id: PodNode0
+            name: "frontend-75c448f886-9qf9s"
+            controller:
+                id: PodController
+                name: "D"
+            cardinality:
+                id: PodCardinality
+                name: "3"
+            containers:
+              - id: ContainerNode0
+                name: "php-redis"
+            ports:
+              - id: Port0
+                name: "PortNode0"
+                number: 80
+          - id: PodNode1
+            name: "redis-master-67bdd49d86-8472n"
+            controller:
+                id: PodController
+                name: "D"
+            cardinality:
+                id: PodCardinality
+                name: "1"
+            containers:
+              - id: ContainerNode0
+                name: "master"
+            ports:
+              - id: Port0
+                name: "PortNode0"
+                number: 6379
+          - id: PodNode2
+            name: "redis-replica-5dbc458645-ff4xn"
+            controller:
+                id: PodController
+                name: "D"
+            cardinality:
+                id: PodCardinality
+                name: "2"
+            containers:
+              - id: ContainerNode0
+                name: "replica"
+            ports:
+              - id: Port0
+                name: "PortNode0"
+                number: 6379

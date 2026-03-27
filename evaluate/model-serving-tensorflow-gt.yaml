@@ -1,0 +1,54 @@
+kdlDiagram:
+  id: tf-serving-example
+  name: "tf-serving"
+  namespaces:
+    - id: NamespaceNode0
+      name: "model-serving"
+      ingresses:
+        - id: IngressNode0
+          name: "tf-serving-ingress"
+          host: "/tf(/|$)(.*)"
+          links:
+            - tf-serving-example.NamespaceNode0.ServiceNode0.Port1
+      services:
+        - id: ServiceNode0
+          name: "tf-serving"
+          type:
+            id: ServiceType
+            name: "CIP"
+          ports:
+            - id: Port0
+              name: "grpc"
+              number: 8500
+            - id: Port1
+              name: "rest"
+              number: 8501
+          links:
+            - tf-serving-example.NamespaceNode0.PodNode0.Port0
+            - tf-serving-example.NamespaceNode0.PodNode0.Port1
+      pods:
+        - id: PodNode0
+          name: "tf-serving"
+          controller:
+            id: PodController
+            name: "D"
+          cardinality:
+            id: PodCardinality
+            name: "1"
+          volumes:
+            - id: Volume0
+              name: "model-volume"
+              type: "persistentVolumeClaim"
+            - id: Volume1
+              name: model-volume
+              type: volumeMounts
+          containers:
+            - id: ContainerNode0
+              name: "tensorflow-serving"
+          ports:
+            - id: Port0
+              name: "PortNode0"
+              number: 8500
+            - id: Port1
+              name: "PortNode1"
+              number: 8501
