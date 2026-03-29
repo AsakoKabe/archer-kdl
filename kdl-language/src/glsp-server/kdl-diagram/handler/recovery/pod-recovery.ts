@@ -3,6 +3,7 @@
  ********************************************************************************/
 
 import { GLSPServerError } from '@eclipse-glsp/server';
+import * as k8s from '@kubernetes/client-node';
 import { KubeClient } from '../../../../kuber/client.js';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { KDLModelState } from '../../model/kdl-state.js';
@@ -30,7 +31,7 @@ export class PodRecovery implements Recover<ast.NamespaceNode> {
         }
     }
 
-    private async recoverPod(namespace: ast.NamespaceNode, kuberPod: any): Promise<void> {
+    private async recoverPod(namespace: ast.NamespaceNode, kuberPod: k8s.V1Pod): Promise<void> {
         const controller = await this.kuberClient.getPodController(kuberPod, namespace.name);
         const pod = createPodNode(namespace, kuberPod.metadata?.name, controller?.kind, String(controller?.spec?.replicas));
         const kubeContainers = kuberPod.spec?.containers || [];
@@ -43,7 +44,7 @@ export class PodRecovery implements Recover<ast.NamespaceNode> {
         this.addAttributesToDiagram(pod);
     }
 
-    private addAttributesToDiagram(pod: any): void {
+    private addAttributesToDiagram(pod: ast.PodNode): void {
         if (!this.modelState.kdlDiagram.diagram) {
             return;
         }

@@ -5,7 +5,6 @@ import {
     ActionHandlerConstructor,
     BindingTarget,
     CompoundOperationHandler,
-    ContextActionsProvider,
     DiagramConfiguration,
     DiagramModule,
     GModelFactory,
@@ -14,7 +13,6 @@ import {
     ModelState,
     ModelSubmissionHandler,
     ModelValidator,
-    MultiBinding,
     OperationHandlerConstructor,
     SourceModelStorage,
     ToolPaletteItemProvider,
@@ -94,10 +92,6 @@ export class KDLDiagramModule extends DiagramModule {
         binding.add(KDLDiagramApplyLabelEditOperationHandler);
         binding.add(KDLDiagramCreateLinkOperationHandler);
         binding.add(KDLDiagramChangeRoutingPointsOperation);
-    }
-
-    protected override configureContextActionProviders(binding: MultiBinding<ContextActionsProvider>): void {
-        super.configureContextActionProviders(binding);
     }
 
     protected override bindGModelIndex(): BindingTarget<GModelIndex> {

@@ -48,8 +48,6 @@ export class KDLDiagramDeleteOperationHandler extends JsonOperationHandler {
         if (!modelElement) {
             return;
         }
-        if (ast.isNodeType(modelElement)) {
-        }
         if (!this.modelState.kdlDiagram.diagram) {
             return;
         }

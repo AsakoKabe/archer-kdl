@@ -1,95 +1,151 @@
-<!-- # Eclipse GLSP - Project Template:<br> 🖥️ Node ● 🗂️ Custom JSON ● 🖼️ VS Code
+# Archer
 
-This folder contains a simple _project template_ to get you started quickly for your diagram editor implementation based on [GLSP](https://github.com/eclipse-glsp/glsp).
-It provides the initial setup of the package architecture and environment for a GLSP diagram editor that uses ...
+**Applying the "Architecture as Code" approach to prevent architecture erosion at design time**
 
--   🖥️ The [Node-based GLSP server framework](https://github.com/eclipse-glsp/glsp-server-node)
--   🗂️ A custom JSON format as source model
--   🖼️ The [VS Code integration](https://github.com/eclipse-glsp/glsp-vscode-integration) to make your editor available in VS Code
+Archer is a VS Code extension that implements the Architecture as Code (AaC) paradigm through *live architecture models* -- architectural representations maintained as synchronized abstractions of a running Kubernetes system. It enables bidirectional synchronization between textual and graphical views of deployment architecture, with automated conformance checking against the actual cluster state.
 
-To explore alternative project templates or learn more about developing GLSP-based diagram editors, please refer to the [Getting Started](https://www.eclipse.org/glsp/documentation/gettingstarted) guide.
+This repository is the companion artifact for the paper submitted to **MODELS '26** (ACM/IEEE International Conference on Model Driven Engineering Languages and Systems, Malaga, Spain, October 4--9, 2026).
 
-## Project structure
+## Key Features
 
-This project is structured as follows:
+- **Domain-Specific Language (KDL)**: A compact, formally structured language for modeling Kubernetes deployment architecture (namespaces, pods, services, ingresses, volumes, controllers)
+- **Bidirectional Synchronization**: Edits in the textual KDL editor are reflected in the graphical diagram and vice versa, both backed by a shared semantic model
+- **Architecture Recovery**: Reconstructs the architectural model from a running Kubernetes cluster via the Kubernetes API
+- **Conformance Validation**: Detects inconsistencies between the KDL model and the actual cluster state through periodic and on-demand checks
+- **Language Intelligence**: Code completion, syntax highlighting, semantic tokens, and validation diagnostics via LSP
+- **Diagram Intelligence**: Interactive graphical editing, auto-layout, create/delete/move operations via GLSP
 
--   [`tasklist-glsp-client`](./tasklist-glsp-client): diagram client configuring the views for rendering and the user interface modules
--   [`tasklist-vscode`](./tasklist-vscode): glue code for integrating the editor into VS Code
-    -   [`extension`](./tasklist-vscode/extension): VS Code extension responsible for starting the glsp-server and registering the `webview` as a custom editor
-    -   [`webview`](./tasklist-vscode/webview): integration of the `tasklist-glsp` diagram as webview
--   [`workspace`](./workspace): contains an example file that can be opened with this diagram editor
--   [`tasklist-glsp-server`](./tasklist-glsp-server):
-    -   [`src/diagram`](./tasklist-glsp-server/src/diagram): dependency injection module of the server and diagram configuration
-    -   [`src/handler`](./tasklist-glsp-server/src/handler): handlers for the diagram-specific actions
-    -   [`src/model`](./tasklist-glsp-server/src/model): all source model, graphical model and model state related files
+## Architecture
 
-The most important entry points are:
+The extension is built on a **three-server model**, all launched from the Language Server:
 
--   [`tasklist-glsp-client/src/tasklist-diagram-module.ts`](./tasklist-glsp-client/src/tasklist-diagram-module.ts): dependency injection module of the client
--   [`glsp-client/tasklist-vscode/extension/package.json`](glsp-client/tasklist-vscode/extension/package.json): VS Code extension entry point
--   [`tasklist-glsp-server/src/diagram/tasklist-diagram-module.ts`](./tasklist-glsp-server/src/diagram/tasklist-diagram-module.ts): dependency injection module of the server -->
-# GLSP KDL
+| Server | Technology | Responsibility |
+|--------|-----------|----------------|
+| **Language Server (LSP)** | Langium | Parsing `.kdl` files, AST construction, validation, completions, semantic tokens |
+| **GLSP Server** | Eclipse GLSP | Graphical model construction, diagram operations, layout, Kubernetes recovery |
+| **Model Server** | JSON-RPC | Mediator between LSP and GLSP; shared semantic model access |
+
+```
+User opens .kdl file
+    --> Language Server parses AST
+        --> Model Server synchronizes state
+            --> GLSP Server builds graphical model
+                --> Webview renders interactive diagram
+```
+
+Diagram edits flow back through GLSP operation handlers, updating the AST and triggering re-validation.
+
+## Project Structure
+
+| Workspace | Path | Purpose |
+|-----------|------|---------|
+| `kdl-language` | `kdl-language/` | Language server, GLSP server, model server, Kubernetes integration |
+| `@kdl/protocol` | `packages/protocol/` | Shared protocol constants and types |
+| `@kdl/glsp-client` | `packages/glsp-client/` | GLSP client configuration and CSS |
+| `kdl-extension` | `vscode/kdl-extension/` | VS Code extension host, editor provider |
+| `kdl-webview` | `vscode/kdl-webview/` | Webview that renders the GLSP diagram |
+| `evaluate` | `evaluate/` | Evaluation scripts and ground-truth models |
 
 ## Prerequisites
 
-The following libraries/frameworks need to be installed on your system:
+- [Node.js](https://nodejs.org/) `>= 16.11.0` (recommended: 18.19.1)
+- [Yarn](https://classic.yarnpkg.com/) `>= 1.7.0 < 2.x.x`
+- [Minikube](https://minikube.sigs.k8s.io/) or another local Kubernetes cluster
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) configured to access the local cluster
 
--   [Node.js](https://nodejs.org/en/) `>=16.11.0`
--   [Yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable) `>=1.7.0 <2.x.x`
+> **Important**: Archer connects to the Kubernetes cluster configured in your local `~/.kube/config`. It is designed and tested with **local clusters only** (Minikube, kind, k3s, Docker Desktop Kubernetes). Do not use it with production clusters.
 
-## VS Code Extension
+## Getting Started
 
-For a smooth development experience we recommend a set of useful VS Code extensions. When the workspace is first opened VS Code will ask you wether you want to install those recommended extensions.
-Alternatively, you can also open the `Extension View` (Ctrl + Shift + X) and type `@recommended` into the search field to see the list of `Workspace Recommendations`.
-
-## Building the example
-
-To build and bundle all components execute the following in the directory containing this README:
+### 1. Start a local Kubernetes cluster
 
 ```bash
-yarn
+# Install Minikube (macOS)
+brew install minikube
+
+# Start the cluster
+minikube start
+
+# Verify the cluster is running
+kubectl get nodes
 ```
 
-## Running the example
+### 2. Deploy a test application
 
-To start the example open the directory containing this README in VS Code and then navigate to the `Run and Debug` view (Ctrl + Shift + D).
-Here you can choose between four different launch configurations:
+You can use one of the [Kubernetes examples](https://github.com/kubernetes/examples) used in the paper evaluation:
 
--   `Launch Tasklist Diagram Extension`: <br>
-    This config can be used to launch a second VS Code runtime instance that has the `Tasklist Diagram Extension` installed.
-    It will automatically open an example workspace that contains a `example.tasklist` file. Double-click the file in the `Explorer` to open it with the `Tasklist Diagram Editor`.
-    This launch config will start the GLSP server as embedded process which means you won't be able to debug the GLSP Server source code.
--   `Launch Tasklist Diagram Extension (External GLSP Server)`<br>
-    Similar to the `Launch Tasklist Diagram Extension` but does not start the GLSP server as embedded process.
-    It expects that the GLSP Server process is already running and has been started externally with the `Launch Tasklist GLSP Server` config.
--   `Launch Tasklist GLSP Server`<br>
-    This config can be used to manually launch the `Tasklist GLSP Server` node process.
-    Breakpoints in the source files of the `glsp-server` directory will be picked up.
-    In order to use this config, the `Tasklist Diagram Extension` has to be launched in `External` server mode.
--   `Launch Tasklist Diagram extension with external GLSP Server`<br>
-    This is a convenience compound config that launches both the `Tasklist Diagram Extension` in external server mode and the
-    `Tasklist GLSP server` process.
-    Enables debugging of both the `glsp-client` and `glsp-server`code simultaneously.
+```bash
+# Guestbook (multi-component microservice app)
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/all-in-one/guestbook-all-in-one.yaml
 
-## Packaging the example
+# Verify deployment
+kubectl get pods,svc
+```
 
-To package the example extension as `*.vsix` execute the following in the directory containing this README:
+### 3. Build the extension
+
+```bash
+# Install dependencies
+yarn
+
+# Full build (packages -> langium-generate -> compile -> bundle)
+yarn build
+
+# Or step-by-step:
+yarn langium-generate   # Regenerate parser/AST from .langium grammars
+yarn compile            # TypeScript compilation
+yarn bundle             # Webpack bundle all components
+```
+
+### 4. Run the extension
+
+1. Open this directory in VS Code
+2. Navigate to **Run and Debug** (Ctrl+Shift+D)
+3. Select the **KDL Extension** launch configuration and press F5
+4. A second VS Code window opens with the extension installed
+5. Open any `.kdl` file — the textual editor appears on the left; double-click the file to open the graphical diagram on the right
+
+### Recovery from Cluster
+
+1. Open a `.kdl` file in the diagram editor
+2. Click the **Recover** button in the toolbar
+3. Archer queries the Kubernetes API of the local cluster and generates the architectural model reflecting the current deployment state
+
+### Conformance Validation
+
+Validation runs automatically when the model or cluster state changes. Diagnostics appear as warnings/errors in both the text editor and the diagram:
+
+- Missing namespaces, services, or pods in the cluster
+- Extra entities in the model not present in the cluster
+- Broken links between services and pods
+
+## Evaluation
+
+The `evaluate/` directory contains the evaluation pipeline used in the paper:
+
+- **Ground-truth KDL models** for three Kubernetes example projects (Model Serving TF, Cassandra, Guestbook)
+- **Python evaluation scripts** for computing precision and recall of model recovery and inconsistency detection
+
+Results from the paper:
+
+| Project | Entity Precision | Entity Recall | Link Precision | Link Recall |
+|---------|:---:|:---:|:---:|:---:|
+| model-serving-tf | 1.0 | 0.82 | 1.0 | 1.0 |
+| cassandra | 1.0 | 0.90 | 1.0 | 1.0 |
+| guestbook | 1.0 | 1.0 | 1.0 | 1.0 |
+
+## Packaging
 
 ```bash
 yarn package
 ```
 
-This will create a `tasklist-vscode-*.vsix` file (located in the [extension directory](./tasklist-vscode/extension/)) that can be installed in VS Code.
+This creates a `.vsix` file in `vscode/kdl-extension/` that can be installed in VS Code.
 
-## Next steps
+## Acknowledgments
 
-Once you are up and running with this project template, we recommend to refer to the [Getting Started](https://www.eclipse.org/glsp/documentation) to learn how to
+This project builds upon the [Eclipse GLSP](https://www.eclipse.org/glsp/) framework and the [Langium](https://langium.org/) language engineering toolkit. The extension architecture is adapted from the [CrossBreeze](https://github.com/CrossBreezeNL/crossmodel) project template.
 
--   ➡️ Add your custom [source model](https://www.eclipse.org/glsp/documentation/sourcemodel) instead of using the example model
--   ➡️ Define the diagram elements to be generated from the source model into the [graphical model](https://www.eclipse.org/glsp/documentation/gmodel)
--   ➡️ Make the diagram look the way you want by adjusting the [diagram rendering and styling](https://www.eclipse.org/glsp/documentation/rendering)
+## License
 
-## More information
-
-For more information, please visit the [Eclipse GLSP Umbrella repository](https://github.com/eclipse-glsp/glsp) and the [Eclipse GLSP Website](https://www.eclipse.org/glsp/).
-If you have questions, please raise them in the [discussions](https://github.com/eclipse-glsp/glsp/discussions) and have a look at our [communication and support options](https://www.eclipse.org/glsp/contact/).
+This project is licensed under the [AGPL-3.0](LICENSE) license.

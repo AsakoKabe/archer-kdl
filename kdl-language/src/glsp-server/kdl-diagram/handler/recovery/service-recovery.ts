@@ -3,6 +3,7 @@
  ********************************************************************************/
 
 import { GLSPServerError } from '@eclipse-glsp/server';
+import * as k8s from '@kubernetes/client-node';
 import { KubeClient } from '../../../../kuber/client.js';
 import * as ast from '../../../../language-server/generated/ast.js';
 import { KDLModelState } from '../../model/kdl-state.js';
@@ -35,18 +36,18 @@ export class ServiceRecovery implements Recover<ast.NamespaceNode> {
         }
     }
 
-    private async recoverServicePortsAndLinks(namespace: ast.NamespaceNode, service: any, kuberService: any): Promise<void> {
-        new PortRecovery(this.modelState).recoverServicePorts(service, kuberService.spec.ports);
+    private async recoverServicePortsAndLinks(namespace: ast.NamespaceNode, service: ast.ServiceNode, kuberService: k8s.V1Service): Promise<void> {
+        new PortRecovery(this.modelState).recoverServicePorts(service, kuberService.spec!.ports!);
         await new ServiceLinkRecovery(this.kuberClient, this.modelState).recover({
             namespace: namespace.name,
             namespaceNode: namespace,
             service: service,
             kuberService: kuberService,
-            kuberPorts: kuberService.spec.ports
+            kuberPorts: kuberService.spec!.ports!
         });
     }
 
-    private addServiceNodeAttributes(service: any): void {
+    private addServiceNodeAttributes(service: ast.ServiceNode): void {
         if (!this.modelState.kdlDiagram.diagram) {
             return;
         }

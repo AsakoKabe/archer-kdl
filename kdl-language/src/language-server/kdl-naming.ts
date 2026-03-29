@@ -143,7 +143,6 @@ export class DefaultIdProvider implements NameProvider, IdProvider {
         const knownIds = this.services.shared.workspace.IndexManager.allElements(type)
             .map(element => element.name)
             .toArray();
-        console.error('findNextGlobalId', type, proposal, knownIds);
         return findNextUnique(proposal, knownIds, identity);
     }
 }

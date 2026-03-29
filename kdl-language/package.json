@@ -4,7 +4,6 @@
     "version": "0.0.1",
     "license": "AGPL-3.0",
     "files": [
-        "bin",
         "out",
         "src"
     ],
@@ -24,9 +23,7 @@
         "@eclipse-glsp/layout-elk": "2.3.0",
         "@eclipse-glsp/server": "2.3.0",
         "@kdl/protocol": "0.0.0",
-        "chalk": "~4.1.2",
         "chevrotain": "~11.0.3",
-        "commander": "~10.0.0",
         "langium": "^3.3.0",
         "p-debounce": "2.1.0",
         "prettier": "^3.1.0",
@@ -56,7 +53,7 @@
         "node": "18.19.1",
         "npm": "10.2.4"
     },
-    "displayName": "lsp-server",
+    "displayName": "KDL Language Server",
     "engines": {
         "vscode": "^1.67.0",
         "node": ">=18.0.0"
@@ -89,8 +86,5 @@
     "activationEvents": [
         "onLanguage:kdl"
     ],
-    "main": "./out/extension/main.cjs",
-    "bin": {
-        "kdl-cli": "./bin/cli.js"
-    }
+    "main": "./out/extension/main.cjs"
 }

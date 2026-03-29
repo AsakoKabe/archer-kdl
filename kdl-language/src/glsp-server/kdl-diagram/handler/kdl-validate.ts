@@ -4,7 +4,6 @@
 
 import { GGraph, GModelElement, Marker, MarkersReason, ModelState, ModelValidator } from '@eclipse-glsp/server';
 import { inject, injectable } from 'inversify';
-import { KubeClient } from '../../../kuber/client.js';
 import { NamespaceNode } from '../model/graph-extension/namespace-node.js';
 import { KDLModelState } from '../model/kdl-state.js';
 import { NamespaceValidator } from './validate/namespace-validator.js';
@@ -13,9 +12,6 @@ import { Validator } from './validate/validator.js';
 
 @injectable()
 export class KDLModelValidator implements ModelValidator {
-    @inject(KubeClient)
-    protected kuberClient: KubeClient;
-
     @inject(ModelState) declare protected modelState: KDLModelState;
 
     @inject(RootValidator)
@@ -28,7 +24,7 @@ export class KDLModelValidator implements ModelValidator {
         const markers: Marker[] = [];
 
         for (const element of elements) {
-            if (MarkersReason.BATCH === reason) {
+            if (MarkersReason.BATCH === reason || MarkersReason.LIVE === reason) {
                 markers.push(...(await this.doBatchValidation(element)));
             }
             if (element.children) {

@@ -3,7 +3,6 @@
  ********************************************************************************/
 
 import {
-    configureActionHandler,
     configureDefaultModelElements,
     configureLayout,
     configureModelElement,
@@ -28,7 +27,6 @@ import 'balloon-css/balloon.min.css';
 import { Container, ContainerModule } from 'inversify';
 import '../css/diagram.css';
 import { FreeFormChildless } from './free-form-childless-layout';
-import { MyCustomResponseAction, MyCustomResponseActionHandler } from './kuber-action-hundler';
 import {
     ContainerNode,
     IngressNode,
@@ -63,7 +61,6 @@ const kdlDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => 
     configureModelElement(context, ModelTypes.CONTAINER, ContainerNode, RoundedCornerNodeView);
     configureModelElement(context, ModelTypes.PORT, PortNode, RoundedCornerNodeView);
     overrideModelElement(context, DefaultTypes.EDGE, GEdge, ArrowEdgeView);
-    configureActionHandler(context, MyCustomResponseAction.KIND, MyCustomResponseActionHandler);
     configureLayout({ bind, isBound }, FreeFormChildless.KIND, FreeFormChildless);
 });
 

@@ -8,10 +8,8 @@
   "categories": [
     "Programming Languages"
   ],
-  "homepage": "",
-  "bugs": "",
   "author": {
-    "name": "SBT R&D"
+    "name": "Archer"
   },
   "main": "dist/kdl-extension.js",
   "files": [
@@ -174,7 +172,7 @@
   },
   "activationEvents": [
     "onStartupFinished",
-    "onLanguage:tasklist"
+    "onLanguage:kdl"
   ],
   "dependencies": {
     "@vscode/codicons": "^0.0.25",

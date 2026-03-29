@@ -1,13 +1,8 @@
 /********************************************************************************
- * Copyright (c) 2024 CrossBreeze.
+ * Copyright (c) 2025-2026 Archer.
  ********************************************************************************/
 import { injectable } from 'inversify';
 import { CrossModelIndex } from '../../common/cross-model-index.js';
-import { AstNode } from 'langium';
 
 @injectable()
-export class KDLModelIndex extends CrossModelIndex {
-    protected override indexAstNode(node: AstNode): void {
-        super.indexAstNode(node);
-    }
-}
+export class KDLModelIndex extends CrossModelIndex {}

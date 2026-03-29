@@ -23,9 +23,6 @@ export class IngressLinkRecovery implements Recover<IngressLinkRecoveryParams> {
         for (const path of paths) {
             const targetService = this.findTargetService(namespaceNode, path);
             if (!targetService) {
-                console.error(
-                    `Service ${path.backend?.service?.name} not found while recovering ingress ${ingress.name} to the service link`
-                );
                 continue;
             }
             this.recoverIngressLinks(ingress, targetService, path);

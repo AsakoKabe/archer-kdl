@@ -5,7 +5,6 @@
 import { GLSPServerError } from '@eclipse-glsp/server';
 import * as k8s from '@kubernetes/client-node';
 import { injectable } from 'inversify';
-// import * as vscode from 'vscode';
 
 export type KuberController = k8s.V1Deployment | k8s.V1ReplicaSet | k8s.V1StatefulSet;
 
@@ -14,22 +13,18 @@ export class KubeClient {
     protected kc: k8s.KubeConfig;
     protected k8sCoreApi: k8s.CoreV1Api;
     protected k8sAppApi: k8s.AppsV1Api;
-    protected k8sNerwokingApi: k8s.NetworkingV1Api;
+    protected k8sNetworkingApi: k8s.NetworkingV1Api;
 
     constructor() {
         this.kc = new k8s.KubeConfig();
         this.kc.loadFromDefault();
         this.k8sCoreApi = this.kc.makeApiClient(k8s.CoreV1Api);
         this.k8sAppApi = this.kc.makeApiClient(k8s.AppsV1Api);
-        this.k8sNerwokingApi = this.kc.makeApiClient(k8s.NetworkingV1Api);
+        this.k8sNetworkingApi = this.kc.makeApiClient(k8s.NetworkingV1Api);
     }
 
     public async ping(): Promise<void> {
-        try {
-            // const pods = await this.k8sCoreApi.listNamespacedPod({ namespace: 'default' });
-        } catch (err) {
-            console.error(err);
-        }
+        await this.k8sCoreApi.listNamespace();
     }
 
     public async getNamespaces(): Promise<string[]> {
@@ -116,7 +111,7 @@ export class KubeClient {
 
     public async getIngresses(namespace: string): Promise<k8s.V1Ingress[]> {
         try {
-            const ingresses = await this.k8sNerwokingApi.listNamespacedIngress({ namespace: namespace });
+            const ingresses = await this.k8sNetworkingApi.listNamespacedIngress({ namespace: namespace });
             return ingresses.items;
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get ingresses');
@@ -125,7 +120,7 @@ export class KubeClient {
 
     public async getNamespacedIngress(namespace: string, ingressName: string): Promise<k8s.V1Ingress> {
         try {
-            const ingress = await this.k8sNerwokingApi.readNamespacedIngress({ name: ingressName, namespace: namespace });
+            const ingress = await this.k8sNetworkingApi.readNamespacedIngress({ name: ingressName, namespace: namespace });
             return ingress;
         } catch (err) {
             throw new GLSPServerError('Error to send k8s request to get ingress: ' + ingressName);

@@ -17,29 +17,9 @@ import {
 import { GLSP_PORT_COMMAND } from '@kdl/protocol';
 import { Container, ContainerModule } from 'inversify';
 import { AddressInfo } from 'node:net';
-import { URI } from 'vscode-uri';
 import { KDLLSPServices } from '../integration.js';
 import { KDLServices, KDLSharedServices } from '../language-server/kdl-module.js';
 import { KDLDiagramModule } from './kdl-diagram/kdl-diagram-module.js';
-
-// ReferenceError: g is not defined
-// https://github.com/kieler/elkjs/issues/181
-// (globalThis as any).g = undefined;
-// (globalThis as any).i = undefined;
-
-// export async function launch(argv?: string[]): Promise<void> {
-//     const options = createSocketCliParser().parse(argv);
-//     const appContainer = new Container();
-//     appContainer.load(createAppModule(options));
-
-//     const launcher = appContainer.resolve(SocketServerLauncher);
-//     const serverModule = new ServerModule().configureDiagramModule(new KDLDiagramModule());
-
-//     launcher.configure(serverModule);
-//     launcher.start({ port: options.port, host: options.host });
-// }
-
-// launch(process.argv).catch(error => console.error('Error in kdl server launcher:', error));
 
 /**
  * Launches a GLSP server with access to the given language services on the default port.
@@ -47,12 +27,12 @@ import { KDLDiagramModule } from './kdl-diagram/kdl-diagram-module.js';
  * @param services language services
  * @returns a promise that is resolved as soon as the server is shut down or rejects if an error occurs
  */
-export async function startGLSPServer(services: KDLLSPServices, workspaceFolder: URI): Promise<MaybePromise<void>> {
+export async function startGLSPServer(services: KDLLSPServices): Promise<MaybePromise<void>> {
     const launchOptions: SocketLaunchOptions = {
         ...defaultSocketLaunchOptions,
         host: '127.0.0.1',
         port: Number(process.env.KDL_GLSP_SERVER_PORT),
-        logLevel: LogLevel.debug
+        logLevel: LogLevel.warn
     };
     // create module based on launch options, e.g., logging etc.
     const appModule = createAppModule(launchOptions);
@@ -78,8 +58,7 @@ export async function startGLSPServer(services: KDLLSPServices, workspaceFolder:
         logger.error('Error in GLSP server launcher:', error);
     }
 
-    // Attach a generic unhandled rejection handler to prevent the process from crashing in case of an error
-    process.on('unhandledRejection', error => console.log('Unhandled rejection', error));
+    process.on('unhandledRejection', error => logger.error('Unhandled rejection:', error));
 }
 
 function getPort(address: AddressInfo | string | null): number | undefined {

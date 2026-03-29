@@ -38,7 +38,7 @@ import { CrossModelSerializer } from './kdl-serializer.js';
 import { KDLWorkspaceManager } from './kdl-workspace-manager.js';
 import { KDLTokenBuilder } from './parser/kdl-indentation-aware.js';
 import { KDLLinker } from './references/kdl-linker.js';
-import { KDLValidator, KubeValidator, registerValidationChecks } from './kdl-validator.js';
+import { KubeValidator, registerValidationChecks } from './kdl-validator.js';
 
 /***************************
  * Shared Module
@@ -140,7 +140,6 @@ export interface CrossModelAddedServices {
         ScopeProvider: KDLScopeProvider;
     };
     validation: {
-        CrossModelValidator: KDLValidator;
         KubeValidator: KubeValidator;
     };
     serializer: {
@@ -182,7 +181,6 @@ export function createCrossModelModule(
             Linker: services => new KDLLinker(services)
         },
         validation: {
-            CrossModelValidator: services => new KDLValidator(services),
             KubeValidator: services => new KubeValidator(services)
         },
         lsp: {

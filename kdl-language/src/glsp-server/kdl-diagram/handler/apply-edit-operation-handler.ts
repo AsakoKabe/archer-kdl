@@ -25,8 +25,7 @@ export class KDLDiagramApplyLabelEditOperationHandler extends JsonOperationHandl
     }
 
     protected async renameEntity(node: ast.NodeType, newValue: string, labelField: string): Promise<void> {
-        if (node) {
-            if (ast.isNamespaceNode(node)) {
+        if (ast.isNamespaceNode(node)) {
                 node.name = newValue;
             } else if (ast.isIngressNode(node)) {
                 if (labelField === 'name') {
@@ -54,21 +53,20 @@ export class KDLDiagramApplyLabelEditOperationHandler extends JsonOperationHandl
                     node.name = newValue;
                 }
             } else if (ast.isPodController(node)) {
-                if (labelField == 'name') {
+                if (labelField === 'name') {
                     node.name = newValue;
                 }
             } else if (ast.isPodCardinality(node)) {
-                if (labelField == 'name') {
+                if (labelField === 'name') {
                     node.name = newValue;
                 }
             } else if (ast.isVolumeNode(node)) {
-                if (labelField == 'name') {
+                if (labelField === 'name') {
                     node.name = newValue;
-                } else if (labelField == 'type') {
+                } else if (labelField === 'type') {
                     node.type = newValue;
                 }
             }
-        }
         const document = findDocument<KDLRoot>(node)!;
         await this.modelState.modelService.save({
             uri: document.uri.toString(),

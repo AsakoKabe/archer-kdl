@@ -11,10 +11,8 @@
     "layout",
     "glsp"
   ],
-  "homepage": "",
-  "bugs": "",
   "author": {
-    "name": "SBT R&D"
+    "name": "Archer"
   },
   "scripts": {
     "build": "tsc && yarn bundle",

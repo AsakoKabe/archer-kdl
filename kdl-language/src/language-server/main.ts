@@ -34,5 +34,5 @@ shared.workspace.WorkspaceManager.onWorkspaceInitialized(async workspaceFolders 
    // Start the JSON server with the shared services
    startModelServer({ shared, language: KDL }, workspaceFolders[0]);
    // Start the graphical language server with the shared services
-   startGLSPServer({ shared, language: KDL }, workspaceFolders[0]);
+   startGLSPServer({ shared, language: KDL });
 });

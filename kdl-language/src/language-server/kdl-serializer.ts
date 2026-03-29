@@ -47,7 +47,6 @@ export class CrossModelSerializer implements Serializer<KDLRoot> {
       }
       if (
          key === 'id' ||
-         (key === 'superEntities' && Array.isArray(parent)) ||
          propertyOf(parent, key, isCustomProperty, 'name') ||
          (!Array.isArray(value) && this.isValidReference(parent, key, value))
       ) {
@@ -95,9 +94,6 @@ export class CrossModelSerializer implements Serializer<KDLRoot> {
    }
 
    protected toKeyword(prop: string): string {
-      if (prop === 'superEntities') {
-         return 'inherits';
-      }
       return prop;
    }
 

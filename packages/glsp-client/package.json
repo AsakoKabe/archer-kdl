@@ -9,9 +9,8 @@
     "minimal",
     "diagram"
   ],
-  "homepage": "",
   "author": {
-    "name": "SBT R&D"
+    "name": "Archer"
   },
   "main": "lib/index",
   "types": "lib/index",

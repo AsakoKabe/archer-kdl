@@ -16,28 +16,23 @@ export const LOG_DIR = path.join(__dirname, '..', '..', 'logs');
 const DEFAULT_GLSP_SERVER_PORT = '0';
 let languageClient: LanguageClient;
 
-async function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+async function waitForGlspServer(client: LanguageClient, retries = 10, delayMs = 500): Promise<void> {
+    for (let i = 0; i < retries; i++) {
+        try {
+            await client.sendRequest(GLSP_PORT_COMMAND);
+            return;
+        } catch {
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+    }
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-    // const kubeURL = vscode.workspace.getConfiguration('kdl').get('kuberURL');
-    // console.error(kubeURL);
     // Start LSP server and client
     languageClient = await startLanguageClient(context);
 
-    // wait while glsp-server and model server launched
-    await sleep(3000);
-
-    // const modulePath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'glsp-server', 'app.js').fsPath;
-    // const serverProcess = new GlspSocketServerLauncher({
-    //     executable: modulePath,
-    //     socketConnectionOptions: { port: JSON.parse(process.env.KDL_GLSP_SERVER_PORT || DEFAULT_GLSP_SERVER_PORT) },
-    //     additionalArgs: ['--no-consoleLog', '--fileLog', '--logDir', LOG_DIR],
-    //     logging: true
-    // });
-    // context.subscriptions.push(serverProcess);
-    // await serverProcess.start();
+    // Wait for GLSP server to become available
+    await waitForGlspServer(languageClient);
 
     // Wrap glsp server
     const minimalServer = new SocketGlspVscodeServer({
