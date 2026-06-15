@@ -1,0 +1,56 @@
+{
+  "name": "kdl",
+  "scopeName": "source.kdl",
+  "fileTypes": [
+    ".kdl"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.kdl",
+      "match": "\\b(cardinality|containers|controller|diagram|dimensions|edgeAttributes|height|host|id|ingresses|kdlDiagram|links|name|namespaces|nodeAttributes|nodeID|number|pods|points|ports|services|sourceID|targetID|type|volumes|width|x|y)\\b"
+    },
+    {
+      "name": "string.quoted.double.kdl",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "include": "#string-character-escape"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.kdl",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "include": "#string-character-escape"
+        }
+      ]
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "begin": "#",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.kdl"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.kdl"
+        }
+      ]
+    },
+    "string-character-escape": {
+      "name": "constant.character.escape.kdl",
+      "match": "\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)"
+    }
+  }
+}
